@@ -9,6 +9,8 @@ class UserLoginReq(BaseModel):
     userId : str
     userPwd : str
 
+
+
 class UserBase(BaseModel):
     userId : str
     userName : str
