@@ -37,3 +37,4 @@ docker run -d \
 -v /usr/local/bin/docker-compose:/usr/local/bin/docker-compose \ 
 -u root jenkins/jenkins
 
+git commit --amend --no-edit --date "Wed 8 Sep 2021 20:19:19 KST"
