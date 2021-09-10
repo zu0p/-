@@ -40,6 +40,9 @@ export default {
         clickDiary(){
             //해당 title의 diary page로 이동
             console.log("click!"+this.diaryTitle)
+            // this.$router.push({name: 'Diary', path: `/diary/${this.diaryTitle}`})
+
+            this.$router.push({name: 'Diary', title: this.diaryTitle})
         }
     }
 }
@@ -59,6 +62,6 @@ export default {
 #diary-band{
     /* height: 350px; */
     height: 100%;
-    background-color: rgb(25, 26, 32);
+    background-color:rgb(48, 50, 61);
 }
 </style>

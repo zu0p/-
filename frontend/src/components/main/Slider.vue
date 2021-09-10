@@ -1,20 +1,25 @@
 <template>
-    <div class="slider">
-    <v-btn icon color="white" class="button" @click="shiftLeft()">
-        <v-icon large>mdi-chevron-left</v-icon>
-    </v-btn>
-    <div class="cards-wrapper">
-        <ul class="cards__container">
-            <li v-for="diary in diarys" :key="diary.id" class="box" :class="diary.hide">
-                <!-- {{diary.title}} -->
-                <diary :title="diary.title" w="12rem" h="20rem" />
-            </li>
-        </ul>
-    </div>
-    <v-btn icon color="white" class="button" @click="shiftRight()">
-        <v-icon large>mdi-chevron-right</v-icon>
-    </v-btn>
-    </div>
+    <v-container>
+        <v-row class="slider">
+            <v-col cols="1" sm="1" md="1" lg="1">
+                <v-btn icon :color="$vuetify.breakpoint.xs?'black':'white'" class="button" @click="shiftLeft()">
+                    <v-icon large>mdi-chevron-left</v-icon>
+                </v-btn>
+            </v-col>
+            <v-col cols="10" sm="10" md="10" lg="10" class="cards-wrapper">
+                <ul class="cards__container">
+                    <li v-for="diary in diarys" :key="diary.id" class="box" :class="diary.hide">
+                        <diary :title="diary.title" w="12rem" h="20rem" />
+                    </li>
+                </ul>
+            </v-col>
+            <v-col cols="1" sm="1" md="1" lg="1">
+                <v-btn icon :color="$vuetify.breakpoint.xs?'black':'white'" class="button" @click="shiftRight()">
+                    <v-icon large>mdi-chevron-right</v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -66,7 +71,22 @@ export default {
           ]
       }
   },
+  beforeDestroy () {
+    if (typeof window === 'undefined') return
+
+    window.removeEventListener('resize', this.onResize, { passive: true })
+  },
+  mounted () {
+    // console.log(this.$vuetify.breakpoint.width)
+    this.onResize()
+
+    window.addEventListener('resize', this.onResize, { passive: true })
+  },
   methods: {
+    onResize () {
+        this.isMobile = window.innerWidth < 600
+        if(this.isMobile)console.log("mobile")
+    },
     shiftLeft: function() {
     //   console.log("prev")
         const boxes = document.querySelectorAll(".box");

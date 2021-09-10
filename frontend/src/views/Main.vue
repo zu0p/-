@@ -1,18 +1,5 @@
 <template>
   <v-app>
-    <!-- <main-header />
-    <main-navbar />
-    <v-content>
-        <div class="diary-container">
-            <diary />
-            <diary />
-            <diary />
-            
-        </div>
-        
-    </v-content>
-    <main-footer /> -->
-    
     <v-container>
         <!-- header -->
         <v-row>
@@ -25,37 +12,20 @@
                 <v-row>
                     <v-container>
                         <v-row>
-                            <v-col cols="0" sm="2" md="2" lg="2">
-                            </v-col>
-                            <v-col cols="12" sm="8" md="8" lg="8">
-                                <!-- <diary /> -->
-                                <!-- <v-slide-group
-                                    class="pa-4"
-                                    center-active
-                                    show-arrows
-                                    id="slider"
-                                    >
-                                    <v-slide-item
-                                        v-for="n in 5"
-                                        :key="n"
-                                    >
-                                        <diary />
-                                    </v-slide-item>
-                                    </v-slide-group> -->
+                            <v-col cols="12" sm="12" md="12" lg="12">
                                 <slider />
-                            </v-col>
-                            <v-col cols="0" sm="2" md="2" lg="2">
                             </v-col>
                         </v-row>
                     </v-container>
                 </v-row>
-                <v-row>
+                <!-- <v-row>
                     <v-flex>
                         <div>D</div>
                     </v-flex>
-                </v-row>
+                </v-row> -->
             </v-container>
         </v-row>
+        
         <v-row>
             <main-footer />
         </v-row>
@@ -64,25 +34,14 @@
 </template>
 
 <script>
-import MainNavbar from '@/components/main/MainNavbar.vue'
+// import MainNavbar from '@/components/main/MainNavbar.vue'
 import MainHeader from '../components/main/MainHeader.vue'
 import MainFooter from '../components/main/MainFooter.vue'
-import Diary from '../components/main/Diary.vue'
 import {reactive} from 'vue'
 import Slider from '../components/main/Slider.vue'
 
 export default {
-  components: { MainNavbar, MainHeader, MainFooter, Diary, Slider },
-  setup(){
-    const state = reactive({
-        diarys:[
-            {id:1},
-            {id:2},
-            {id:3}
-        ]
-    })
-    return {state}
-  }
+  components: { MainHeader, MainFooter, Slider },
 }
 </script>
 
