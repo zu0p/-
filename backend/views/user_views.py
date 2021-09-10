@@ -14,3 +14,8 @@ user_router = APIRouter()
 def sign_up(user_data: user_schemas.UserCreate, db: Session = Depends(get_db)):
     new_user = user_crud.create_user(db, user_data)
     return new_user
+
+@user_router.post("/login")
+def login(login_data: user_schemas.UserLoginReq):
+    print(login_data)
+    return {"access_token": login_data.userId, "token_type": login_data.userPwd}
