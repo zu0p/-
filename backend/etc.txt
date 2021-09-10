@@ -37,5 +37,3 @@ docker run -d \
 -v /usr/local/bin/docker-compose:/usr/local/bin/docker-compose \ 
 -u root jenkins/jenkins
 
-
-
