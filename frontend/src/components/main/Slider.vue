@@ -1,0 +1,374 @@
+<template>
+    <div class="slider">
+    <v-btn icon color="white" class="button" @click="shiftLeft()">
+        <v-icon large>mdi-chevron-left</v-icon>
+    </v-btn>
+    <div class="cards-wrapper">
+        <ul class="cards__container">
+            <li v-for="diary in diarys" :key="diary.id" class="box" :class="diary.hide">
+                <!-- {{diary.title}} -->
+                <diary :title="diary.title" w="12rem" h="20rem" />
+            </li>
+        </ul>
+    </div>
+    <v-btn icon color="white" class="button" @click="shiftRight()">
+        <v-icon large>mdi-chevron-right</v-icon>
+    </v-btn>
+    </div>
+</template>
+
+<script>
+import Diary from './Diary.vue'
+import { mdiChevronLeft,mdiChevronRight } from '@mdi/js';
+
+export default {
+  components: { 
+    Diary
+  },
+  data(){
+      return{
+          diarys:[
+            {
+                id: 0,
+                title: "my diary",
+                hied: ''
+            },
+            {
+                id:1,
+                title: "happy",
+                hied: ''
+            },
+            {
+                id:2,
+                title: "emotion",
+                hied: ''
+            },
+            {
+                id:3,
+                title: "today",
+                hied: ''
+            },
+            {
+                id:4,
+                title: "hoi",
+                hied: ''
+            },
+            {
+                id:5,
+                title: "shiny",
+                hide: 'box--hide'
+            },
+            {
+                id:6,
+                title: "cute",
+                hide: 'box--hide'
+            }
+          ]
+      }
+  },
+  methods: {
+    shiftLeft: function() {
+    //   console.log("prev")
+        const boxes = document.querySelectorAll(".box");
+        const tmpNode = boxes[0];
+        boxes[0].className = "box move-out-from-left";
+
+        setTimeout(function() {
+            if (boxes.length > 5) {
+                tmpNode.classList.add("box--hide");
+                boxes[5].className = "box move-to-position5-from-left";
+            }
+            boxes[1].className = "box move-to-position1-from-left";
+            boxes[2].className = "box move-to-position2-from-left";
+            boxes[3].className = "box move-to-position3-from-left";
+            boxes[4].className = "box move-to-position4-from-left";
+            boxes[0].remove();
+
+            document.querySelector(".cards__container").appendChild(tmpNode);
+
+        }, 500);
+    },
+    shiftRight: function(){
+        // console.log('next')
+        const boxes = document.querySelectorAll(".box");
+        boxes[4].className = "box move-out-from-right";
+        setTimeout(function() {
+            const noOfCards = boxes.length;
+            if (noOfCards > 4) {
+                boxes[4].className = "box box--hide";
+            }
+
+            const tmpNode = boxes[noOfCards - 1];
+            tmpNode.classList.remove("box--hide");
+            boxes[noOfCards - 1].remove();
+            let parentObj = document.querySelector(".cards__container");
+            parentObj.insertBefore(tmpNode, parentObj.firstChild);
+            tmpNode.className = "box move-to-position1-from-right";
+            boxes[0].className = "box move-to-position2-from-right";
+            boxes[1].className = "box move-to-position3-from-right";
+            boxes[2].className = "box move-to-position4-from-right";
+            boxes[3].className = "box move-to-position5-from-right";
+        }, 500);
+    }
+  }
+}
+</script>
+
+<style>
+.slider {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.button {
+    margin-left: 0 3%;
+    width: 2rem;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.button--inactive {
+    opacity: 0.2;
+}
+
+.button img {
+    width: 60%;
+}
+
+.cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cards__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25rem;
+}
+
+.box {
+/*     margin: -1.5rem; */
+    width: 12rem;
+    height: 20rem;
+    box-shadow: 0px 0px 2rem 0px #888888;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    /* transition: 1s all; */
+}
+
+.box:nth-child(2n) {
+    transform: scale(0.85);
+    z-index: -1;
+}
+
+.box:nth-child(2) {
+  left: 5%;
+}
+
+.box:nth-child(4) {
+  left: -5%;
+}
+
+.box:nth-child(4n + 1) {
+    transform: scale(0.75);
+    z-index: -2;
+}
+
+.box:nth-child(1) {
+  left: 15%;
+}
+
+.box:nth-child(5) {
+  left: -15%;
+}
+
+.card__text-content {
+    text-align: center;
+    width: 75%;
+}
+
+.card__title {
+    padding: 1rem;
+}
+
+.box--hide {
+    display: none;
+}
+
+.move-out-from-left {
+    animation: moveOutLeft 0.5s ease-in-out;
+}
+
+.move-out-from-right {
+    animation: moveOutRight 0.5s ease-in-out;
+}
+
+.move-to-position5-from-left {
+    animation: moveToP5Left 0.5s ease-in-out;
+}
+
+.move-to-position4-from-left {
+    animation: moveToP4Left 0.5s ease-in-out;
+}
+
+.move-to-position3-from-left {
+    animation: moveToP3Left 0.5s ease-in-out;
+}
+
+.move-to-position2-from-left {
+    animation: moveToP2Left 0.5s ease-in-out;
+}
+
+
+.move-to-position1-from-left{
+    animation: moveToP1Left 0.5s ease-in-out;
+}
+
+.move-to-position5-from-right{
+    animation: moveToP5Right 0.5s ease-in-out;
+}
+.move-to-position4-from-right{
+    animation: moveToP4Right 0.5s ease-in-out;
+}
+.move-to-position3-from-right{
+    animation: moveToP3Right 0.5s ease-in-out;
+}
+.move-to-position2-from-right{
+    animation: moveToP2Right 0.5s ease-in-out;
+}
+.move-to-position1-from-right{
+    animation: moveToP1Right 0.5s ease-in-out;
+}
+
+@keyframes moveOutLeft {
+    0% {
+        transform: scale(0.75) translateX(0%);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.5) translateX(-150%);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0.25) translateX(0%);
+        opacity: 0;
+    }
+}
+
+@keyframes moveOutRight {
+    0% {
+        transform: scale(0.75) translateX(0%);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.5) translateX(150%);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0.25) translateX(0%);
+        opacity: 0;
+    }
+}
+
+
+@keyframes moveToP5Left {
+    from {
+        transform: scale(0.75) translateX(100%);
+    }
+    to {
+        transform: scale(0.75) translateX(0);
+    }
+}
+
+@keyframes moveToP4Left {
+    from {
+        transform: scale(0.75) translateX(100%);
+    }
+    to {
+        transform: scale(0.85) translateX(0);
+    }
+}
+
+@keyframes moveToP3Left {
+    from {
+        transform: scale(0.85) translateX(100%);
+    }
+    to {
+        transform: scale(1) translateX(0);
+    }
+}
+
+@keyframes moveToP2Left {
+    from {
+        transform: scale(1) translateX(100%);
+    }
+    to {
+        transform: scale(0.85) translateX(0);
+    }
+}
+
+@keyframes moveToP1Left {
+    from {
+        transform: scale(0.85) translateX(100%);
+    }
+    to {
+        transform: scale(0.75) translateX(0);
+    }
+}
+
+
+@keyframes moveToP1Right {
+    from {
+        transform: scale(0.75) translateX(-100%);
+    }
+    to {
+        transform: scale(0.75) translateX(0);
+    }
+}
+
+@keyframes moveToP2Right {
+    from {
+        transform: scale(0.75) translateX(-100%);
+    }
+    to {
+        transform: scale(0.85) translateX(0);
+    }
+}
+
+@keyframes moveToP3Right {
+    from {
+        transform: scale(0.85) translateX(-100%);
+    }
+    to {
+        transform: scale(1) translateX(0);
+    }
+}
+
+@keyframes moveToP4Right {
+    from {
+        transform: scale(1) translateX(-100%);
+    }
+    to {
+        transform: scale(0.85) translateX(0);
+    }
+}
+
+@keyframes moveToP5Right {
+    from {
+        transform: scale(0.85) translateX(-100%);
+    }
+    to {
+        transform: scale(0.75) translateX(0);
+    }
+}
+
+</style>

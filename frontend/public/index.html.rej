@@ -1,0 +1,12 @@
+diff a/frontend/public/index.html b/frontend/public/index.html	(rejected hunks)
+@@ -14,6 +14,10 @@
+       rel="stylesheet"
+       href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+     />
++    <link 
++      rel="stylesheet" 
++      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
++    />
+     <script
+       type="text/javascript"
+       src="//dapi.kakao.com/v2/maps/sdk.js?appkey=82cb5ace470f2e55b87cc99afd685754&libraries=services"

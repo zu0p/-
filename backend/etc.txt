@@ -1,0 +1,41 @@
+<ubuntu 20.04 docker install>
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+
+<mysql docker>
+- pull > docker pull mysql
+- container > docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<password> -d -p 3306:3306 mysql:latest
+- connect > docker exec -it mysql-container bash
+          > use mysql;
+            CREATE USER 'test'@'%' IDENTIFIED BY 'password';
+            GRANT ALL PRIVILEGES ON *.* TO 'test'@'%';
+            FLUSH PRIVILEGES;
+            exit
+
+<docker-hub image upload 확인>
+docker-compose build fastapi
+sudo docker login
+sudo docker tag <빌드로 생성된 이미지명>:latest <docker_hub_id>/fastapi:latest
+    > sudo docker tag fastapi:latest lsyeup1206/fastapi:latest
+sudo docker push <docker_hub_id>/flask:latest
+    > sudo docker push lsyeup1206/fastapi:latest
+
+<jenkins image pull>
+sudo docker pull jenkins/jenkins:lts
+pwd: 31cb7a40da3f44a5992b64b7c1a6f1d4
+docker run -d \ 
+--name my_jenkins \ 
+-p 8080:8080 \ 
+-v /jenkins:/var/jenkins_home \ 
+-v /var/run/docker.sock:/var/run/docker.sock \ 
+-v $(which docker):/usr/bin/docker \ 
+-v /usr/local/bin/docker-compose:/usr/local/bin/docker-compose \ 
+-u root jenkins/jenkins
+
+
+

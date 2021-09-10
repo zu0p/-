@@ -1,0 +1,7 @@
+version: '3' 
+services: 
+    fastapi: 
+        build: ./backend 
+        image: fastapi:latest
+        ports: 
+            - "80:80"
