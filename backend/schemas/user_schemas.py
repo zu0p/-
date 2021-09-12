@@ -53,3 +53,6 @@ class UserUpdate(BaseModel):
     userEmail: str
     userNick: str
     userPhone: str
+
+    class Config:
+        orm_mode = True

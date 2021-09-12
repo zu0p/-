@@ -21,7 +21,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 # openssl rand -hex 32
 SECRET_KEY = "a6480a82721880f4cebcd01f4963f65e126fdf0c15292b3817cac34c7198bad5"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 3000
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -82,7 +82,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 
 # ============================ user CRUD ============================
-
+### C
 def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db_user = user_model.UserInfo(
         userId = user_data.userId,
@@ -98,16 +98,18 @@ def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db.refresh(db_user)
     return db_user
 
-def update_user(db: SessionLocal, user_data: user_schemas.UserUpdate, old_user):
-    db_user = user_model.UserInfo(
-        userId = old_user.userId,
-        userPwd = old_user.userPwd,
-        userName = user_data.userName,
-        userEmail = user_data.userEmail,
-        userNick = user_data.userNick,
-        userPhone = user_data.userPhone,
-        userImage = old_user.userImage
-    )
+### U
+def update_user(db: SessionLocal, user_data: user_schemas.UserUpdate, old_user:user_schemas.UserInDB):
+    old_user.userName = user_data.userName
+    old_user.userEmail = user_data.userEmail
+    old_user.userNick = user_data.userNick
+    old_user.userPhone = user_data.userPhone
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(old_user)
+    return old_user
+
+### D
+def delete_user(db: SessionLocal, user_data: user_schemas.UserInDB):
+    db.delete(user_data)
+    db.commit()
+    return

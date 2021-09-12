@@ -45,10 +45,14 @@ async def read_user_one(current_user: user_schemas.UserInDB = Depends(user_crud.
     return current_user
 
 ### U
-@user_router.put("/update", response_model=user_schemas.UserUpdate)
-async def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db)):
-    old_user = user_crud.get_current_user
+@user_router.put("/update", response_model=user_schemas.UserInDB)
+def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db), 
+                        old_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     updated_user = user_crud.update_user(db, user_data, old_user)
     return updated_user
 
 ### D
+@user_router.delete("/delete")
+def update_user(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user), db: Session = Depends(get_db)):
+    user_crud.delete_user(db, current_user)
+    return {"state": "success"}
