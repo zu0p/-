@@ -1,5 +1,5 @@
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 from pydantic import EmailStr
@@ -9,8 +9,16 @@ class UserLoginReq(BaseModel):
     userId : str
     userPwd : str
 
+#================ Token #================
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
 
 
+#================ User #================
 class UserBase(BaseModel):
     userId : str
     userName : str
@@ -20,7 +28,7 @@ class UserBase(BaseModel):
     userImage : str
 
 
-class UserCreate(UserBase):
+class UserInDB(UserBase):
     userPwd : str
     
     class Config:
