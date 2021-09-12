@@ -4,21 +4,27 @@ from typing import List, Optional
 from pydantic import BaseModel
 from pydantic import EmailStr
 
-# Login
-class UserLoginReq(BaseModel):
-    userId : str
-    userPwd : str
+# ================ Token ================
 
-#================ Token #================
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
-    userName: Optional[str] = None
+    userId: Optional[str] = None
 
 
-#================ User #================
+
+# ================ Login ================
+
+class UserLoginForm(BaseModel):
+    userId: str
+    userPwd: str
+
+
+
+# ================ User ================
+
 class UserBase(BaseModel):
     userId : str
     userName : str
@@ -42,3 +48,11 @@ class User(UserBase):
                         # even if it is not a dict, but an ORM model (or any other arbitrary object with attributes).
                         # id = data["id"] 뿐 아니라 id = data.id로도 가능해짐!
 
+class UserUpdate(BaseModel):
+    userName: str
+    userEmail: str
+    userNick: str
+    userPhone: str
+
+    class Config:
+        orm_mode = True
