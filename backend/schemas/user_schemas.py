@@ -1,9 +1,24 @@
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 from pydantic import EmailStr
 
+# Login
+class UserLoginReq(BaseModel):
+    userId : str
+    userPwd : str
+
+#================ Token #================
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    userName: Optional[str] = None
+
+
+#================ User #================
 class UserBase(BaseModel):
     userId : str
     userName : str
@@ -13,7 +28,7 @@ class UserBase(BaseModel):
     userImage : str
 
 
-class UserCreate(UserBase):
+class UserInDB(UserBase):
     userPwd : str
     
     class Config:
@@ -26,3 +41,4 @@ class User(UserBase):
         orm_mode = True # Pydantic's orm_mode will tell the Pydantic model to read the data 
                         # even if it is not a dict, but an ORM model (or any other arbitrary object with attributes).
                         # id = data["id"] 뿐 아니라 id = data.id로도 가능해짐!
+
