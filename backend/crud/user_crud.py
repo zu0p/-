@@ -1,7 +1,8 @@
 
 
 from typing import Optional
-from backend.schemas.user_schemas import UserInDB
+from schemas.user_schemas import TokenData, UserInDB
+from fastapi import APIRouter, HTTPException, Depends, status
 from database import SessionLocal
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -47,13 +48,41 @@ def get_user(db: SessionLocal, userId: str):
     return db.query(user_model.UserInfo).filter(user_model.UserInfo.userId == userId).first()
 
 # 유저 확인
-def authenticate_user(SessionLocal, username: str, password: str):
-    user = get_user(SessionLocal, username)
+def authenticate_user(db: SessionLocal, userId: str, userPwd: str):
+    user = get_user(db, userId)
+    print(user.userId, user.userPwd)
+
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(userPwd, user.userPwd):
         return False
     return user
+
+# 현재 유저 반환
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    user = get_user(SessionLocal, username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user
+
+# 활동중인 유저 확인 
+async def get_current_active_user(current_user: user_schemas.UserInDB = Depends(get_current_user)):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
 
 # ============================ user CRUD ============================
@@ -61,7 +90,7 @@ def authenticate_user(SessionLocal, username: str, password: str):
 def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db_user = user_model.UserInfo(
         userId = user_data.userId,
-        userPwd = user_data.userPwd,
+        userPwd = get_password_hash(user_data.userPwd),
         userName = user_data.userName,
         userEmail = user_data.userEmail,
         userNick = user_data.userNick,

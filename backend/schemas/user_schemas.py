@@ -4,12 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from pydantic import EmailStr
 
-# Login
-class UserLoginReq(BaseModel):
-    userId : str
-    userPwd : str
-
-#================ Token #================
+# ================ Token ================
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -17,8 +12,12 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     userName: Optional[str] = None
 
+# ================ Login ================
+class UserLoginForm(BaseModel):
+    userId: str
+    userPwd: str
 
-#================ User #================
+# ================ User ================
 class UserBase(BaseModel):
     userId : str
     userName : str
