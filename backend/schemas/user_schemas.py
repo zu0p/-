@@ -48,3 +48,8 @@ class User(UserBase):
                         # even if it is not a dict, but an ORM model (or any other arbitrary object with attributes).
                         # id = data["id"] 뿐 아니라 id = data.id로도 가능해짐!
 
+class UserUpdate(BaseModel):
+    userName: str
+    userEmail: str
+    userNick: str
+    userPhone: str
