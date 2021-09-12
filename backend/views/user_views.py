@@ -35,15 +35,20 @@ async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Sess
 
 ### C
 @user_router.post("/signup", response_model=user_schemas.UserInDB)
-def sign_up(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
+async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
     new_user = user_crud.create_user(db, user_data)
     return new_user
 
 ### R
 @user_router.get("/me", response_model=user_schemas.UserInDB)
-async def read_users_me(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+async def read_user_one(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     return current_user
 
 ### U
+@user_router.put("/update", response_model=user_schemas.UserUpdate)
+async def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db)):
+    old_user = user_crud.get_current_user
+    updated_user = user_crud.update_user(db, user_data, old_user)
+    return updated_user
 
 ### D

@@ -97,3 +97,17 @@ def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def update_user(db: SessionLocal, user_data: user_schemas.UserUpdate, old_user):
+    db_user = user_model.UserInfo(
+        userId = old_user.userId,
+        userPwd = old_user.userPwd,
+        userName = user_data.userName,
+        userEmail = user_data.userEmail,
+        userNick = user_data.userNick,
+        userPhone = user_data.userPhone,
+        userImage = old_user.userImage
+    )
+    db.commit()
+    db.refresh(db_user)
+    return db_user
