@@ -1,5 +1,6 @@
 
 
+from database import get_db
 from typing import Optional
 from schemas.user_schemas import TokenData, UserInDB
 from fastapi import APIRouter, HTTPException, Depends, status
@@ -11,6 +12,8 @@ from schemas import user_schemas
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+
 
 # ============================ user Auth ============================
 
@@ -50,8 +53,6 @@ def get_user(db: SessionLocal, userId: str):
 # 유저 확인
 def authenticate_user(db: SessionLocal, userId: str, userPwd: str):
     user = get_user(db, userId)
-    print(user.userId, user.userPwd)
-
     if not user:
         return False
     if not verify_password(userPwd, user.userPwd):
@@ -59,7 +60,7 @@ def authenticate_user(db: SessionLocal, userId: str, userPwd: str):
     return user
 
 # 현재 유저 반환
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -67,22 +68,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        userId: str = payload.get("sub")
+        if userId is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(userId=userId)
     except JWTError:
         raise credentials_exception
-    user = get_user(SessionLocal, username=token_data.username)
+    user = get_user(db, userId=token_data.userId)
     if user is None:
         raise credentials_exception
     return user
 
-# 활동중인 유저 확인 
-async def get_current_active_user(current_user: user_schemas.UserInDB = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
 
 
 # ============================ user CRUD ============================

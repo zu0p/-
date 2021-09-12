@@ -5,19 +5,26 @@ from pydantic import BaseModel
 from pydantic import EmailStr
 
 # ================ Token ================
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
-    userName: Optional[str] = None
+    userId: Optional[str] = None
+
+
 
 # ================ Login ================
+
 class UserLoginForm(BaseModel):
     userId: str
     userPwd: str
 
+
+
 # ================ User ================
+
 class UserBase(BaseModel):
     userId : str
     userName : str

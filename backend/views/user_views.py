@@ -12,6 +12,7 @@ from crud import user_crud # crud
 user_router = APIRouter()
 
 # ================================== user Auth ==================================
+
 @user_router.post("/login", response_model=user_schemas.Token)
 async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Session = Depends(get_db)): # DI
     user = user_crud.authenticate_user(db, form_data.userId, form_data.userPwd)
@@ -28,11 +29,14 @@ async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Sess
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@user_router.get("/users/me/", response_model=user_schemas.UserInDB)
-async def read_users_me(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_active_user)):
+@user_router.get("/me", response_model=user_schemas.UserInDB)
+async def read_users_me(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     return current_user
 
+
+
 # ================================== user CRUD ==================================
+
 @user_router.post("/signup", response_model=user_schemas.UserInDB)
 def sign_up(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
     new_user = user_crud.create_user(db, user_data)
