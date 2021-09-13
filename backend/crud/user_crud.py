@@ -17,6 +17,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 # ============================ user Auth ============================
 
+# https://fastapi.tiangolo.com/ko/tutorial/security/oauth2-jwt/
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "a6480a82721880f4cebcd01f4963f65e126fdf0c15292b3817cac34c7198bad5"
@@ -80,8 +81,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
     return user
 
 
-
 # ============================ user CRUD ============================
+
 ### C
 def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db_user = user_model.UserInfo(
@@ -113,3 +114,22 @@ def delete_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db.delete(user_data)
     db.commit()
     return
+
+# ============================ user ETC ============================
+
+# 아이디 중복체크
+def duplicate_user(db: SessionLocal, user_data: user_schemas.checkDuplication):
+    user = get_user(db, user_data.inputId)
+    if not user:
+        return False
+    return True
+
+# 비밀번호 변경
+def change_password(db: SessionLocal, current_user: user_schemas.UserInDB, 
+                        newPassword: user_schemas.changePassword):
+    current_user.userPwd = get_password_hash(newPassword)
+    db.commit()
+    db.refresh(current_user)
+    return
+
+# 프로필 이미지 변경
