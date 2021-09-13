@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from database import get_db
@@ -13,7 +14,7 @@ user_router = APIRouter()
 
 # ================================== user Auth ==================================
 
-@user_router.post("/login", response_model=user_schemas.Token)
+@user_router.post("/login", response_model=user_schemas.Token, )
 async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Session = Depends(get_db)): # DI
     user = user_crud.authenticate_user(db, form_data.userId, form_data.userPwd)
     print(user)
