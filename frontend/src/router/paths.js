@@ -1,8 +1,13 @@
 export default [
   {
-    path: "/",
+    path: "/main",
     view: "Main",
     name: "Main"
+  },
+  {
+    path: "/",
+    view: "Login",
+    name: "Login"
   },
   {
     path: "/diary/:title",

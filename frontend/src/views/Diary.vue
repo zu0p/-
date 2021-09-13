@@ -7,7 +7,7 @@
 <script>
 export default {
   create(){
-    // console.log(this.$router.param.title)
+    console.log(this.$router.param.title)
   }
 }
 </script>

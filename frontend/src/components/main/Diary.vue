@@ -40,9 +40,8 @@ export default {
         clickDiary(){
             //해당 title의 diary page로 이동
             console.log("click!"+this.diaryTitle)
-            // this.$router.push({name: 'Diary', path: `/diary/${this.diaryTitle}`})
 
-            this.$router.push({name: 'Diary', title: this.diaryTitle})
+            this.$router.push({name:'Diary', params:{title: this.diaryTitle}})
         }
     }
 }
