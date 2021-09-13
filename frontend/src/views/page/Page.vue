@@ -1,21 +1,22 @@
 <template>
   <v-container fullscreen>
+    <div class="overlay"></div>
+    <div class="bg"></div>
     <!-- <v-row> -->
       <v-col id="diary-menu">
         <diary-menu />
       </v-col>
     <!-- </v-row> -->
     <v-row fullscreen class="diary-contents">
-      <before-create v-if="pages.length==0" />
+      <router-view />
     </v-row>
   </v-container>
 </template>
 
 <script>
 import DiaryMenu from '@/components/diary/DiaryMenu.vue'
-import BeforeCreate from '../components/diary/BeforeCreate.vue'
 export default {
-  name:'Diary',
+  name:'Page',
   data(){
     return{
       pages:[]
@@ -23,21 +24,36 @@ export default {
   },
   components:{
     DiaryMenu,
-    BeforeCreate
   },
-  create(){
-    console.log(this.$router.param.title)
-  }
 }
 </script>
 
 <style>
+.bg{
+  background-image: url('../../images/night.jpg');
+  min-width: 100%;
+  height: 100vh;
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 0;
+}
+.overlay{
+  background-color: black;
+  opacity: 0.7;
+  min-width: 100%;
+  height: 100vh;
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 1;
+}
 #diary-menu{
   position: relative;
   z-index: 3;
 }
 .diary-contents{
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 </style>

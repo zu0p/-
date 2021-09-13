@@ -41,7 +41,10 @@ export default {
             //해당 title의 diary page로 이동
             console.log("click!"+this.diaryTitle)
 
-            this.$router.push({name:'Diary', params:{title: this.diaryTitle}})
+            // 선택한 diary에 page가 하나도 없으면 
+            // => beforeCreate(path: /diary/:id/first)로 라우팅
+            this.$router.push({path:`pages/${this.diaryTitle}/first`})
+            
         }
     }
 }

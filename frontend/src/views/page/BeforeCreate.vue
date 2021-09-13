@@ -1,9 +1,6 @@
 <template>
   <v-container>
-    <div class="overlay"></div>
-    <div class="bg"></div>
     <v-row >
-      <!-- <img id="bg" src="@/images/night.jpg" /> -->
       <v-row align="center" class="before-contents">
         <v-col id="guide" cols="10" sm="10" md="10" lg="10">
           <div v-if="!$vuetify.breakpoint.xs">
@@ -48,26 +45,6 @@ export default {
 </script>
 
 <style>
-
-.bg{
-  background-image: url('../../images/night.jpg');
-  min-width: 100%;
-  height: 100vh;
-  position: fixed;
-  top:0;
-  left: 0;
-  z-index: -1;
-}
-.overlay{
-  background-color: black;
-  opacity: 0.7;
-  min-width: 100%;
-  height: 100vh;
-  position: fixed;
-  top:0;
-  left: 0;
-  z-index: 0;
-}
 #guide{
   color: white;
   text-align: right;
