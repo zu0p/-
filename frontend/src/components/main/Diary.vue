@@ -6,7 +6,7 @@
         :width="w"
         @click="clickDiary"
     >
-        <v-container fluid>
+        <v-container fluid class="diary-wrapper">
             <v-row class="card-contents">
                 <v-col cols="1" sm="1" md="1" lg="1" id="diary-band" class="diary">
                 </v-col>
@@ -48,6 +48,10 @@ export default {
 </script>
 
 <style>
+.diary-wrapper{
+    margin: 0;
+    padding: 0;
+}
 .diary-card{
     position: relative;
     z-index: 2;
