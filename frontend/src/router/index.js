@@ -39,6 +39,11 @@ const router = new Router({
           path:"first",
           name:"BeforeCreate",
           component: resolve => import(`@/views/page/BeforeCreate.vue`).then(resolve),
+        },
+        {
+          path:"create",
+          name:"CreatePage",
+          component: resolve => import(`@/views/page/CreatePage.vue`).then(resolve),
         }
       ]
     },

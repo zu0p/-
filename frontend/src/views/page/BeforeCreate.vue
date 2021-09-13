@@ -38,7 +38,9 @@ export default {
   name:'BeforeCreate',
   methods:{
     createDiary(){
-      
+      var url = document.location.href
+      // console.log(url)
+      this.$router.push({name:'CreatePage'})
     }
   }
 }

@@ -2,11 +2,11 @@
   <v-container fullscreen>
     <div class="overlay"></div>
     <div class="bg"></div>
-    <!-- <v-row> -->
-      <v-col id="diary-menu">
-        <diary-menu />
-      </v-col>
-    <!-- </v-row> -->
+    
+    <div id="diary-menu">
+      <diary-menu />
+    </div>
+    
     <v-row fullscreen class="diary-contents">
       <router-view />
     </v-row>
