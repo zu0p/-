@@ -13,15 +13,24 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     userId: Optional[str] = None
 
+# ================ ETC ================
 
-
-# ================ Login ================
-
+# Login
 class UserLoginForm(BaseModel):
     userId: str
     userPwd: str
 
+# duplication
+class checkDuplication(BaseModel):
+    inputId: str
 
+# change-pw
+class changePassword(BaseModel):
+    modifyPwd: str
+
+# change-profile
+class changeProfile(BaseModel):
+    modifyImage: str
 
 # ================ User ================
 
@@ -56,3 +65,4 @@ class UserUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
