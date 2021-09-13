@@ -59,23 +59,23 @@ def update_user(current_user: user_schemas.UserInDB = Depends(user_crud.get_curr
 
 # ================================== user ETC ==================================
 
-# 아이디 중복확인
+### 아이디 중복확인
 @user_router.post("/checkDuplication")
 def duplication_user(inputUser: user_schemas.checkDuplication, db: Session = Depends(get_db)):
     if user_crud.duplicate_user(db, inputUser):
         return {"state": "yes"} 
     return {"state": "no"} 
 
-# 비밀번호 변경
-@user_router.post("/change-password")
+### 비밀번호 변경
+@user_router.put("/change-password")
 def change_password(newPassword: user_schemas.changePassword, db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     user_crud.change_password(db, current_user, newPassword)
     return {"state": "success"}
 
-# 아이디 중복확인
-@user_router.post("/checkDuplication")
-def duplication_user(inputUser: user_schemas.checkDuplication, db: Session = Depends(get_db)):
-    if user_crud.duplicate_user(db, inputUser):
-        return {"state": "yes"} 
-    return {"state": "no"} 
+### 프로필 이미지 변경
+@user_router.put("/change-image")
+def change_image(newImageUrl: user_schemas.changeProfile, db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    user_crud.change_image(db, current_user, newImageUrl)
+    return {"state": "success"}

@@ -127,9 +127,15 @@ def duplicate_user(db: SessionLocal, user_data: user_schemas.checkDuplication):
 # 비밀번호 변경
 def change_password(db: SessionLocal, current_user: user_schemas.UserInDB, 
                         newPassword: user_schemas.changePassword):
-    current_user.userPwd = get_password_hash(newPassword)
+    current_user.userPwd = get_password_hash(newPassword.modifyPwd)
     db.commit()
     db.refresh(current_user)
     return
 
 # 프로필 이미지 변경
+def change_image(db: SessionLocal, current_user: user_schemas.UserInDB, 
+                        newImageUrl: user_schemas.changeProfile):
+    current_user.userImage = newImageUrl.modifyImage
+    db.commit()
+    db.refresh(current_user)
+    return
