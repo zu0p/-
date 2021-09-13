@@ -7,6 +7,7 @@ from scipy.sparse.sputils import matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import normalize
+import openpyxl
 import numpy as np
 import time
 
@@ -25,7 +26,8 @@ def main():
     contents = df['내용']
 
     dic = {}
-    for idx in range(0, 20):
+
+    for idx in range(len(contents)):
         sentences = get_sentences(contents[idx])
         nouns = get_nouns(sentences, stopwords)
         keywords = get_keywords(nouns, 5)
@@ -36,9 +38,18 @@ def main():
             else:
                 dic[keyword] = 1
 
-    print(time.time() - start)
-    dic = sorted(dic.items(), reverse=True, key=lambda item: item[1])
-    print(dic)
+    sorted_dic = sorted(dic.items(), reverse=True, key=lambda item: item[1])
+    # 엑셀 파일로 저장
+    excel_file = openpyxl.Workbook()
+    excel_sheet = excel_file.active
+    excel_sheet.append(["키워드", "빈도수"])
+
+    for row in sorted_dic:
+        excel_sheet.append(row)
+
+    excel_file.save("keywords.xlsx")
+    excel_file.close()
+    print("수행 시간(초) : ", time.time() - start)
 
 
 def tf_idf(sentences):
