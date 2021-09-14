@@ -22,14 +22,25 @@ def main():
     df_stopwords = pd.read_excel(
         'C:/SSAFY/semester2/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
 
+    # nan을 None으로 변경
+    df = df.where(pd.notnull(df), None)
     stopwords = df_stopwords['형태'].tolist()
     contents = df['내용']
-
     dic = {}
 
+    # 문장별 키워드 추출
+    keywords = get_keywords(nouns, 5)
+
     for idx in range(len(contents)):
+        print(idx)
+        if(contents[idx] is None):
+            continue
+
+        # 글을 문장별로 구분
         sentences = get_sentences(contents[idx])
+        # 문장별 명사 추출
         nouns = get_nouns(sentences, stopwords)
+        # 문장별 키워드 추출
         keywords = get_keywords(nouns, 5)
 
         for keyword in keywords:
@@ -67,7 +78,8 @@ def tf_idf(sentences):
 
 def cv(sentences):
     # 텍스트를 토큰 매트릭스로 변환
-    cv = CountVectorizer()
+    #  token_pattern = r"(?u)\b\w+\b" 1개의 단어도 포함되도록
+    cv = CountVectorizer(token_pattern=r"(?u)\b\w+\b")
     cv_mat = normalize(cv.fit_transform(
         sentences).toarray().astype(float), axis=0)
 
@@ -122,7 +134,7 @@ def get_nouns(sentences, stopwords):
     for sentence in sentences:
         if sentence is not '':
             noun = [noun for noun in okt.nouns(str(sentence))
-                    if noun not in stopwords and len(noun) > 1]
+                    if noun not in stopwords]
             if len(noun) > 0:
                 nouns.append(' '.join(noun))
     return nouns
