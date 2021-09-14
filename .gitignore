@@ -140,6 +140,7 @@ cython_debug/
 # 크롤링 관련
 crawler/chromedriver.exe
 crawler/article.xlsx
+crawler/images/
 article.xlsx
 
 # ai 폴더 
