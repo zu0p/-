@@ -16,20 +16,21 @@ okt = Okt()
 
 
 def main():
+    extraction_from_article()
+
+
+def extraction_from_article():
     start = time.time()
     df = pd.read_excel(
         'C:/SSAFY/semester2/특화PJT/ai/article.xlsx', engine='openpyxl')
     df_stopwords = pd.read_excel(
         'C:/SSAFY/semester2/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
-
     # nan을 None으로 변경
     df = df.where(pd.notnull(df), None)
+
     stopwords = df_stopwords['형태'].tolist()
     contents = df['내용']
     dic = {}
-
-    # 문장별 키워드 추출
-    keywords = get_keywords(nouns, 5)
 
     for idx in range(len(contents)):
         print(idx)
@@ -40,6 +41,8 @@ def main():
         sentences = get_sentences(contents[idx])
         # 문장별 명사 추출
         nouns = get_nouns(sentences, stopwords)
+        if len(nouns) < 1:
+            continue
         # 문장별 키워드 추출
         keywords = get_keywords(nouns, 5)
 
@@ -50,6 +53,7 @@ def main():
                 dic[keyword] = 1
 
     sorted_dic = sorted(dic.items(), reverse=True, key=lambda item: item[1])
+
     # 엑셀 파일로 저장
     excel_file = openpyxl.Workbook()
     excel_sheet = excel_file.active
@@ -134,7 +138,7 @@ def get_nouns(sentences, stopwords):
     for sentence in sentences:
         if sentence is not '':
             noun = [noun for noun in okt.nouns(str(sentence))
-                    if noun not in stopwords]
+                    if noun not in stopwords and len(noun) > 1]
             if len(noun) > 0:
                 nouns.append(' '.join(noun))
     return nouns
