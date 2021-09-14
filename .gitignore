@@ -140,8 +140,11 @@ cython_debug/
 # 크롤링 관련
 crawler/chromedriver.exe
 crawler/article.xlsx
+crawler/images
 article.xlsx
 
 # ai 폴더 
 ai/article.xlsx
 ai/stop_words.xlsx
+
+J5D103T.pem
