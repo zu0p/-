@@ -44,6 +44,18 @@ const router = new Router({
           path:"create",
           name:"CreatePage",
           component: resolve => import(`@/views/page/CreatePage.vue`).then(resolve),
+          children:[
+            {
+              path:"imageSelect",
+              name:"ImageSelect",
+              component: resolve => import(`@/components/page/ImageSelectorItem.vue`).then(resolve),
+            }
+          ]
+        },
+        {
+          path:"preview",
+          name:"Preview",
+          component: resolve => import(`@/views/page/Preview.vue`).then(resolve),
         }
       ]
     },

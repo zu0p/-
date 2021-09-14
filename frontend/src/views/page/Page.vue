@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import DiaryMenu from '@/components/diary/DiaryMenu.vue'
+import DiaryMenu from '@/components/page/DiaryMenu.vue'
 export default {
   name:'Page',
   data(){
@@ -23,7 +23,7 @@ export default {
     }
   },
   components:{
-    DiaryMenu,
+    DiaryMenu
   },
 }
 </script>
@@ -40,7 +40,7 @@ export default {
 }
 .overlay{
   background-color: black;
-  opacity: 0.7;
+  opacity: 0.6;
   min-width: 100%;
   height: 100vh;
   position: fixed;
@@ -49,7 +49,9 @@ export default {
   z-index: 1;
 }
 #diary-menu{
-  position: relative;
+  position: fixed;
+  top: 20px;
+  left: 20px;
   z-index: 3;
 }
 .diary-contents{
