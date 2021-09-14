@@ -4,14 +4,13 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from urllib.request import urlopen
-import openpyxl
-import requests
-from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
-from urllib.parse import quote_plus
+import googletrans
 
 
 def image_crawling(keyword):
     driver = driver_init()
+    # 한글 -> 영어 번역
+    keyword = googletrans.Translator().translate(keyword, dest='en').text
 
     url = 'https://unsplash.com/s/photos/' + keyword
     # 페이지 로드를 위해 3초 대기
@@ -19,12 +18,11 @@ def image_crawling(keyword):
     driver.get(url)
 
     elem = driver.find_element_by_tag_name("body")
-    for i in range(10):
+    for i in range(5):
         elem.send_keys(Keys.PAGE_DOWN)
-        time.sleep(0.3)
+        time.sleep(0.4)
 
     images = driver.find_elements_by_class_name("oCCRx")
-    print(len(images))
     n = 1
     for image in images:
         img_urls = image.get_attribute('srcset')
@@ -58,7 +56,7 @@ def driver_init():
 
 
 def main():
-    image_crawling("mom")
+    image_crawling("더욱")
 
 
 if __name__ == '__main__':
