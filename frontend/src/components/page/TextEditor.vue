@@ -1,16 +1,5 @@
 <template>
   <v-container>
-    <!-- title -->
-    <!-- <v-row>
-      <v-text-field
-        v-model="title"
-        color="blue darken-2"
-        :rules="rules.title"
-        label="Title"
-        required
-      ></v-text-field>
-    </v-row> -->
-
     <!-- text editor -->
     <v-row>
       <form>
@@ -53,11 +42,31 @@
           </select> -->
         </div>
         <div class="content" name="content" contenteditable="true"></div>
-        <div style="text-align: right">
-          <v-btn depressed>
-            <v-icon color="pink">mdi-account-heart-outline</v-icon>
-            <span>감정분석</span>
+        <div style="text-align: right" id="keyword-btn">
+          <v-btn depressed @click="keywordButtonClick">
+            <v-icon color="pink">mdi-key-chain</v-icon>
+            <span>키워드 분석</span>
           </v-btn>
+        </div>
+        <div style="text-align: right" id="select-keyword">
+          <v-container fluid>
+            <v-row>
+              <v-col >
+                <v-checkbox v-for="i in keywords"
+                  v-model="checkbox"
+                  color="indigo"
+                  :label="i"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-btn icon depressed>
+                  <v-icon color="blue">mdi-check-bold</v-icon>
+                  <!-- <span>완료</span> -->
+                </v-btn>
+                {{checkbox}}
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
       </form>
     </v-row>
@@ -79,12 +88,19 @@ export default {
           v => !!v || '제목은 필수 입력사항입니다.'
         ]
       },
-      text:''
+      text:'',
+      checkbox:[],
+      keywords:[
+        'str1', 'str2', 'str3', 'str4', 'str5'
+      ]
     }
   },
   methods: {
     onUpdate (text) {
       this.text = text
+    },
+    keywordButtonClick(){
+
     }
   }
 }
@@ -92,7 +108,7 @@ export default {
 
 <style>
 .content{
-  height: 60vh;
+  height: 50vh;
   overflow: auto;
   border: 0.01rem solid gray;
   border-radius: 5px;
