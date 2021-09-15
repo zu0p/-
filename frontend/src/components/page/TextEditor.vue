@@ -48,22 +48,35 @@
             <span>키워드 분석</span>
           </v-btn>
         </div>
-        <div style="text-align: right" id="select-keyword">
+        <div style="text-align: right; display:none;" id="select-keyword">
           <v-container fluid>
             <v-row>
-              <v-col >
-                <v-checkbox v-for="i in keywords"
+              <div style="text-align:left; font-size:12px;">
+                <v-icon small>mdi-lightbulb-outline</v-icon>
+                <sapn > 키워드를 선택해주세요</sapn>
+              </div>
+            </v-row>
+            <v-row>
+              <v-col v-for="i in keywords" v-bind:key="i">
+                <v-checkbox 
                   v-model="checkbox"
-                  color="indigo"
+                  color="info"
                   :label="i"
+                  :value="i"
+                  :disabled="isDisable"
                 ></v-checkbox>
               </v-col>
+            </v-row>
+            <v-row>
               <v-col>
-                <v-btn icon depressed>
+                <v-btn 
+                  class="done-btn" 
+                  depressed 
+                  :disabled="isDisable"
+                  @click="selectKeywordButtonClick">
+                  <span>완료</span>
                   <v-icon color="blue">mdi-check-bold</v-icon>
-                  <!-- <span>완료</span> -->
                 </v-btn>
-                {{checkbox}}
               </v-col>
             </v-row>
           </v-container>
@@ -92,7 +105,8 @@ export default {
       checkbox:[],
       keywords:[
         'str1', 'str2', 'str3', 'str4', 'str5'
-      ]
+      ],
+      isDisable: false
     }
   },
   methods: {
@@ -100,7 +114,15 @@ export default {
       this.text = text
     },
     keywordButtonClick(){
-
+      // 1. 키워드 분석해서 가져온 값 keywords에 채워넣기
+      
+      // 2.
+      document.getElementById('keyword-btn').style.display='none'
+      document.getElementById('select-keyword').style.display='block'
+    },
+    selectKeywordButtonClick(){
+      this.isDisable = true
+      // select한 키워드들은 this.checkbox에 배열로 담겨있음
     }
   }
 }
@@ -113,5 +135,8 @@ export default {
   border: 0.01rem solid gray;
   border-radius: 5px;
   margin: 0 0 10px 0;
+}
+.done-btn > v-icon{
+ color: black;
 }
 </style>
