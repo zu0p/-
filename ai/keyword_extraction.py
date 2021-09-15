@@ -4,6 +4,7 @@ from konlpy.tag import Twitter
 from konlpy.tag import Okt
 from konlpy.tag import Hannanum
 from nltk.tokenize.punkt import PunktSentenceTokenizer
+from pandas.core.indexes.base import InvalidIndexError
 from scipy.sparse.sputils import matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -36,6 +37,7 @@ def extraction_from_article():
 
     for idx in range(len(contents)):
         print(idx)
+
         if(contents[idx] is None):
             continue
 
@@ -91,7 +93,7 @@ def cv(sentences):
 
     vocab = cv.vocabulary_
     idx_to_word = {vocab[word]: word for word in vocab}
-    graph_word = np.dot(cv_mat, cv_mat.T)
+    graph_word = np.dot(cv_mat.T, cv_mat)
 
     return idx_to_word, graph_word
 
@@ -105,7 +107,6 @@ def get_keywords(nouns, num):
     index = []
     for idx in sort_ranks[:num]:
         index.append(idx)
-
     for idx in index:
         keywords.append(idx_to_word[idx])
 
