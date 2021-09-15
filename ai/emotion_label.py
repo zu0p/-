@@ -33,6 +33,7 @@ def test3():
 def changeSentence():
     # write_data = pd.read_excel('article.xlsx')
     write_data = pd.read_excel('article.xlsx', engine='openpyxl')
+    write_data = write_data.where(pd.notnull(write_data), None)
     emotion_dir = pd.read_excel('emotion_directory.xlsx', engine='openpyxl')
     emotion_dir = emotion_dir.fillna(0)
 
@@ -44,9 +45,11 @@ def changeSentence():
     list_dir1 = dir1.values.tolist()
     # check = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     check = []
-    cnt =0
+    cnt = 0
     emotion = ['혐오', '기쁨', '슬픔', '중립', '기타', '분노', '흥미', '지루함', '놀람', '통증']
     for i in range(len(df1)):
+        if(df1.loc[i] is None):  # 공백시 보지 않음
+            continue
         cnt = cnt+1
         print(cnt)
         stop_list = ["이다", "있다", "있어", "해서", "해도", "했지만", "하다", "한다", "했다"]
