@@ -6,7 +6,7 @@
         :width="w"
         @click="clickDiary"
     >
-        <v-container fluid>
+        <v-container fluid class="diary-wrapper">
             <v-row class="card-contents">
                 <v-col cols="1" sm="1" md="1" lg="1" id="diary-band" class="diary">
                 </v-col>
@@ -41,13 +41,20 @@ export default {
             //해당 title의 diary page로 이동
             console.log("click!"+this.diaryTitle)
 
-            this.$router.push({name:'Diary', params:{title: this.diaryTitle}})
+            // 선택한 diary에 page가 하나도 없으면 
+            // => beforeCreate(path: /diary/:id/first)로 라우팅
+            this.$router.push({path:`pages/${this.diaryTitle}/first`})
+            
         }
     }
 }
 </script>
 
 <style>
+.diary-wrapper{
+    margin: 0;
+    padding: 0;
+}
 .diary-card{
     position: relative;
     z-index: 2;

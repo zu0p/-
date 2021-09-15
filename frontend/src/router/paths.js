@@ -10,8 +10,15 @@ export default [
     name: "Login"
   },
   {
-    path: "/diary/:title",
-    view: "Diary",
-    name: "Diary",
+    path: "/pages/:title",
+    view: "pages",
+    name: "Page",
+    children:[
+      {
+        path:"/pages/:title/first",
+        name:"BeforeCreate",
+        view:"page/BeforeCreate",
+      }
+    ]
   }
 ];
