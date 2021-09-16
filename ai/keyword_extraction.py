@@ -2,7 +2,9 @@ import pandas as pd
 from konlpy.tag import Kkma
 from konlpy.tag import Twitter
 from konlpy.tag import Okt
+from konlpy.tag import Hannanum
 from nltk.tokenize.punkt import PunktSentenceTokenizer
+from pandas.core.indexes.base import InvalidIndexError
 from scipy.sparse.sputils import matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -13,6 +15,7 @@ import time
 
 kkma = Kkma()
 okt = Okt()
+hannanum = Hannanum()
 
 
 def main():
@@ -22,9 +25,9 @@ def main():
 def extraction_from_article():
     start = time.time()
     df = pd.read_excel(
-        'C:/SSAFY/semester2/특화PJT/ai/article.xlsx', engine='openpyxl')
+        'C:/SSAFY/2학기/특화PJT/ai/article.xlsx', engine='openpyxl')
     df_stopwords = pd.read_excel(
-        'C:/SSAFY/semester2/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
+        'C:/SSAFY/2학기/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
     # nan을 None으로 변경
     df = df.where(pd.notnull(df), None)
 
@@ -34,6 +37,7 @@ def extraction_from_article():
 
     for idx in range(len(contents)):
         print(idx)
+
         if(contents[idx] is None):
             continue
 
@@ -62,7 +66,7 @@ def extraction_from_article():
     for row in sorted_dic:
         excel_sheet.append(row)
 
-    excel_file.save("keywords.xlsx")
+    excel_file.save("keywords(kkma.posx).xlsx")
     excel_file.close()
     print("수행 시간(초) : ", time.time() - start)
 
@@ -89,7 +93,7 @@ def cv(sentences):
 
     vocab = cv.vocabulary_
     idx_to_word = {vocab[word]: word for word in vocab}
-    graph_word = np.dot(cv_mat, cv_mat.T)
+    graph_word = np.dot(cv_mat.T, cv_mat)
 
     return idx_to_word, graph_word
 
@@ -103,7 +107,6 @@ def get_keywords(nouns, num):
     index = []
     for idx in sort_ranks[:num]:
         index.append(idx)
-
     for idx in index:
         keywords.append(idx_to_word[idx])
 
@@ -132,13 +135,23 @@ def get_sentences(text):
     return sentences
 
 
+def get_pos(sentences):
+    for sentence in sentences:
+        pos = kkma.pos(sentence)
+        print(pos)
+
+
 def get_nouns(sentences, stopwords):
     nouns = []
 
     for sentence in sentences:
         if sentence is not '':
-            noun = [noun for noun in okt.nouns(str(sentence))
-                    if noun not in stopwords and len(noun) > 1]
+            pos = kkma.pos(sentence)
+            noun = []
+            for word in pos:
+                if (word[1] == 'NNG' or word[1] == 'NNP') and word[0] not in stopwords and len(word[0]) > 1:
+                    noun.append(word[0])
+
             if len(noun) > 0:
                 nouns.append(' '.join(noun))
     return nouns
