@@ -1,9 +1,10 @@
 
+import os
 
 from database import get_db
 from typing import Optional
 from schemas.user_schemas import TokenData, UserInDB
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Form, UploadFile
 from database import SessionLocal
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -12,9 +13,6 @@ from schemas import user_schemas
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-
-
 # ============================ user Auth ============================
 
 # https://fastapi.tiangolo.com/ko/tutorial/security/oauth2-jwt/
@@ -84,7 +82,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 # ============================ user CRUD ============================
 
 ### C
-def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
+async def create_user(db: SessionLocal, user_data: user_schemas.UserInDB, profileImage: UploadFile = File(...)):
+    # image 저장부분
+    UPLOAD_DIRECTORY = "../static/image/profile"
+    contents = await profileImage.read()
+    with open(os.path.join(UPLOAD_DIRECTORY, profileImage.filename), "wb") as fp:
+        fp.write(contents)
+    print(profileImage.filename)
+    # db 저장부분
     db_user = user_model.UserInfo(
         userId = user_data.userId,
         userPwd = get_password_hash(user_data.userPwd),

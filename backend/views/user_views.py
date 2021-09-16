@@ -50,8 +50,8 @@ async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Sess
 
 ### C
 @user_router.post("/signup", response_model=user_schemas.UserInDB)
-async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
-    new_user = user_crud.create_user(db, user_data)
+async def create_user(user_data: user_schemas.UserInDB = Form(...), profileImage: UploadFile = File(...), db: Session = Depends(get_db)): # DI
+    new_user = user_crud.create_user(db, user_data, profileImage)
     return new_user
 
 ### R
@@ -61,14 +61,14 @@ async def read_user_one(current_user: user_schemas.UserInDB = Depends(user_crud.
 
 ### U
 @user_router.put("/update", response_model=user_schemas.UserInDB)
-def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db), 
+async def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db), 
                         old_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     updated_user = user_crud.update_user(db, user_data, old_user)
     return updated_user
 
 ### D
 @user_router.delete("/delete")
-def update_user(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user), db: Session = Depends(get_db)):
+async def update_user(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user), db: Session = Depends(get_db)):
     user_crud.delete_user(db, current_user)
     return {"state": "success"}
 
