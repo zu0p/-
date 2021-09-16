@@ -50,7 +50,26 @@ async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Sess
 
 ### C
 @user_router.post("/signup", response_model=user_schemas.UserInDB)
-async def create_user(user_data: user_schemas.UserInDB = Form(...), profileImage: UploadFile = File(...), db: Session = Depends(get_db)): # DI
+async def create_user(  userId: str = Form(...),
+                        userName: str = Form(...),
+                        userPwd: str = Form(...),
+                        userEmail: str = Form(...),
+                        userNick: str = Form(...),
+                        userPhone: str = Form(...),
+                        profileImage: UploadFile = File(...), # pydantic doesn't support UplodaFile type
+                        db: Session = Depends(get_db)): # DI
+
+    user_data = user_model.UserInfo(
+        userId = userId,
+        userPwd = userPwd,
+        userName = userName,
+        userEmail = userEmail,
+        userNick = userNick,
+        userPhone = userPhone,
+        userImage = userImageUrl
+    )
+    print(user_data)
+    print(profileImage)
     new_user = user_crud.create_user(db, user_data, profileImage)
     return new_user
 
