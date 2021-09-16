@@ -10,5 +10,10 @@ export default {
   name: 'App',
   components: { 
   },
+  data() {
+    return{
+      token: localStorage.getItem('jwt'),
+    }
+  }
 };
 </script>
