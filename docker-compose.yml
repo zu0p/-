@@ -5,6 +5,5 @@ services:
         image: fastapi:latest
         ports: 
             - "80:80"
-        working_dir: /app
         volumes:
-            - ./:/app
+            - ./:.
