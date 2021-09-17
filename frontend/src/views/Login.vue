@@ -1,162 +1,252 @@
 <template>
-    <div class="vertical-center">
-      <div class="inner-block">
-        <div class="vue-tempalte">
-            <form>
-                <h3>Sign In</h3>
+  <v-app id="inspire">
+    <v-content class="back-img">
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="8" md="6">
+            <v-card class="elevation-12">
+              <v-window v-model="step">
+                <v-window-item :value="1">
+                  <v-row>
+                    <v-col cols="12" md="8">
+                      <v-card-text class="mt-12 white--text">
+                        <h1
+                          class="text-center display-2 text--accent-3"
+                        >그리더</h1>
+                        <h5
+                          class="text-center"
+                        >:당신의 글에 이미지를 더하다</h5>
+                        <div class="text-center mt-4">
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-facebook-f</v-icon>
+                          </v-btn>
 
-                <div class="form-group">
-                    <label>Email address</label>
-                    <input type="email" class="form-control form-control-lg" />
-                </div>
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-google-plus-g</v-icon>
+                          </v-btn>
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-linkedin-in</v-icon>
+                          </v-btn>
+                        </div>
+                        <h4 class="text-center mt-4">Ensure your ID for registration</h4>
+                        <v-form>
+                          <v-text-field
+                            dark
+                            label="ID"
+                            name="ID"
+                            prepend-icon="mdi-account-circle white--text"
+                            type="text"
+                            color="teal accent-3"
+                          />
 
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control form-control-lg" />
-                </div>
+                          <v-text-field
+                            
+                            label="Password"
+                            name="password"
+                            prepend-icon="lock"
+                            type="password"
+                            color="teal accent-3"
+                            dark
+                          />
+                        </v-form>
+                        <h3 class="text-center mt-4">Forgot your password ?</h3>
+                      </v-card-text>
+                      <div class="text-center mt-3">
+                        <v-btn rounded color="grey accent-3" @click="clickLogin">SIGN IN</v-btn>
+                      </div>
+                    </v-col>
+                    <v-col cols="12" md="4" class="back-opt accent-3">
+                      <v-card-text class="white--text mt-12">
+                        <h1 class="text-center display-1">Welcome!!!</h1>
+                        <h5
+                          class="text-center"
+                        >그리더와 함께하기</h5>
+                      </v-card-text>
+                      <div class="text-center">
+                        <v-btn rounded outlined dark @click="step++">SIGN UP</v-btn>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-window-item>
+                <v-window-item :value="2">
+                  <v-row class="fill-height">
+                    <v-col cols="12" md="4" class="back-opt accent-3">
+                      <v-card-text class="white--text mt-12">
+                        <h1 class="text-center display-1">Welcome Back!</h1>
+                        <h5
+                          class="text-center"
+                        >일기쓰러 가기</h5>
+                      </v-card-text>
+                      <div class="text-center">
+                        <v-btn rounded outlined dark @click="step--">Sign in</v-btn>
+                      </div>
+                    </v-col>
 
-                <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+                    <v-col cols="12" md="8">
+                      <v-card-text class="mt-12 white--text">
+                        <h1 class="text-center display-2 text--accent-3">그리더와 함께하기</h1>
+                        <div class="text-center mt-4">
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-facebook-f</v-icon>
+                          </v-btn>
 
-                <p class="forgot-password text-right mt-2 mb-4">
-                    <router-link to="/forgot-password">Forgot password ?</router-link>
-                </p>
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-google-plus-g</v-icon>
+                          </v-btn>
+                          <v-btn class="mx-2" fab color="white" outlined>
+                            <v-icon>fab fa-linkedin-in</v-icon>
+                          </v-btn>
+                        </div>
+                        <h4 class="text-center mt-4">Ensure your email for registration</h4>
+                        <v-form class="form-c">
+                          <v-text-field
+                            label="Name"
+                            name="Name"
+                            prepend-icon="mdi-account-details white--text"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
+                          <v-text-field
+                            label="Email"
+                            name="Email"
+                            prepend-icon="email"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
 
-                <div class="social-icons">
-                    <ul>
-                        <li><a href="#"><i class="fa fa-google"></i></a></li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    </ul>
-                </div>
+                          <v-text-field
+                            id="id"
+                            label="ID"
+                            name="id"
+                            prepend-icon="person"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
 
-            </form>
-        </div>
-      </div>
-    </div>
+                          <v-text-field
+                            id="password"
+                            label="Password"
+                            name="password"
+                            prepend-icon="lock"
+                            type="password"
+                            color="teal accent-3"
+                            dark
+                          />
+
+                          <v-text-field
+                            id="nick"
+                            label="Nickname"
+                            name="nick"
+                            prepend-icon="mdi-alpha-n-circle white--text"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
+
+                          <v-text-field
+                            id="phone"
+                            label="Phone Number"
+                            name="phone"
+                            prepend-icon="phone"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
+
+                          <v-text-field
+                            id="userImage"
+                            label="User Image"
+                            name="userImage"
+                            prepend-icon="mdi-image-area white--text"
+                            type="text"
+                            color="teal accent-3"
+                            dark
+                          />
+                        </v-form>
+                      </v-card-text>
+                      <div class="text-center mt-n5">
+                        <v-btn rounded color="grey accent-3">SIGN UP</v-btn>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-window-item>
+              </v-window>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
+
 </template>
 
 <script>
-    export default {
-        data() {
-            return {}
+import {reactive, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import swal from 'sweetalert'
+
+export default {
+  props: {
+  },
+  data: () => ({
+    step: 1
+  }),
+  setup() {
+    const store = useStore()
+
+    const state = reactive({
+      form: {
+        id: '',
+        password: '',
+        nick: '',
+        name: '',
+        phone: '',
+        email: '',
+        userimage: '',
+      },
+    })
+
+    onMounted(()=>{
+    })
+
+    const clickLogin = function () {
+      loginForm.value.validate((valid)=>{
+        if(valid){
+          store.dispatch('root/requestLogin',{
+            userId: state.form.id,
+            userPwd: state.form.password
+          }).then(function (result){
+            swal("Success!","로그인 성공", "success")
+            localStorage.setItem('jwt',result.data.accessToken)
+            location.reload()
+          })
+          .catch(function () {
+            swal('Fail','아이디와 비밀번호를 확인해주세요','error')
+          })
         }
+      })
     }
-</script>
-<style>
-* {
-    box-sizing: border-box;
+
+    return { state, clickLogin}
   }
-  
-  body {
-    background-image: url("../images/night.jpg");
+};
+</script>
+
+<style scoped>
+.back-img {
+    background-image: url("../images/sy.png");
     min-height: 100vh;
     display: flex;
-    font-weight: 400;
+    background-repeat : no-repeat;
+    background-size : cover;
   }
-  
-  body,
-  html,
-  .App,
-  .vue-tempalte,
-  .vertical-center {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .navbar-light {
-    background-color: #ffffff;
-    box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  }
-  
-  .vertical-center {
-    display: flex;
-    text-align: left;
-    justify-content: center;
-    flex-direction: column;    
-  }
-  
-  .inner-block {
-    width: 450px;
-    margin: auto;
-    /* background: #ffffff; */
-    /* box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2); */
-    padding: 40px 55px 45px 55px;
-    border-radius: 15px;
-    transition: all .3s;
-  }
-  
-  .vertical-center .form-control:focus {
-    border-color: #2554FF;
-    box-shadow: none;
-  }
-  
-  .vertical-center h3 {
-    text-align: center;
-    margin: 0;
-    line-height: 1;
-    padding-bottom: 20px;
-  }
-  
-  label {
-    font-weight: 500;
-  }
-  
-  .forgot-password,
-  .forgot-password a {
-    text-align: right;
-    font-size: 13px;
-    padding-top: 10px;
-    color: #7a7a7a;
-    margin: 0;
-  }
-  
-  .forgot-password a {
-    color: #2554FF;
-  }
-  
-  .social-icons {
-    text-align: center;
-    font-family: "Open Sans";
-    font-weight: 300;
-    font-size: 1.5em;
-    color: #222222;
-  }
-  
-  .social-icons ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .social-icons ul li {
-    display: inline-block;
-    zoom: 1;
-    width: 65px;
-    vertical-align: middle;
-    border: 1px solid #e3e8f9;
-    font-size: 15px;
-    height: 40px;
-    line-height: 40px;
-    margin-right: 5px;
-    background: #f4f6ff;
-  }
-  
-  .social-icons ul li a {
-    display: block;
-    font-size: 1.4em;
-    margin: 0 5px;
-    text-decoration: none;
-  }
-  .social-icons ul li a i {
-    -webkit-transition: all 0.2s ease-in;
-    -moz-transition: all 0.2s ease-in;
-    -o-transition: all 0.2s ease-in;
-    -ms-transition: all 0.2s ease-in;
-    transition: all 0.2s ease-in;
-  }
-  
-  .social-icons ul li a:focus i,
-  .social-icons ul li a:active i {
-    transition: none;
-    color: #222222;
-  }
+.elevation-12 {
+  background-color: rgba( 255, 255, 255, 0.0 );
+}
+.back-opt {
+  background-color: rgba( 255, 255, 255, 0.5 );
+}
 </style>
