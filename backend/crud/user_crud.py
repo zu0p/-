@@ -1,6 +1,4 @@
 
-import os
-
 from database import get_db
 from typing import Optional
 from schemas.user_schemas import TokenData, UserInDB
@@ -82,14 +80,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 # ============================ user CRUD ============================
 
 ### C
-async def create_user(db: SessionLocal, user_data: user_schemas.UserInDB, profileImage: UploadFile = File(...)):
-    # image 저장부분
-    UPLOAD_DIRECTORY = "../static/image/profile"
-    contents = await profileImage.read()
-    with open(os.path.join(UPLOAD_DIRECTORY, profileImage.filename), "wb") as fp:
-        fp.write(contents)
-    print(profileImage.filename)
-    # db 저장부분
+def create_user(db: SessionLocal, user_data: user_schemas.UserInDB):
     db_user = user_model.UserInfo(
         userId = user_data.userId,
         userPwd = get_password_hash(user_data.userPwd),
@@ -139,8 +130,8 @@ def change_password(db: SessionLocal, current_user: user_schemas.UserInDB,
 
 # 프로필 이미지 변경
 def change_image(db: SessionLocal, current_user: user_schemas.UserInDB, 
-                        newImageUrl: user_schemas.changeProfile):
-    current_user.userImage = newImageUrl.modifyImage
+                        newImageUrl: str):
+    current_user.userImage = newImageUrl
     db.commit()
     db.refresh(current_user)
     return

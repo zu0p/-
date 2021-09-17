@@ -1,3 +1,7 @@
+import os
+import asyncio
+import aiofiles
+import logging
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Form, UploadFile
@@ -6,6 +10,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 
 app = FastAPI()
+
+# 로그 생성
+logger = logging.getLogger()
+# 로그의 출력 기준 설정
+logger.setLevel(logging.INFO)
 
 
 @app.post("/files/")
@@ -28,7 +37,7 @@ user_router = APIRouter()
 
 # ================================== user Auth ==================================
 
-@user_router.post("/login", response_model=user_schemas.Token, )
+@user_router.post("/login", response_model=user_schemas.Token)
 async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Session = Depends(get_db)): # DI
     user = user_crud.authenticate_user(db, form_data.userId, form_data.userPwd)
     print(user)
@@ -50,27 +59,8 @@ async def login_for_access_token(form_data: user_schemas.UserLoginForm, db: Sess
 
 ### C
 @user_router.post("/signup", response_model=user_schemas.UserInDB)
-async def create_user(  userId: str = Form(...),
-                        userName: str = Form(...),
-                        userPwd: str = Form(...),
-                        userEmail: str = Form(...),
-                        userNick: str = Form(...),
-                        userPhone: str = Form(...),
-                        profileImage: UploadFile = File(...), # pydantic doesn't support UplodaFile type
-                        db: Session = Depends(get_db)): # DI
-
-    user_data = user_model.UserInfo(
-        userId = userId,
-        userPwd = userPwd,
-        userName = userName,
-        userEmail = userEmail,
-        userNick = userNick,
-        userPhone = userPhone,
-        userImage = userImageUrl
-    )
-    print(user_data)
-    print(profileImage)
-    new_user = user_crud.create_user(db, user_data, profileImage)
+async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
+    new_user = user_crud.create_user(db, user_data)
     return new_user
 
 ### R
@@ -109,7 +99,19 @@ def change_password(newPassword: user_schemas.changePassword, db: Session = Depe
 
 ### 프로필 이미지 변경
 @user_router.put("/change-image")
-def change_image(newImageUrl: user_schemas.changeProfile, db: Session = Depends(get_db),
+async def change_image(
+                        profileImage: UploadFile = File(...),
+                        db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    user_crud.change_image(db, current_user, newImageUrl)
+    # image 저장부분
+    UPLOAD_DIRECTORY = "./static/image/profile/"
+    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+".jpg")
+    async with aiofiles.open(new_path, "wb") as fp:
+        contents = await profileImage.read()  # async read
+        fp.write(contents)
+        await fp.write(contents)  # async write
+    fp.close()
+
+    logger.info(profileImage)
+    user_crud.change_image(db, current_user, new_path)
     return {"state": "success"}
