@@ -25,9 +25,9 @@ def main():
 def extraction_from_article():
     start = time.time()
     df = pd.read_excel(
-        'C:/SSAFY/2학기/특화PJT/ai/article.xlsx', engine='openpyxl')
+        'C:/SSAFY/2학기/특화PJT/특화PJT/ai/article.xlsx', engine='openpyxl')
     df_stopwords = pd.read_excel(
-        'C:/SSAFY/2학기/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
+        'C:/SSAFY/2학기/특화PJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
     # nan을 None으로 변경
     df = df.where(pd.notnull(df), None)
 
@@ -66,7 +66,7 @@ def extraction_from_article():
     for row in sorted_dic:
         excel_sheet.append(row)
 
-    excel_file.save("keywords(kkma.posx).xlsx")
+    excel_file.save("keywords(한단어 포함).xlsx")
     excel_file.close()
     print("수행 시간(초) : ", time.time() - start)
 
@@ -149,7 +149,7 @@ def get_nouns(sentences, stopwords):
             pos = kkma.pos(sentence)
             noun = []
             for word in pos:
-                if (word[1] == 'NNG' or word[1] == 'NNP') and word[0] not in stopwords and len(word[0]) > 1:
+                if (word[1] == 'NNG' or word[1] == 'NNP') and word[0] not in stopwords:
                     noun.append(word[0])
 
             if len(noun) > 0:
