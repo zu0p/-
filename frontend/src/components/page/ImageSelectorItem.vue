@@ -60,7 +60,8 @@ export default {
     },
     onFileChanged(e){
       this.image = e.target.files[0]
-      // console.log(this.image)
+      console.log(this.image)
+      
       var reader = new FileReader();
       reader.onload = (e) => {
         this.preview = e.target.result;

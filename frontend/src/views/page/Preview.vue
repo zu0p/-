@@ -2,14 +2,16 @@
   <v-container>
     <v-row>
       <v-col class="wrapper">
-        
+        <drag-and-drop />
       </v-col>
     </v-row>
   </v-container>  
 </template>
 
 <script>
+import DragAndDrop from '../../components/page/DragAndDrop.vue'
 export default {
+  components: { DragAndDrop },
 
 }
 </script>
