@@ -1,9 +1,8 @@
 
-
 from database import get_db
 from typing import Optional
 from schemas.user_schemas import TokenData, UserInDB
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Form, UploadFile
 from database import SessionLocal
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -12,9 +11,6 @@ from schemas import user_schemas
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-
-
 # ============================ user Auth ============================
 
 # https://fastapi.tiangolo.com/ko/tutorial/security/oauth2-jwt/
@@ -134,8 +130,8 @@ def change_password(db: SessionLocal, current_user: user_schemas.UserInDB,
 
 # 프로필 이미지 변경
 def change_image(db: SessionLocal, current_user: user_schemas.UserInDB, 
-                        newImageUrl: user_schemas.changeProfile):
-    current_user.userImage = newImageUrl.modifyImage
+                        newImageUrl: str):
+    current_user.userImage = newImageUrl
     db.commit()
     db.refresh(current_user)
     return
