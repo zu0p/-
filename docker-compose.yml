@@ -5,3 +5,5 @@ services:
         image: fastapi:latest
         ports: 
             - "80:80"
+        volumes:
+            - ./:.
