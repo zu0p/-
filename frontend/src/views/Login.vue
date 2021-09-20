@@ -3,7 +3,7 @@
     <v-content class="back-img">
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="6">
+          <v-col cols="17" sm="10" md="7">
             <v-card class="elevation-12">
               <v-window v-model="step">
                 <v-window-item :value="1">
@@ -155,16 +155,6 @@
                             color="teal accent-3"
                             dark
                           />
-
-                          <v-text-field
-                            id="userImage"
-                            label="User Image"
-                            name="userImage"
-                            prepend-icon="mdi-image-area white--text"
-                            type="text"
-                            color="teal accent-3"
-                            dark
-                          />
                         </v-form>
                       </v-card-text>
                       <div class="text-center mt-n5">
@@ -186,7 +176,6 @@
 <script>
 import {reactive, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import swal from 'sweetalert'
 
 export default {
   props: {
@@ -219,12 +208,12 @@ export default {
             userId: state.form.id,
             userPwd: state.form.password
           }).then(function (result){
-            swal("Success!","로그인 성공", "success")
+            alert("Success!","로그인 성공", "success")
             localStorage.setItem('jwt',result.data.accessToken)
             location.reload()
           })
           .catch(function () {
-            swal('Fail','아이디와 비밀번호를 확인해주세요','error')
+            alert('Fail','아이디와 비밀번호를 확인해주세요','error')
           })
         }
       })
@@ -236,6 +225,15 @@ export default {
 </script>
 
 <style scoped>
+h3 {
+  font-size: 18px;
+}
+h4 {
+  font-size: 15px;
+}
+h5 {
+  font-size: 12px;
+}
 .back-img {
     background-image: url("../images/sy.png");
     min-height: 100vh;
