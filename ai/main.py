@@ -5,6 +5,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import gluonnlp as nlp
 import numpy as np
+import kss
 from tqdm import tqdm, tqdm_notebook
 from kobert.utils import get_tokenizer
 from kobert.pytorch_kobert import get_pytorch_kobert_model
@@ -12,10 +13,25 @@ from transformers import AdamW
 from transformers.optimization import get_cosine_schedule_with_warmup
 from bert_model import BERTClassifier
 from bertDataSet import BERTDataset
-# Setting parameters
 
 
-def main():
+from typing import Optional
+from fastapi import FastAPI
+from pydantic import BaseModel
+app = FastAPI()
+
+
+class Item(BaseModel):
+    writing: str
+
+
+@app.get('/')
+def read_root():
+    return{"Hello": "World"}
+
+
+@app.post('/emotion')
+def emotion_extraction(item: Item):
     max_len = 64
     batch_size = 64
     warmup_ratio = 0.1
@@ -24,11 +40,11 @@ def main():
     log_interval = 200
     learning_rate = 5e-5
     device = torch.device('cpu')
-
     bertmodel, vocab = get_pytorch_kobert_model()
     # 토큰화
     tokenizer = get_tokenizer()
     tok = nlp.data.BERTSPTokenizer(tokenizer, vocab, lower=False)
+
     model = BERTClassifier(bertmodel,  dr_rate=0.5).to(device)
     # Prepare optimizer and schedule (linear warmup and decay)
     no_decay = ['bias', 'LayerNorm.weight']
@@ -52,37 +68,24 @@ def main():
     model.load_state_dict(checkpoint['model'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-    print("gd")
-    dataset_another = [['영화에 나오는 귀신이 너무 무섭네요', '2'], ['그게 사실이야? 대박', '1'], ['배고파서 화가 난다', '2'],
-                       ['그런 일이 있었다니 참 안타깝다', '2'], ['오늘은 비가 온다고 해요~', '0'], ['대학교에 붙어서 기분이 너무 좋다', '1'], ['수준 너무 떨어진다~', '2']]
+    # dataset_another = [['영화에 나오는 귀신이 너무 무섭네요', '0'], ['그게 사실이야? 대박', '0'], ['배고파서 화가 난다', '0'],
+    #                    ['그런 일이 있었다니 참 안타깝다', '0'], ['오늘은 비가 온다고 해요~', '0'], ['대학교에 붙어서 기분이 너무 좋다', '0'], ['수준 너무 떨어진다~', '0']]
 
-    predict(dataset_another, model)
-
-    # emotion_model = torch.load(
-    #     '../../model/emotion_model.pkl', map_location=device)
-
-
-def predict(dataset_another, model1):
-    max_len = 64
-    batch_size = 64
-    warmup_ratio = 0.1
-    num_epochs = 20
-    max_grad_norm = 1
-    log_interval = 200
-    learning_rate = 5e-5
-    device = torch.device('cpu')
-    tokenizer = get_tokenizer()
-    bertmodel, vocab = get_pytorch_kobert_model()
-    tok = nlp.data.BERTSPTokenizer(tokenizer, vocab, lower=False)
-    # 토큰화
+    total = []
+    item = str(item)
+    for sent in kss.split_sentences(item):  # 글에서 문장 하나씩 가져오기
+        sentence = []
+        sentence.append(sent)
+        sentence.append('0')
+        total.append(sentence)
 
     another_test = BERTDataset(
-        dataset_another, 0, 1, tok, max_len, True, False)
+        total, 0, 1, tok, max_len, True, False)
     test_dataloader = torch.utils.data.DataLoader(
         another_test, batch_size=batch_size, num_workers=5)
 
-    model1.eval()
-
+    model.eval()
+    result = -1
     for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(tqdm_notebook(test_dataloader)):
         token_ids = token_ids.long().to(device)
         segment_ids = segment_ids.long().to(device)
@@ -90,7 +93,7 @@ def predict(dataset_another, model1):
         valid_length = valid_length
         label = label.long().to(device)
 
-        out = model1(token_ids, valid_length, segment_ids)
+        out = model(token_ids, valid_length, segment_ids)
 
         test_eval = []
         for i in out:
@@ -99,7 +102,7 @@ def predict(dataset_another, model1):
             test_eval.append(np.argmax(logits))
 
         print(test_eval)
+        print(max(test_eval, key=test_eval.count))
+        result = int(max(test_eval, key=test_eval.count))
 
-
-if __name__ == '__main__':
-    main()
+    return result
