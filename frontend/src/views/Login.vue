@@ -31,6 +31,9 @@
                         <h4 class="text-center mt-4">Ensure your ID for registration</h4>
                         <v-form>
                           <v-text-field
+                            v-model="state.form.id"
+                            :rules="state.form.id"
+                            prop="id"
                             dark
                             label="ID"
                             name="ID"
@@ -40,7 +43,9 @@
                           />
 
                           <v-text-field
-                            
+                            v-model="state.form.password"
+                            :rules="state.form.password"
+                            prop="password"
                             label="Password"
                             name="password"
                             prepend-icon="lock"
@@ -100,6 +105,9 @@
                         <h4 class="text-center mt-4">Ensure your email for registration</h4>
                         <v-form class="form-c">
                           <v-text-field
+                            v-model="state.form.name"
+                            :rules="state.form.name"
+                            prop="name"
                             label="Name"
                             name="Name"
                             prepend-icon="mdi-account-details white--text"
@@ -108,16 +116,22 @@
                             dark
                           />
                           <v-text-field
+                            v-model="state.form.email"
+                            :rules="state.form.email"
+                            prop="email"
                             label="Email"
                             name="Email"
                             prepend-icon="email"
                             type="text"
                             color="teal accent-3"
                             dark
-                          />
+                          /> 
+                          <!-- <v-btn rounded outlined dark @click="checkId">중복체크</v-btn> -->
 
                           <v-text-field
-                            id="id"
+                            v-model="state.form.id"
+                            :rules="state.form.id"
+                            prop="id"
                             label="ID"
                             name="id"
                             prepend-icon="person"
@@ -127,7 +141,9 @@
                           />
 
                           <v-text-field
-                            id="password"
+                            v-model="state.form.password"
+                            :rules="state.form.password"
+                            prop="password"
                             label="Password"
                             name="password"
                             prepend-icon="lock"
@@ -137,7 +153,9 @@
                           />
 
                           <v-text-field
-                            id="nick"
+                            v-model="state.form.nick"
+                            :rules="state.form.nick"
+                            prop="nick"
                             label="Nickname"
                             name="nick"
                             prepend-icon="mdi-alpha-n-circle white--text"
@@ -147,7 +165,9 @@
                           />
 
                           <v-text-field
-                            id="phone"
+                            v-model="state.form.phone"
+                            :rules="state.form.phone"
+                            prop="phone"
                             label="Phone Number"
                             name="phone"
                             prepend-icon="phone"
@@ -158,7 +178,7 @@
                         </v-form>
                       </v-card-text>
                       <div class="text-center mt-n5">
-                        <v-btn rounded color="grey accent-3">SIGN UP</v-btn>
+                        <v-btn rounded color="grey accent-3" @click="clickSignup">SIGN UP</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -174,7 +194,7 @@
 </template>
 
 <script>
-import {reactive, onMounted } from 'vue'
+import {reactive, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -186,6 +206,8 @@ export default {
   setup() {
     const store = useStore()
 
+    const loginForm = ref(null)
+
     const state = reactive({
       form: {
         id: '',
@@ -195,6 +217,27 @@ export default {
         phone: '',
         email: '',
         userimage: '',
+        evalid: true,
+      },
+      rules: {
+        id: [
+          { required: true, message: 'Please input ID', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Please input password', trigger: 'blur' }
+        ],
+        nick: [
+          { required: true, message: 'Please input password', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: 'Please input password', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: 'Please input password', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: 'Please input password', trigger: 'blur' }
+        ]
       },
     })
 
@@ -219,7 +262,102 @@ export default {
       })
     }
 
-    return { state, clickLogin}
+     const clickSignup = function () {
+        if(validpwd() == false){
+          // console.log("비밀번호 유효성 안맞음")
+          state.form.evalid = false;
+        }else{
+          // console.log("비밀번호 유효성 "+ validpwd());
+        }
+
+        if(validemail() == false){
+          // console.log("이메일 유효성 안맞음")
+          state.form.evalid = false;
+        }else{
+          // console.log("이메일 유효성 "+validemail());
+        }
+
+        if(validid() == false){
+          // console.log("아이디 유효성 안맞음")
+          state.form.evalid = false;
+        }else{
+          // console.log("아이디 유효성 "+validid());
+        }
+
+
+        if(validpwd() && validemail() && validid() && validateCnumber())
+          state.form.evalid = true;
+
+        if (state.form.evalid==true) {
+          store.dispatch('root/requestSignup',
+          {
+            userEmail: state.form.email,
+            userName: state.form.name,
+            userId: state.form.id,
+            userPwd: state.form.password,
+            userPhone: state.form.phone,
+            userNick: state.form.nick,
+            userImage: ''
+          })
+          .then(function (
+          ) {
+            alert("Succes!", "회원가입 성공", "success")
+            location.reload()
+          })
+          .catch(function (err) {
+            alert("Fail!", `${err}`, "error")
+          })
+        } else {
+          alert("Fail!", "입력하신 정보가 유효한지 다시 확인해주세요.", "error")
+        }
+    }
+
+    const validpwd = function (){
+      var pw = state.form.password;
+      var num = pw.search(/[0-9]/g);
+      var eng = pw.search(/[a-z]/ig);
+      var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+
+      if(pw.length < 9 || pw.length > 16){
+        alert("Fail!", "9자리 ~ 16자리 이내로 입력해주세요.", "error")
+        return false;
+        }
+      if(pw.search(/₩s/) != -1){
+        alert("Fail!", "비밀번호는 공백없이 입력해주세요.", "error")
+        return false;
+        }
+      if(num < 0 || eng < 0 || spe < 0 ){
+        alert("Fail!", "영문, 숫자, 특수문자를 혼합하여 입력해주세요.", "error")
+        return false;
+        }
+      return true;
+    }
+
+    const validemail = function(){
+      var email = state.form.email;
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+
+    const validid = function(){
+      var id = state.form.id;
+      if(id.length > 16 || id == "")
+        return false;
+      return true;
+    }
+
+    const checkId = function(){
+      store.dispatch('root/checkSignupId', { id: state.form.id })
+      .then(function () {
+        alert("Succes!", "사용가능한 아이디입니다.", "success")
+      })
+      .catch(function () {
+        alert("Fail!", "사용중인 아이디입니다.", "info")
+      })
+    }
+
+
+    return { loginForm, state, clickLogin, clickSignup, validpwd, validemail, validid, checkId }
   }
 };
 </script>
