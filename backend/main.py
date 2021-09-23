@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from views.user_views import user_router
+from views.diary_views import diary_router
 
 tags_metadata = [
     {
@@ -42,3 +43,4 @@ server.router.prefix = "/api/v1"
 
 # router 설정
 server.include_router(user_router, prefix="/users", tags=["회원관리"])
+server.include_router(diary_router, prefix="/diary", tags=["다이어리"])
