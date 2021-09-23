@@ -10,9 +10,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from database import get_db
 
-from schemas import user_schemas # schemas
-from models import user_model # models
-from crud import user_crud # crud
+from schemas import user_schemas, diary_schemas # schemas
+from models import user_model, diary_model # models
+from crud import user_crud, diary_crud # crud
 
 # 로그 생성
 logger = logging.getLogger()
@@ -26,20 +26,32 @@ diary_router = APIRouter()
 ### C
 @diary_router.post("/create")
 async def create_diary(
-                    diaryImage: UploadFile = File(...),
-                    db: Session = Depends(get_db),
-                    current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+                        diaryName: str = Form(...),
+                        diaryImage: UploadFile = File(...),
+                        diaryDesc: str = Form(...),
+                        diaryShare: bool = Form(...),
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
     UPLOAD_DIRECTORY = "./static/image/diary/"
-    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+".jpg")
+    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+f"_{diaryName}.jpg")
     async with aiofiles.open(new_path, "wb") as fp:
         contents = await diaryImage.read()  # async read
         fp.write(contents)
         await fp.write(contents)  # async write
     fp.close()
 
+    # diary create 객체생성
+    diary_data = diary_schemas.DiaryCreate(
+        diaryName = diaryName,
+        diaryImage = new_path,
+        diaryDesc = diaryDesc,
+        diaryShare = diaryShare,
+    )
 
-    pass
+    # db 저장부분
+    new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
+    return new_diary
 
 # @user_router.post("/signup", response_model=user_schemas.UserInDB)
 # async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
