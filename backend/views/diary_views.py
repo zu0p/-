@@ -24,7 +24,7 @@ diary_router = APIRouter()
 # ================================== diary CRUD ==================================
 
 ### C
-@diary_router.post("/create")
+@diary_router.post("/create", response_model=diary_schemas.DiaryCreate)
 async def create_diary(
                         diaryName: str = Form(...),
                         diaryImage: UploadFile = File(...),
@@ -40,7 +40,6 @@ async def create_diary(
         fp.write(contents)
         await fp.write(contents)  # async write
     fp.close()
-
     # diary create 객체생성
     diary_data = diary_schemas.DiaryCreate(
         diaryName = diaryName,
@@ -48,7 +47,6 @@ async def create_diary(
         diaryDesc = diaryDesc,
         diaryShare = diaryShare,
     )
-
     # db 저장부분
     new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
     return new_diary

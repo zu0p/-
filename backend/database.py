@@ -57,6 +57,8 @@ engine = create_engine(
 )
 metadata.create_all(engine)
 
+# ============================================ db-usage ============================================
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base() # 상속 클래스를 자동으로 인지하고, 알아서 매핑해준다
 
