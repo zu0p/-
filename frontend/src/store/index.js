@@ -3,15 +3,19 @@ import Vuex from "vuex";
 import state from './state'
 import * as getters from './getters'
 import * as actions from './actions'
+import pageStore from './modules/page'
 // import data from "./modules/data";
 // import app from "./modules/app";
 
 Vue.use(Vuex);
 
-const root = {
+const root = new Vuex.Store({
   state,
   getters,
   actions,
-}
+  modules: {
+    pageStore: pageStore
+  }
+})
 
 export default root

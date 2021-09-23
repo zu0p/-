@@ -41,7 +41,7 @@
             <option value="7">30px</option>
           </select> -->
         </div>
-        <div class="content" name="content" contenteditable="true"></div>
+        <div class="content" name="content" contenteditable="true" :v-bind="text"></div>
         <div style="text-align: right" id="keyword-btn">
           <v-btn depressed @click="keywordButtonClick">
             <v-icon color="pink">mdi-key-chain</v-icon>
@@ -88,6 +88,8 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+const pageStore = 'pageStore'
 
 export default {
   name: 'TextEditor',
@@ -110,10 +112,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(pageStore, ['setPageTitle', 'setPageText']),
     onUpdate (text) {
       this.text = text
     },
     keywordButtonClick(){
+      // 타이틀, 텍스트 store저장
+      this.text = document.getElementsByClassName('content')[0].innerHTML
+      this.setPageTitle(this.title)
+      this.setPageText(this.text)
+      // console.log(this.$store)
+
       // 1. 키워드 분석해서 가져온 값 keywords에 채워넣기
       
       // 2.
