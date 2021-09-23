@@ -1,5 +1,19 @@
 <template>
     <v-container>
+        <v-row justify="end" style="position:relative; z-index:2;">
+            <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="600px"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on" >
+                        <v-icon :color="$vuetify.breakpoint.xs?'black':'white'" >mdi-plus-circle-outline</v-icon>
+                    </v-btn>
+                </template>
+                <add-diary @closeAddDialog='onCloseAddDialog'/>
+            </v-dialog>
+        </v-row>
         <v-row class="slider">
             <v-col cols="1" sm="1" md="1" lg="1">
                 <v-btn icon :color="$vuetify.breakpoint.xs?'black':'white'" class="button" @click="shiftLeft()">
@@ -23,15 +37,19 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import Diary from './Diary.vue'
-import { mdiChevronLeft,mdiChevronRight } from '@mdi/js';
+import AddDiary from './AddDiary.vue'
+const diaryStore = 'diaryStore'
 
 export default {
   components: { 
-    Diary
+    Diary,
+    AddDiary
   },
   data(){
       return{
+          dialog:false,
           diarys:[
             {
                 id: 0,
@@ -81,8 +99,13 @@ export default {
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })
+
+    // diary 리스트 불러와서 diarys 초기화
+    let getD = this.getDiaryList()
+    console.log(getD)
   },
   methods: {
+    ...mapActions(diaryStore, ['getDiaryList']),
     onResize () {
         this.isMobile = window.innerWidth < 600
         if(this.isMobile)console.log("mobile")
@@ -129,12 +152,26 @@ export default {
             boxes[2].className = "box move-to-position4-from-right";
             boxes[3].className = "box move-to-position5-from-right";
         }, 500);
+    },
+
+    onCloseAddDialog(){
+        this.dialog = false
     }
   }
 }
 </script>
 
 <style>
+.add-diary-wrapper{
+    position: fixed;
+    z-index: 2;
+    margin: 0;
+    left: 80%;
+}
+/* #add-diary{
+    position: relative;
+    z-index: 2;
+} */
 .slider {
     display: flex;
     justify-content: space-around;

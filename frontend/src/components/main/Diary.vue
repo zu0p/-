@@ -10,13 +10,44 @@
             <v-row class="card-contents">
                 <v-col cols="1" sm="1" md="1" lg="1" id="diary-band" class="diary">
                 </v-col>
-                <v-col cols="11" sm="11" md="11" lg="11" class="diary">
-                    <v-container>
+                <v-col cols="11" sm="11" md="11" lg="11" class="diary">  
+                    <v-row id="buttons" justify="end">
+                        <!-- 수정 form dialog -->
+                        <v-dialog
+                        v-model="editDialog"
+                        persistent
+                        max-width="290"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn icon v-bind="attrs" v-on="on">
+                                    <v-icon color="blue darken-3">mdi-pencil-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            <!-- <add-diary @closeEditDialog='onCloseEditDialog'/> -->
+                        </v-dialog>
+
+                        <!-- 삭제 확인 dialog -->
+                        <v-dialog
+                        v-model="deleteDialog"
+                        persistent
+                        max-width="290"
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn icon  v-bind="attrs" v-on="on">
+                                    <v-icon color="red darken-3">mdi-trash-can-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            <delete-diary @cancelDeleteDialog="onDeleteDialog"/>
+                        </v-dialog>
+                    </v-row>
+
+                    <!-- 다이어리 제목과 설명 -->
+                    <v-container mt-5>        
                         <v-row>
-                            {{diaryTitle}}
+                            <h3>{{diaryTitle}}</h3>
                         </v-row>
                         <v-row>
-                            sub title?
+                            description
                         </v-row>
                     </v-container>
                 </v-col>
@@ -26,11 +57,19 @@
 </template>
 
 <script>
+import AddDiary from './AddDiary.vue'
+import DeleteDiary from './DeleteDiary.vue'
 export default {
+    components: { 
+        DeleteDiary,
+        AddDiary,
+    },
     props:['title','w', 'h'],
     data(){
         return{
-            diaryTitle: ''
+            diaryTitle: '',
+            deleteDialog: false,
+            editDialog: false
         }
     },
     created(){
@@ -45,6 +84,19 @@ export default {
             // => beforeCreate(path: /diary/:id/first)로 라우팅
             this.$router.push({path:`pages/${this.diaryTitle}/first`})
             
+        },
+        // editClick(e){
+        //     e.stopPropagation()
+        // },
+        // deleteClick(e){
+        //     e.stopPropagation()
+        //     this.deleteDialog = true
+        // },
+        onDeleteDialog(){
+            this.deleteDialog = false
+        },
+        onCloseEditDialog(){
+            this.editDialog = false
         }
     }
 }
@@ -69,5 +121,9 @@ export default {
     /* height: 350px; */
     height: 100%;
     background-color:rgb(48, 50, 61);
+}
+#buttons{
+    position: relative;
+    z-index: 100;
 }
 </style>
