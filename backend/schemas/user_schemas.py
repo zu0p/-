@@ -1,4 +1,5 @@
 
+from schemas.diary_schemas import Diary
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -42,7 +43,6 @@ class UserBase(BaseModel):
     userPhone : str
     userImage : str
 
-
 class UserInDB(UserBase):
     userPwd : str
     
@@ -51,6 +51,7 @@ class UserInDB(UserBase):
 
 class User(UserBase):
     id: int
+    userDiaries: List[Diary] = []
 
     class Config:
         orm_mode = True # Pydantic's orm_mode will tell the Pydantic model to read the data 
