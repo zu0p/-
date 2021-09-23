@@ -16,6 +16,15 @@ class DiaryCreate(DiaryBase):
         orm_mode = True
 
 
+class DiaryUpdateFrom(BaseModel):
+    diaryId: int
+    modifyName: str
+
+
+class DiaryDeleteForm(BaseModel):
+    diaryId: int
+
+
 class Diary(DiaryBase):
     id: int
     diaryOwner : str

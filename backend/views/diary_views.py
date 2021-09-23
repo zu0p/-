@@ -10,7 +10,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from database import get_db
 
-from schemas import user_schemas, diary_schemas # schemas
+from schemas import user_schemas
+from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
 from crud import user_crud, diary_crud # crud
 
@@ -51,6 +52,7 @@ async def create_diary(
     new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
     return new_diary
 
+
 ### R
 @diary_router.get("/read")
 async def read_diary(
@@ -60,26 +62,23 @@ async def read_diary(
     return read_diaries
 
 
-# @user_router.post("/signup", response_model=user_schemas.UserInDB)
-# async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
-#     new_user = user_crud.create_user(db, user_data)
-#     return new_user
+### U
+@diary_router.put("/update")
+async def update_diary(
+                        updateInfo: diary_schemas.DiaryUpdateFrom,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    diary_crud.update_diary(db, current_user.userName, updateInfo)
+    return {"state": "success"}
 
-# ### R
-# @user_router.get("/me", response_model=user_schemas.UserInDB)
-# async def read_user_one(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-#     return current_user
 
-# ### U
-# @user_router.put("/update", response_model=user_schemas.UserInDB)
-# async def update_user(user_data: user_schemas.UserUpdate, db: Session = Depends(get_db), 
-#                         old_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-#     updated_user = user_crud.update_user(db, user_data, old_user)
-#     return updated_user
+### D
+@diary_router.delete("/delete")
+async def delete_diary(
+                        deleteInfo: diary_schemas.DiaryDeleteForm,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    diary_crud.delete_diary(db, current_user.userName, deleteInfo.diaryId)
+    return {"state": "success"}
 
-# ### D
-# @user_router.delete("/delete")
-# async def update_user(current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user), db: Session = Depends(get_db)):
-#     user_crud.delete_user(db, current_user)
-#     return {"state": "success"}
 

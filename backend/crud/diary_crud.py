@@ -1,4 +1,5 @@
 
+from sqlalchemy.sql.sqltypes import Integer
 from database import get_db
 from typing import Optional
 from schemas.user_schemas import TokenData, UserInDB
@@ -32,18 +33,15 @@ def create_diary(db: SessionLocal, diary_data: diary_schemas.DiaryBase, owner: s
 def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
     return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).offset(skip).limit(limit).all()
 
-# ### U
-# def update_user(db: SessionLocal, user_data: user_schemas.UserUpdate, old_user:user_schemas.UserInDB):
-#     old_user.userName = user_data.userName
-#     old_user.userEmail = user_data.userEmail
-#     old_user.userNick = user_data.userNick
-#     old_user.userPhone = user_data.userPhone
-#     db.commit()
-#     db.refresh(old_user)
-#     return old_user
+### U
+def update_diary(db: SessionLocal, owner: str, updateInfo:diary_schemas.DiaryUpdateFrom):
+    get = db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=updateInfo.diaryId).first()
+    get.diaryName=updateInfo.modifyName
+    db.commit()
+    return 
 
-# ### D
-# def delete_user(db: SessionLocal, user_data: user_schemas.UserInDB):
-#     db.delete(user_data)
-#     db.commit()
-#     return
+### D
+def delete_diary(db: SessionLocal, owner: str, diaryId: Integer):
+    db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
+    db.commit()
+    return 
