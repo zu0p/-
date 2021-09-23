@@ -1,5 +1,4 @@
 
-
 from sqlalchemy import Column,Integer,String
 from sqlalchemy.dialects.mysql import INTEGER
 
@@ -17,3 +16,6 @@ class UserInfo(Base):
     userNick = Column(String)
     userPhone = Column(String)
     userImage = Column(String)
+    
+    userDiaries = relationship("DiaryInfo", back_populates="diaryOwner")
+    # https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html

@@ -8,30 +8,16 @@ from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Fo
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-
-app = FastAPI()
-
-# 로그 생성
-logger = logging.getLogger()
-# 로그의 출력 기준 설정
-logger.setLevel(logging.INFO)
-
-
-@app.post("/files/")
-async def create_file(file: bytes = File(...)):
-    return {"file_size": len(file)}
-
-
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    return {"filename": file.filename}
-
-
 from database import get_db
 
 from schemas import user_schemas # schemas
 from models import user_model # models
 from crud import user_crud # crud
+
+# 로그 생성
+logger = logging.getLogger()
+# 로그의 출력 기준 설정
+logger.setLevel(logging.INFO)
 
 user_router = APIRouter()
 
