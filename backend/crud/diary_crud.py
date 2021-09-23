@@ -28,6 +28,10 @@ def create_diary(db: SessionLocal, diary_data: diary_schemas.DiaryBase, owner: s
     db.refresh(db_diary)
     return db_diary
 
+### R
+def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
+    return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).offset(skip).limit(limit).all()
+
 # ### U
 # def update_user(db: SessionLocal, user_data: user_schemas.UserUpdate, old_user:user_schemas.UserInDB):
 #     old_user.userName = user_data.userName

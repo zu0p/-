@@ -51,6 +51,15 @@ async def create_diary(
     new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
     return new_diary
 
+### R
+@diary_router.get("/read")
+async def read_diary(
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    read_diaries = diary_crud.read_diary(db, current_user.userId)
+    return read_diaries
+
+
 # @user_router.post("/signup", response_model=user_schemas.UserInDB)
 # async def create_user(user_data: user_schemas.UserInDB, db: Session = Depends(get_db)): # DI
 #     new_user = user_crud.create_user(db, user_data)
