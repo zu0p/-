@@ -103,4 +103,5 @@ async def change_image(
     return {"state": "success"}
 
     # profile -> userId.jpeg
-    # 
+    # diary -> userId_diaryId.jpeg
+    # page -> userId_diaryId_pageId.jpeg
