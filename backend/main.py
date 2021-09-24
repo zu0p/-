@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
 from views.user_views import user_router
@@ -37,6 +38,19 @@ server = FastAPI(
             )
 
 server.mount("/static", StaticFiles(directory="static"), name="static")
+
+# CORS 설정
+origins = [
+    "*"
+]
+
+server.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # prefix 지정
 server.router.prefix = "/api/v1"
