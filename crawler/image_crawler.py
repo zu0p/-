@@ -82,12 +82,8 @@ def main():
         './keywords(초기850개).xlsx', engine='openpyxl')
     keywords = df['키워드']
 
-    cnt = 0
     for word in keywords:
-        cnt += 1
-
-        if (cnt > 5):
-            break
+        print(word)
 
         key, img_urls, img_descs = image_crawling(word)
         for i in range(len(img_urls)):
