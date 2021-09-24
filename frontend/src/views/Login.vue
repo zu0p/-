@@ -37,6 +37,7 @@
                             prepend-icon="mdi-account-circle white--text"
                             type="text"
                             color="teal accent-3"
+                            v-model="login.userId"
                           />
 
                           <v-text-field
@@ -47,6 +48,7 @@
                             type="password"
                             color="teal accent-3"
                             dark
+                            v-model="login.userPwd"
                           />
                         </v-form>
                         <h3 class="text-center mt-4">Forgot your password ?</h3>
@@ -82,12 +84,13 @@
                       </div>
                     </v-col>
 
+                    <!-- 회원가입 -->
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12 white--text">
                         <h1 class="text-center display-2 text--accent-3">그리더와 함께하기</h1>
                         <div class="text-center mt-4">
                           <v-btn class="mx-2" fab color="white" outlined>
-                            <v-icon>fab fa-facebook-f</v-icon>
+                            <v-icon>fa-facebook-f</v-icon>
                           </v-btn>
 
                           <v-btn class="mx-2" fab color="white" outlined>
@@ -106,34 +109,42 @@
                             type="text"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userName"
                           />
                           <v-text-field
                             label="Email"
                             name="Email"
-                            prepend-icon="email"
+                            prepend-icon="mdi-email-outline"
                             type="text"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userEmail"
                           />
 
                           <v-text-field
                             id="id"
                             label="ID"
                             name="id"
-                            prepend-icon="person"
+                            prepend-icon="mdi-account"
                             type="text"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userId"
                           />
 
                           <v-text-field
                             id="password"
                             label="Password"
                             name="password"
-                            prepend-icon="lock"
+                            prepend-icon="mdi-lock-outline"
                             type="password"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userPwd"
                           />
 
                           <v-text-field
@@ -144,21 +155,25 @@
                             type="text"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userNick"
                           />
 
                           <v-text-field
                             id="phone"
                             label="Phone Number"
                             name="phone"
-                            prepend-icon="phone"
+                            prepend-icon="mdi-cellphone-wireless"
                             type="text"
                             color="teal accent-3"
                             dark
+                            required
+                            v-model="form.userPhone"
                           />
                         </v-form>
                       </v-card-text>
                       <div class="text-center mt-n5">
-                        <v-btn rounded color="grey accent-3">SIGN UP</v-btn>
+                        <v-btn rounded color="grey accent-3" @click="clickSignup">SIGN UP</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -174,53 +189,109 @@
 </template>
 
 <script>
-import {reactive, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import {mapActions} from 'vuex'
+const userStore = 'userStore'
+// import {reactive, onMounted } from 'vue'
+// import { useStore } from 'vuex'
 
 export default {
   props: {
   },
-  data: () => ({
-    step: 1
-  }),
-  setup() {
-    const store = useStore()
-
-    const state = reactive({
-      form: {
-        id: '',
-        password: '',
-        nick: '',
-        name: '',
-        phone: '',
-        email: '',
-        userimage: '',
-      },
-    })
-
-    onMounted(()=>{
-    })
-
-    const clickLogin = function () {
-      loginForm.value.validate((valid)=>{
-        if(valid){
-          store.dispatch('root/requestLogin',{
-            userId: state.form.id,
-            userPwd: state.form.password
-          }).then(function (result){
-            alert("Success!","로그인 성공", "success")
-            localStorage.setItem('jwt',result.data.accessToken)
-            location.reload()
-          })
-          .catch(function () {
-            alert('Fail','아이디와 비밀번호를 확인해주세요','error')
-          })
-        }
-      })
+  data(){
+    return{
+        step:1,
+        login:{
+            userId: '',
+            userPwd: ''
+        },
+        form: {
+            userId: '',
+            userPwd: '',
+            userNick: '',
+            userName: '',
+            userPhone: '',
+            userEmail: '',
+            userImage: '',
+        },
     }
+  },
+  methods:{
+      ...mapActions(userStore, ['requestSignup','requestLogin','setToken']),
+    clickLogin(){
+        this.requestLogin(this.login)
+            .then(res=>{
+                if(res.status!=200){
+                    console.log('로그인실패')
+                }
+                // 로그인 성공 시 
+                if(res.statusText='OK'){
+                    // token 저장
+                    let tokenObj={
+                        access_token: res.data.access_token,
+                        token_type: res.data.token_type
+                    }
+                    this.setToken(tokenObj)
 
-    return { state, clickLogin}
-  }
+                    // main으로 라우팅
+                    this.$router.push({name:'Main'})
+                }
+                console.log(res.data)
+            })
+            .catch(e=>{
+                console.log(e)
+            })
+    },
+    clickSignup(){
+        this.requestSignup(this.form)
+            .then(res=>{
+                if(res.statusText=='OK'){
+                    alert('회원가입 성공')
+                    window.location='/'
+                }
+            })
+            .catch(e=>{
+                console.log(e)
+            })
+    }
+  },
+//   setup() {
+//     const store = useStore()
+
+//     const state = reactive({
+//       form: {
+//         id: '',
+//         password: '',
+//         nick: '',
+//         name: '',
+//         phone: '',
+//         email: '',
+//         userimage: '',
+//       },
+//     })
+
+//     onMounted(()=>{
+//     })
+
+//     const clickLogin = function () {
+//       loginForm.value.validate((valid)=>{
+//         if(valid){
+//           store.dispatch('root/requestLogin',{
+//             userId: state.form.id,
+//             userPwd: state.form.password
+//           }).then(function (result){
+//             alert("Success!","로그인 성공", "success")
+//             localStorage.setItem('jwt',result.data.accessToken)
+//             location.reload()
+//           })
+//           .catch(function () {
+//             alert('Fail','아이디와 비밀번호를 확인해주세요','error')
+//           })
+//         }
+//       })
+//     }
+
+//     return { state, clickLogin}
+//   }
 };
 </script>
 

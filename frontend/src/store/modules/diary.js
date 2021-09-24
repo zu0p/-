@@ -1,7 +1,8 @@
 import api from "../../api";
-import axios from "axios";
+import axios from 'axios';
+import interceptor from '../interceptors'
 
-const BASE_URL='http://j5d103.p.ssafy.io/api/v1'
+const BASE_URL='http://j5d103.p.ssafy.io/api/v1/diary'
 
 const diaryStore = {
   namespaced: true,
@@ -30,7 +31,7 @@ const diaryStore = {
   // actions
   actions : {
     getDiaryList({commit}){
-      let list = axios.get(`${BASE_URL}/diary/read`)
+      let list = axios.get(`${BASE_URL}/read`)
       commit('SET_DIARY_LIST', list)
       console.log(list)
     }

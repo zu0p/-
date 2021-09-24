@@ -5,6 +5,7 @@ import * as getters from './getters'
 import * as actions from './actions'
 import pageStore from './modules/page'
 import diaryStore from './modules/diary'
+import userStore from './modules/user'
 // import data from "./modules/data";
 // import app from "./modules/app";
 
@@ -16,7 +17,8 @@ const root = new Vuex.Store({
   actions,
   modules: {
     pageStore: pageStore,
-    diaryStore: diaryStore
+    diaryStore: diaryStore,
+    userStore: userStore
   }
 })
 
