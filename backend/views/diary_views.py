@@ -90,7 +90,7 @@ async def delete_diary(
                         deleteInfo: diary_schemas.DiaryDeleteForm,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.delete_diary(db, current_user.userName, deleteInfo.diaryId)
+    diary_crud.delete_diary(db, current_user.userId, deleteInfo.diaryId)
     return {"state": "success"}
 
 
