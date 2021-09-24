@@ -17,9 +17,10 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 ### C
 def create_diary(db: SessionLocal, diary_data: diary_schemas.DiaryBase, owner: str):
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
     db_diary = diary_model.DiaryInfo(
         diaryName = diary_data.diaryName,
-        diaryImage = diary_data.diaryImage,
+        diaryImage = Base_url + f"diary/{owner}_{diary_data.diaryName}.jpg",
         diaryDesc = diary_data.diaryDesc,
         diaryShare = diary_data.diaryShare,
         diaryOwnerId = owner

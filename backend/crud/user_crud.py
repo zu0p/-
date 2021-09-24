@@ -131,7 +131,8 @@ def change_password(db: SessionLocal, current_user: user_schemas.UserInDB,
 # 프로필 이미지 변경
 def change_image(db: SessionLocal, current_user: user_schemas.UserInDB, 
                         newImageUrl: str):
-    current_user.userImage = newImageUrl
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
+    current_user.userImage = Base_url + f"profile/{current_user.userId}.jpg"
     db.commit()
     db.refresh(current_user)
     return
