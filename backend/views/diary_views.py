@@ -49,7 +49,7 @@ async def create_diary(
         # profile -> userId.jpeg
         # diary -> userId_diaryId.jpeg
         # page -> userId_diaryId_pageId.jpeg
-        upload_file(UPLOAD_DIRECTORY+file_name,
+        await upload_file(UPLOAD_DIRECTORY+file_name,
                 "diary/"+file_name, 
                 client_s3)
     fp.close()
