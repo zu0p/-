@@ -18,14 +18,15 @@ client_s3 = boto3.client(
 """
 upload file to S3
 """
-def upload_file(local_path, s3_path, client, bucket_name="greeda-recommend"):
+async def upload_file(local_path, s3_path, client, bucket_name="greeda-recommend"):
     try:
         client.upload_file(
             local_path,
             bucket_name,
             s3_path,
-            ExtraArgs={'ContentType': 'image/jpeg'}
+            ExtraArgs={'ContentType': 'image/jpg'}
         )
+        print("upload")
     except ClientError as e :
         print(f'Credential error => {e}')
     except Exception as e :

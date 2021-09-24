@@ -49,7 +49,7 @@ async def create_diary(
         # profile -> userId.jpeg
         # diary -> userId_diaryId.jpeg
         # page -> userId_diaryId_pageId.jpeg
-        upload_file(UPLOAD_DIRECTORY+file_name,
+        await upload_file(UPLOAD_DIRECTORY+file_name,
                 "diary/"+file_name, 
                 client_s3)
     fp.close()
@@ -90,7 +90,7 @@ async def delete_diary(
                         deleteInfo: diary_schemas.DiaryDeleteForm,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.delete_diary(db, current_user.userName, deleteInfo.diaryId)
+    diary_crud.delete_diary(db, current_user.userId, deleteInfo.diaryId)
     return {"state": "success"}
 
 

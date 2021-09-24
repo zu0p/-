@@ -105,7 +105,7 @@ async def change_image(
         # profile -> userId.jpeg
         # diary -> userId_diaryId.jpeg
         # page -> userId_diaryId_pageId.jpeg
-        upload_file(UPLOAD_DIRECTORY+file_name,
+        await upload_file(UPLOAD_DIRECTORY+file_name,
                 "profile/"+file_name, 
                 client_s3)
     fp.close()
