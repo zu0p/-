@@ -101,3 +101,6 @@ async def change_image(
     logger.info(profileImage)
     user_crud.change_image(db, current_user, new_path)
     return {"state": "success"}
+
+    # profile -> userId.jpeg
+    # 
