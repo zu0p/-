@@ -14,6 +14,9 @@ from schemas import user_schemas # schemas
 from models import user_model # models
 from crud import user_crud # crud
 
+# image S3
+from utils.image_upload import client_s3, upload_file
+
 # 로그 생성
 logger = logging.getLogger()
 # 로그의 출력 기준 설정
@@ -93,9 +96,14 @@ async def change_image(
     UPLOAD_DIRECTORY = "./static/image/profile/"
     new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+".jpg")
     async with aiofiles.open(new_path, "wb") as fp:
-        contents = await profileImage.read()  # async read
-        fp.write(contents)
-        await fp.write(contents)  # async write
+        # async read
+        contents = await profileImage.read()  
+        # async write
+        await fp.write(contents)
+        # aws image upload
+        await upload_file(UPLOAD_DIRECTORY+current_user.userId+".jpg",
+                "profile/"+current_user.userId+".jpeg", 
+                client_s3)
     fp.close()
 
     logger.info(profileImage)
