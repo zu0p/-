@@ -94,22 +94,22 @@ async def change_image(
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
     UPLOAD_DIRECTORY = "./static/image/profile/"
-    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+".jpg")
+    file_name = current_user.userId+".jpg"
+    new_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     async with aiofiles.open(new_path, "wb") as fp:
         # async read
         contents = await profileImage.read()  
         # async write
         await fp.write(contents)
         # aws image upload
-        await upload_file(UPLOAD_DIRECTORY+current_user.userId+".jpg",
-                "profile/"+current_user.userId+".jpeg", 
+        # profile -> userId.jpeg
+        # diary -> userId_diaryId.jpeg
+        # page -> userId_diaryId_pageId.jpeg
+        upload_file(UPLOAD_DIRECTORY+file_name,
+                "profile/"+file_name, 
                 client_s3)
     fp.close()
 
     logger.info(profileImage)
     user_crud.change_image(db, current_user, new_path)
     return {"state": "success"}
-
-    # profile -> userId.jpeg
-    # diary -> userId_diaryId.jpeg
-    # page -> userId_diaryId_pageId.jpeg

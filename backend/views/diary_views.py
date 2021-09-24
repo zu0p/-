@@ -15,6 +15,9 @@ from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
 from crud import user_crud, diary_crud # crud
 
+# image S3
+from utils.image_upload import client_s3, upload_file
+
 # 로그 생성
 logger = logging.getLogger()
 # 로그의 출력 기준 설정
@@ -25,7 +28,7 @@ diary_router = APIRouter()
 # ================================== diary CRUD ==================================
 
 ### C
-@diary_router.post("/create", response_model=diary_schemas.DiaryCreate)
+@diary_router.post("/create")
 async def create_diary(
                         diaryName: str = Form(...),
                         diaryImage: UploadFile = File(...),
@@ -35,11 +38,20 @@ async def create_diary(
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
     UPLOAD_DIRECTORY = "./static/image/diary/"
-    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+f"_{diaryName}.jpg")
+    file_name = current_user.userId+f"_{diaryName}.jpg"
+    new_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     async with aiofiles.open(new_path, "wb") as fp:
-        contents = await diaryImage.read()  # async read
-        fp.write(contents)
-        await fp.write(contents)  # async write
+        # async read
+        contents = await diaryImage.read()  
+        # async write
+        await fp.write(contents) 
+        # aws image upload
+        # profile -> userId.jpeg
+        # diary -> userId_diaryId.jpeg
+        # page -> userId_diaryId_pageId.jpeg
+        upload_file(UPLOAD_DIRECTORY+file_name,
+                "diary/"+file_name, 
+                client_s3)
     fp.close()
     # diary create 객체생성
     diary_data = diary_schemas.DiaryCreate(
