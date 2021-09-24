@@ -44,7 +44,7 @@
                             
                             label="Password"
                             name="password"
-                            prepend-icon="lock"
+                            prepend-icon="mdi-lock-outline"
                             type="password"
                             color="teal accent-3"
                             dark
@@ -231,14 +231,18 @@ export default {
                         token_type: res.data.token_type
                     }
                     this.setToken(tokenObj)
+                    window.localStorage.setItem('access-token', tokenObj.access_token)
 
                     // main으로 라우팅
                     this.$router.push({name:'Main'})
                 }
-                console.log(res.data)
             })
             .catch(e=>{
-                console.log(e)
+                if(e.response.status==401){
+                    alert('아이디 혹은 비밀번호가 틀렸습니다.')
+                    this.login.userId=''
+                    this.login.userPwd=''
+                }
             })
     },
     clickSignup(){

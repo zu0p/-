@@ -66,24 +66,38 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+const diaryStore = 'diaryStore'
 export default {
+  props:['id'],
   data(){
     return{
       dialog: false
     }
   },
   methods:{
+    ...mapActions(diaryStore, ['requestDeleteDiary', 'deleteDiary']),
     clickCancel(){
       this.$emit('cancelDeleteDialog')
     },
     clickDelete(){
-      console.log("ddd")
+      // console.log("ddd")
       this.dialog = false
-      // 1. diary-actions로 diaryList에서 해당 다이어리 제거
+      // diary-actions로 diaryList에서 해당 다이어리 제거
+      const param={
+        "diaryId": this.id
+      }
+      console.log(param)
+      this.requestDeleteDiary(param)
+        .then(res=>{
+          console.log(res)
+          this.deleteDiary(this.id)
+        })
+        .catch(e=>{
+          console.log(e.response)
+        })
 
-      // 2. 제거완료의 알림창
-
-      // 3. dialog 닫기
+      // dialog 닫기
       this.$emit('cancelDeleteDialog')
     }
   }

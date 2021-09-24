@@ -37,17 +37,18 @@
                                     <v-icon color="red darken-3">mdi-trash-can-outline</v-icon>
                                 </v-btn>
                             </template>
-                            <delete-diary @cancelDeleteDialog="onDeleteDialog"/>
+                            <delete-diary :id="curDiary.id" @cancelDeleteDialog="onDeleteDialog"/>
                         </v-dialog>
                     </v-row>
 
                     <!-- 다이어리 제목과 설명 -->
                     <v-container mt-5>        
                         <v-row>
-                            <h3>{{diaryTitle}}</h3>
+                            <h3>{{curDiary.diaryName}}</h3>
                         </v-row>
                         <v-row>
-                            description
+                            {{curDiary.diaryDesc}}
+                            {{curDiary.id}}
                         </v-row>
                     </v-container>
                 </v-col>
@@ -64,16 +65,20 @@ export default {
         DeleteDiary,
         AddDiary,
     },
-    props:['title','w', 'h'],
+    props:['diary','w', 'h'],
     data(){
         return{
+            curDiary: null,
             diaryTitle: '',
             deleteDialog: false,
             editDialog: false
         }
     },
     created(){
-        this.diaryTitle = this.title
+        this.curDiary = this.diary
+        console.log(this.diary)
+        console.log(this.curDiary)
+        // this.diaryTitle = this.title
     },
     methods:{
         clickDiary(){
@@ -87,10 +92,6 @@ export default {
         },
         // editClick(e){
         //     e.stopPropagation()
-        // },
-        // deleteClick(e){
-        //     e.stopPropagation()
-        //     this.deleteDialog = true
         // },
         onDeleteDialog(){
             this.deleteDialog = false

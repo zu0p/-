@@ -20,7 +20,7 @@ const userStore = {
     SET_TOKEN(state, tokenObj){
       state.store.token = tokenObj.access_token
       state.store.tokenType = tokenObj.token_type
-      // console.log(state.store.token+" : "+state.store.tokenType)
+      console.log(state.store.token+" : "+state.store.tokenType)
     }
   },
 

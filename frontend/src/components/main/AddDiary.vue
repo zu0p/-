@@ -10,6 +10,7 @@
             <v-text-field
               label="Title*"
               required
+              v-model="diary.diaryName"
             ></v-text-field>
           </v-col>          
         </v-row>
@@ -21,21 +22,22 @@
               hint="간단한 설명을 적어보세요"
               persistent-hint
               required
+              v-model="diary.diaryDesc"
             ></v-text-field>
           </v-col>          
         </v-row>
         <v-row>
           <v-col>        
             <v-checkbox
-              v-model="isPublic"
-              label="Public diary"
+              v-model="diary.diaryShare"
+              label="Share Diary"
             ></v-checkbox>
           </v-col>
           <v-col>
             <v-file-input
               accept="image/*"
               label="Diary Cover Image*"
-              v-model="cover"
+              v-model="diary.diaryImage"
             ></v-file-input>
           </v-col>
         </v-row>
@@ -63,22 +65,43 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+const diaryStore = 'diaryStore'
+
 export default {
   data(){
     return{
-      isPublic: false,
-      cover: {}
+      diary:{
+        diaryName: '',
+        diaryImage: {},
+        diaryDesc: '',
+        diaryShare: false
+      }
     }
   },
   updated(){
-    console.log(this.cover)
+    // console.log(this.diary.diaryImage)
   },
   methods:{
+    ...mapActions(diaryStore,['createDiary', 'addDiary']),
     closeClick(){
       this.$emit('closeAddDialog')
     },
     createClick(){
+      console.log(this.diary)
+      const form = new FormData()
+      form.append('diaryName', this.diary.diaryName)
+      form.append('diaryImage', this.diary.diaryImage)
+      form.append('diaryDesc', this.diary.diaryDesc)
+      form.append('diaryShare', this.diary.diaryShare)
+
       //actions 불러서 새로 생성
+      this.createDiary(form)
+        .then(res=>{
+          console.log(res)
+          this.addDiary(res.data)
+          this.$emit('closeAddDialog')
+        })
     }
   }
 }

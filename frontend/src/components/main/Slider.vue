@@ -23,7 +23,7 @@
             <v-col cols="10" sm="10" md="10" lg="10" class="cards-wrapper">
                 <ul class="cards__container">
                     <li v-for="diary in diarys" :key="diary.id" class="box" :class="diary.hide">
-                        <diary :title="diary.title" w="12rem" h="20rem" />
+                        <diary :diary="diary" w="12rem" h="20rem" />
                     </li>
                 </ul>
             </v-col>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Diary from './Diary.vue'
 import AddDiary from './AddDiary.vue'
 const diaryStore = 'diaryStore'
@@ -48,46 +48,17 @@ export default {
     AddDiary
   },
   data(){
-      return{
-          dialog:false,
-          diarys:[
-            {
-                id: 0,
-                title: "my diary",
-                hied: ''
-            },
-            {
-                id:1,
-                title: "happy",
-                hied: ''
-            },
-            {
-                id:2,
-                title: "emotion",
-                hied: ''
-            },
-            {
-                id:3,
-                title: "today",
-                hied: ''
-            },
-            {
-                id:4,
-                title: "hoi",
-                hied: ''
-            },
-            {
-                id:5,
-                title: "shiny",
-                hide: 'box--hide'
-            },
-            {
-                id:6,
-                title: "cute",
-                hide: 'box--hide'
-            }
-          ]
-      }
+    return{
+    dialog:false,
+    diarys:[]
+    }
+  },
+  computed:{
+    ...mapGetters(diaryStore, ['diaryList']),
+    setDiarys(){
+        this.diarys = this.diaryList
+        // console.log(this.diarys)
+    }
   },
   beforeDestroy () {
     if (typeof window === 'undefined') return
@@ -101,11 +72,16 @@ export default {
     window.addEventListener('resize', this.onResize, { passive: true })
 
     // diary 리스트 불러와서 diarys 초기화
-    let getD = this.getDiaryList()
-    console.log(getD)
+    this.getDiaryList()
+        .then(res=>{
+            // console.log(res)
+            // this.diarys = res.data
+            this.setDiaryList(res.data)
+            this.setDiarys
+        })
   },
   methods: {
-    ...mapActions(diaryStore, ['getDiaryList']),
+    ...mapActions(diaryStore, ['getDiaryList', 'setDiaryList']),
     onResize () {
         this.isMobile = window.innerWidth < 600
         if(this.isMobile)console.log("mobile")
