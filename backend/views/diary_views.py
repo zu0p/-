@@ -88,7 +88,7 @@ async def update_diary(
                         updateInfo: diary_schemas.DiaryUpdateFrom,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.update_diary(db, current_user.userName, updateInfo)
+    diary_crud.update_diary(db, current_user.userId, updateInfo)
     return {"state": "success"}
 
 
