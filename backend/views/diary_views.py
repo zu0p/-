@@ -73,6 +73,14 @@ async def read_diary(
     read_diaries = diary_crud.read_diary(db, current_user.userId)
     return read_diaries
 
+@diary_router.get("/read/{diaryId}")
+async def read_diary(
+                        diaryId: str,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    read_diaries = diary_crud.read_one_diary(db, current_user.userId, diaryId)
+    return read_diaries
+
 
 ### U
 @diary_router.put("/update")
@@ -80,7 +88,7 @@ async def update_diary(
                         updateInfo: diary_schemas.DiaryUpdateFrom,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.update_diary(db, current_user.userName, updateInfo)
+    diary_crud.update_diary(db, current_user.userId, updateInfo)
     return {"state": "success"}
 
 
