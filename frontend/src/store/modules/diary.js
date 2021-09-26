@@ -95,6 +95,9 @@ const diaryStore = {
     },
     
     // 다이어리 수정
+    requestDiaryInfo({commit}, id){
+      return instanceWithAuth.get(`${BASE_URL}/read/${id}`)
+    },
     requestUpdateDiary({commit}, diary){
       return instanceWithAuth.put(`${BASE_URL}/update`, diary)
     },

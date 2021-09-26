@@ -91,11 +91,19 @@ export default {
     if(!this.isAdd){
       // 수정일 때
       // 기존 정보 불러와서 값 채우기
-      console.log(this.id)
+      // console.log(this.id)
+      this.requestDiaryInfo(this.id)
+        .then(res=>{
+          console.log(res)
+          this.diary.diaryName = res.data.diaryName
+          this.diary.diaryDesc = res.data.diaryDesc
+          this.diary.diaryImage = res.data.diaryImage
+          this.diary.diaryShare = res.data.diaryShare
+        })
     }
   },
   methods:{
-    ...mapActions(diaryStore,['createDiary', 'addDiary', 'requestUpdateDiary', 'updateDiary']),
+    ...mapActions(diaryStore,['createDiary', 'addDiary', 'requestUpdateDiary', 'updateDiary', 'requestDiaryInfo']),
     closeClick(){
       this.$emit('closeAddDialog')
     },
@@ -132,7 +140,8 @@ export default {
         }
         this.requestUpdateDiary(param)
           .then(res=>{
-            console.log(res)
+            // console.log(res)
+            this.updateDiary(param)
             this.$emit('closeAddDialog')
           })
       }
