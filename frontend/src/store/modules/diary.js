@@ -55,9 +55,16 @@ const diaryStore = {
       state.store.diaryList.push(diary)
       // console.log(state.store.diaryList)
     },
+    UPDATE_DIARY(state, diary){
+      const res = state.store.diaryList.map(item => {
+        if(item.id == diary.diaryId)
+          item.diaryName = diary.modifyName
+      })
+    },
     DELETE_DIARY(state, id){
       const res = state.store.diaryList.filter(item => item.id != id)
       state.store.diaryList = res
+      // console.log(state.store.diaryList)
     }
   },
 
@@ -88,10 +95,20 @@ const diaryStore = {
     },
     
     // 다이어리 수정
-
+    requestUpdateDiary({commit}, diary){
+      return instanceWithAuth.put(`${BASE_URL}/update`, diary)
+    },
+    updateDiary({commit},diary){
+      commit('UPDATE_DIARY', diary)
+    },
     // 다이어리 삭제
     requestDeleteDiary({commit}, id){
-      return instanceWithAuth.delete(`${BASE_URL}/delete`, id)
+      return instanceWithAuth.delete(
+        `${BASE_URL}/delete`,
+        {
+          data: id
+        }
+      )
     },
     deleteDiary({commit}, id){
       commit('DELETE_DIARY', id)

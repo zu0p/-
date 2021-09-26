@@ -11,7 +11,7 @@
                         <v-icon :color="$vuetify.breakpoint.xs?'black':'white'" >mdi-plus-circle-outline</v-icon>
                     </v-btn>
                 </template>
-                <add-diary @closeAddDialog='onCloseAddDialog'/>
+                <add-diary :isAdd="true" @closeAddDialog='onCloseAddDialog'/>
             </v-dialog>
         </v-row>
         <v-row class="slider">
@@ -50,15 +50,56 @@ export default {
   data(){
     return{
     dialog:false,
-    diarys:[]
+    // diarys:[
+    //             {
+    //                 id: 1,
+    //                 diaryName: 'hi',
+    //                 diaryDesc: 'ddd',
+    //                 diaryImg: 'ddd',
+    //                 diaryShare: true
+    //             },
+    //             {
+    //                 id: 2,
+    //                 diaryName: 'hi',
+    //                 diaryDesc: 'ddd',
+    //                 diaryImg: 'ddd',
+    //                 diaryShare: true
+    //             },
+    //             {
+    //                 id: 3,
+    //                 diaryName: 'hi',
+    //                 diaryDesc: 'ddd',
+    //                 diaryImg: 'ddd',
+    //                 diaryShare: true
+    //             },
+    //             {
+    //                 id: 4,
+    //                 diaryName: 'hi',
+    //                 diaryDesc: 'ddd',
+    //                 diaryImg: 'ddd',
+    //                 diaryShare: true
+    //             },
+    //         ]
     }
   },
   computed:{
     ...mapGetters(diaryStore, ['diaryList']),
-    setDiarys(){
-        this.diarys = this.diaryList
-        // console.log(this.diarys)
-    }
+    diarys(){
+        return this.diaryList
+    }, 
+  },
+  updated(){
+      if(this.diarys.length >= 5){
+          // .box 클래스에 n-th child 에 넣은 css를 처리하기 위해 css 클래스 네임 바꾸고
+          for(let i = 0; i<this.diarys.length; i++){
+            document.getElementsByClassName('box')[i].classList.add('over-five')
+          }
+      }
+      else{
+          for(let i = 0; i<this.diarys.length; i++){
+            document.getElementsByClassName('box')[i].classList.remove('over-five')
+          }
+      }
   },
   beforeDestroy () {
     if (typeof window === 'undefined') return
@@ -66,7 +107,6 @@ export default {
     window.removeEventListener('resize', this.onResize, { passive: true })
   },
   mounted () {
-    // console.log(this.$vuetify.breakpoint.width)
     this.onResize()
 
     window.addEventListener('resize', this.onResize, { passive: true })
@@ -74,59 +114,81 @@ export default {
     // diary 리스트 불러와서 diarys 초기화
     this.getDiaryList()
         .then(res=>{
-            // console.log(res)
-            // this.diarys = res.data
             this.setDiaryList(res.data)
-            this.setDiarys
+            this.diarys
         })
+    
+      if(this.diarys.length >= 5){
+          // .box 클래스에 n-th child 에 넣은 css를 처리하기 위해 css 클래스 네임 바꾸고
+          for(let i = 0; i<this.diarys.length; i++){
+            document.getElementsByClassName('box')[i].classList.add('over-five')
+          }
+      }
   },
+
   methods: {
     ...mapActions(diaryStore, ['getDiaryList', 'setDiaryList']),
     onResize () {
         this.isMobile = window.innerWidth < 600
-        if(this.isMobile)console.log("mobile")
+        // if(this.isMobile)console.log("mobile")
     },
     shiftLeft: function() {
-    //   console.log("prev")
         const boxes = document.querySelectorAll(".box");
         const tmpNode = boxes[0];
-        boxes[0].className = "box move-out-from-left";
+        let isOverFive = boxes.length>=5?'over-five':''
+        let lastIdx = boxes.length>=5?4:boxes.length-1
+
+        boxes[0].className = `box move-out-from-left ${isOverFive}`;
 
         setTimeout(function() {
-            if (boxes.length > 5) {
-                tmpNode.classList.add("box--hide");
-                boxes[5].className = "box move-to-position5-from-left";
-            }
-            boxes[1].className = "box move-to-position1-from-left";
-            boxes[2].className = "box move-to-position2-from-left";
-            boxes[3].className = "box move-to-position3-from-left";
-            boxes[4].className = "box move-to-position4-from-left";
-            boxes[0].remove();
 
+            if (boxes.length > 5) {
+                tmpNode.classList.add("box--hide")
+                boxes[5].className = `box move-to-position5-from-left ${isOverFive}`
+                for(let i = 6; i<boxes.length; i++){
+                    boxes[i].className = `box box--hide ${isOverFive}`
+                }
+            }
+            // boxes[1].className = `box move-to-position1-from-left ${isOverFive}`
+            // boxes[2].className = `box move-to-position2-from-left ${isOverFive}`
+            // boxes[3].className = `box move-to-position3-from-left ${isOverFive}`
+            // boxes[4].className = `box move-to-position4-from-left ${isOverFive}`
+            boxes[0].remove();
+            for(let i = 1; i<lastIdx; i++){
+                boxes[i].className = `box move-to-position${i%5}-from-left ${isOverFive}`
+            }
             document.querySelector(".cards__container").appendChild(tmpNode);
 
         }, 500);
     },
     shiftRight: function(){
         // console.log('next')
-        const boxes = document.querySelectorAll(".box");
-        boxes[4].className = "box move-out-from-right";
+        const boxes = document.querySelectorAll(".box")
+        let isOverFive = boxes.length>=5?'over-five':''
+        let lastIdx = boxes.length>=5?4:boxes.length-1
+        boxes[lastIdx].className = `box move-out-from-right ${isOverFive}`
         setTimeout(function() {
             const noOfCards = boxes.length;
-            if (noOfCards > 4) {
-                boxes[4].className = "box box--hide";
+            if (noOfCards > 5) {
+                // boxes[4].className = "box box--hide over-five"
+                for(let i = 4; i<boxes.length; i++){
+                    boxes[i].className = "box box--hide over-five"
+                }
             }
 
-            const tmpNode = boxes[noOfCards - 1];
-            tmpNode.classList.remove("box--hide");
-            boxes[noOfCards - 1].remove();
-            let parentObj = document.querySelector(".cards__container");
-            parentObj.insertBefore(tmpNode, parentObj.firstChild);
-            tmpNode.className = "box move-to-position1-from-right";
-            boxes[0].className = "box move-to-position2-from-right";
-            boxes[1].className = "box move-to-position3-from-right";
-            boxes[2].className = "box move-to-position4-from-right";
-            boxes[3].className = "box move-to-position5-from-right";
+            const tmpNode = boxes[noOfCards - 1]
+            tmpNode.classList.remove("box--hide")
+            boxes[noOfCards - 1].remove()
+            let parentObj = document.querySelector(".cards__container")
+            parentObj.insertBefore(tmpNode, parentObj.firstChild)
+            tmpNode.className = `box move-to-position1-from-right ${isOverFive}`
+            // boxes[0].className = "box move-to-position2-from-right over-five";
+            // boxes[1].className = "box move-to-position3-from-right over-five";
+            // boxes[2].className = "box move-to-position4-from-right over-five";
+            // boxes[3].className = "box move-to-position5-from-right over-five";
+            for(let i = 0; i<lastIdx; i++){
+                boxes[i].className = `box move-to-position${(i+2)%6}-from-right ${isOverFive}`
+            }
         }, 500);
     },
 
@@ -161,7 +223,7 @@ export default {
     width: 2rem;
     cursor: pointer;
     position: relative;
-    z-index: 2;
+    z-index: 100;
 }
 
 .button--inactive {
@@ -186,7 +248,7 @@ export default {
 }
 
 .box {
-/*     margin: -1.5rem; */
+    margin: 1.5rem;
     width: 12rem;
     height: 20rem;
     box-shadow: 0px 0px 2rem 0px #888888;
@@ -198,29 +260,29 @@ export default {
     /* transition: 1s all; */
 }
 
-.box:nth-child(2n) {
+.over-five:nth-child(2n) {
     transform: scale(0.85);
     z-index: -1;
 }
 
-.box:nth-child(2) {
+.over-five:nth-child(2) {
   left: 5%;
 }
 
-.box:nth-child(4) {
+.over-five:nth-child(4) {
   left: -5%;
 }
 
-.box:nth-child(4n + 1) {
+.over-five:nth-child(4n + 1) {
     transform: scale(0.75);
     z-index: -2;
 }
 
-.box:nth-child(1) {
+.over-five:nth-child(1) {
   left: 15%;
 }
 
-.box:nth-child(5) {
+.over-five:nth-child(5) {
   left: -15%;
 }
 

@@ -23,7 +23,7 @@
                                     <v-icon color="blue darken-3">mdi-pencil-outline</v-icon>
                                 </v-btn>
                             </template>
-                            <!-- <add-diary @closeEditDialog='onCloseEditDialog'/> -->
+                            <add-diary :isAdd="false" :id="curDiary.id" @closeAddDialog='onCloseEditDialog'/>
                         </v-dialog>
 
                         <!-- 삭제 확인 dialog -->
@@ -76,18 +76,16 @@ export default {
     },
     created(){
         this.curDiary = this.diary
-        console.log(this.diary)
-        console.log(this.curDiary)
         // this.diaryTitle = this.title
     },
     methods:{
         clickDiary(){
             //해당 title의 diary page로 이동
-            console.log("click!"+this.diaryTitle)
+            // console.log("click!"+this.diaryTitle)
 
             // 선택한 diary에 page가 하나도 없으면 
             // => beforeCreate(path: /diary/:id/first)로 라우팅
-            this.$router.push({path:`pages/${this.diaryTitle}/first`})
+            this.$router.push({path:`pages/${this.curDiary.diaryName}/first`})
             
         },
         // editClick(e){

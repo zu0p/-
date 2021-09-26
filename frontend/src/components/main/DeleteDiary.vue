@@ -54,13 +54,6 @@
           </v-card>
         </template>
       </v-dialog>
-      <!-- <v-btn
-        color="red darken-3"
-        text
-        @click="clickDelete"
-      >
-        delete
-      </v-btn> -->
     </v-card-actions>
   </v-card>
 </template>
@@ -81,24 +74,25 @@ export default {
       this.$emit('cancelDeleteDialog')
     },
     clickDelete(){
-      // console.log("ddd")
       this.dialog = false
+
       // diary-actions로 diaryList에서 해당 다이어리 제거
       const param={
         "diaryId": this.id
       }
-      console.log(param)
       this.requestDeleteDiary(param)
         .then(res=>{
           console.log(res)
-          this.deleteDiary(this.id)
+          if(res.statusText=='OK')
+            this.deleteDiary(this.id)
+
+          // dialog 닫기
+          this.$emit('cancelDeleteDialog')
         })
         .catch(e=>{
           console.log(e.response)
         })
 
-      // dialog 닫기
-      this.$emit('cancelDeleteDialog')
     }
   }
 }

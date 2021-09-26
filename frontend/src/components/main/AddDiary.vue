@@ -18,6 +18,7 @@
         <v-row>
           <v-col>
             <v-text-field
+              :disabled="!isAdd"
               label="Description*"
               hint="간단한 설명을 적어보세요"
               persistent-hint
@@ -29,12 +30,14 @@
         <v-row>
           <v-col>        
             <v-checkbox
+              :disabled="!isAdd"
               v-model="diary.diaryShare"
               label="Share Diary"
             ></v-checkbox>
           </v-col>
           <v-col>
             <v-file-input
+              :disabled="!isAdd"
               accept="image/*"
               label="Diary Cover Image*"
               v-model="diary.diaryImage"
@@ -58,7 +61,7 @@
         text
         @click="createClick"
       >
-        Create
+        {{isAdd?'Create':'Update'}}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -69,6 +72,7 @@ import { mapActions } from 'vuex'
 const diaryStore = 'diaryStore'
 
 export default {
+  props:['isAdd', 'id'],
   data(){
     return{
       diary:{
@@ -76,32 +80,62 @@ export default {
         diaryImage: {},
         diaryDesc: '',
         diaryShare: false
-      }
+      },
     }
   },
   updated(){
     // console.log(this.diary.diaryImage)
   },
+  mounted(){
+    // console.log(this.isAdd)
+    if(!this.isAdd){
+      // 수정일 때
+      // 기존 정보 불러와서 값 채우기
+      console.log(this.id)
+    }
+  },
   methods:{
-    ...mapActions(diaryStore,['createDiary', 'addDiary']),
+    ...mapActions(diaryStore,['createDiary', 'addDiary', 'requestUpdateDiary', 'updateDiary']),
     closeClick(){
       this.$emit('closeAddDialog')
     },
     createClick(){
-      console.log(this.diary)
-      const form = new FormData()
-      form.append('diaryName', this.diary.diaryName)
-      form.append('diaryImage', this.diary.diaryImage)
-      form.append('diaryDesc', this.diary.diaryDesc)
-      form.append('diaryShare', this.diary.diaryShare)
+      // console.log(this.diary)
 
-      //actions 불러서 새로 생성
-      this.createDiary(form)
-        .then(res=>{
-          console.log(res)
-          this.addDiary(res.data)
-          this.$emit('closeAddDialog')
-        })
+      if(this.isAdd){
+        //생성
+        //actions 불러서 새로 생성
+        const form = new FormData()
+        form.append('diaryName', this.diary.diaryName)
+        form.append('diaryImage', this.diary.diaryImage)
+        form.append('diaryDesc', this.diary.diaryDesc)
+        form.append('diaryShare', this.diary.diaryShare)
+
+        this.createDiary(form)
+          .then(res=>{
+            // console.log(res)
+            this.addDiary(res.data)
+            this.diary.diaryName=''
+            this.diary.diaryImage={}
+            this.diary.diaryDesc=''
+            this.diary.diaryShare=false
+
+            this.$emit('closeAddDialog')
+          })
+      }
+      else{
+        //update
+        console.log('update')
+        const param={
+          diaryId: this.id,
+          modifyName: this.diary.diaryName
+        }
+        this.requestUpdateDiary(param)
+          .then(res=>{
+            console.log(res)
+            this.$emit('closeAddDialog')
+          })
+      }
     }
   }
 }
