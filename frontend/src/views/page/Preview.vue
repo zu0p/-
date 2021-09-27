@@ -5,9 +5,6 @@
         <drag-and-drop />
       </v-col>
     </v-row>
-    <v-row>
-      <v-btn>done</v-btn>
-    </v-row>
   </v-container>  
 </template>
 

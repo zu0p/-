@@ -1,16 +1,8 @@
 <template>
-  <v-container>
+  <v-container id="preview-wrapper"> 
     <img id="img-bg" :src="preview"/>
-    <v-row id="preview-wrapper">
+    <v-row style="height:95%">
     <div  style="width:40px" >
-      <!-- <v-icon 
-        id="ball"
-        @mousedown="drag($event)" 
-        draggable="true" 
-        @dragstart.prevent
-        >
-        mdi-billiards
-      </v-icon> -->
       <div 
         id="ball"
         @mousedown="drag($event)" 
@@ -20,6 +12,12 @@
         >
       </div>
     </div>
+    </v-row>
+    <v-row>
+      <v-btn color="blue-grey" @click="clickWritePage">
+        <v-icon color="white">mdi-application-edit-outline</v-icon>
+        <span style="color:white;">DONE</span>
+      </v-btn>
     </v-row>
   </v-container>
   <!-- <v-container>
@@ -42,7 +40,8 @@ export default {
     return{
       text: '',
       imgFile: {},
-      preview: null
+      preview: null,
+      plainText: ''
     }
   },
   mounted(){
@@ -55,6 +54,8 @@ export default {
     const pageStore = this.$store._modules.root._children.pageStore.state.store
     this.text = pageStore.page_text
     this.imgFile = pageStore.page_img
+    this.plainText = this.text.replace(/<[^>]*>/g, '')
+    console.log(this.plainText)
     console.log(this.text)
     console.log(this.imgFile)
 
@@ -101,6 +102,10 @@ export default {
         ball.onmouseup = null
       }
     },
+
+    clickWritePage(){
+      // 이미지+텍스트+위치 create page
+    }
   },
 }
 </script>
@@ -118,7 +123,30 @@ export default {
   z-index: -1;
   top:0;
   left: 0;
-  max-width: 100%;
   
+  width: 100%;
+  height: 90%;
+
+  background-position: center;
+  background-size: cover;
 }
+
+#preview-wrapper{
+
+  width: 100% !important;
+  height: 100% !important;
+}
+/* #preview-wrapper{
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  width: 100vh;
+  height: 100vh;
+  margin: 0;
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+} */
+/* :style="`background-image: url(${preview})`" id="preview-wrapper" */
 </style>

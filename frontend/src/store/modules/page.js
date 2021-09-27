@@ -7,17 +7,15 @@ const pageStore = {
   state : {
     store:{
       page_id: "",
-      page_img: {},
+      page_img: null,
       page_text: "",
-      page_title: ""
+      page_title: "",
+      isKeywordSearch: false,
     }
   },
 
   // getters
   getters:{
-    getPageImag: function(state){
-      return state.store.page_img
-    }
   },
 
   // mutations
@@ -43,6 +41,9 @@ const pageStore = {
       return state.store.page_img
     },
 
+    SET_IS_KEYWORD_SEARCH(state){
+      state.store.isKeywordSearch = !state.store.isKeywordSearch
+    },
   },
 
   // actions
@@ -65,7 +66,11 @@ const pageStore = {
 
     getPageImg({commit}){
       return commit('GET_PAGE_IMG')
-    }
+    },
+
+    setIsKeywordSearch({commit}){
+      commit('SET_IS_KEYWORD_SEARCH')
+    },
   },
 
 }

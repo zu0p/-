@@ -45,30 +45,6 @@
                 <v-icon>mdi-format-align-right</v-icon>
               </v-btn>
             </v-col>
-            <!-- color picker -->
-            <!-- <v-col cols="1" class="shrink" style="min-width: 220px;">
-              <v-row class="ma-0 pa-0">
-              <v-col class="ma-0 pa-0">
-                <v-text-field v-model="color"  hide-details class="ma-0 pa-0" solo >
-                  <template v-slot:append>
-                    <v-menu v-model="menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false" >
-                      <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle" v-on="on" />
-                      </template>
-                      <v-card>
-                        <v-card-text class="pa-0">
-                          <v-color-picker v-model="color" flat />
-                        </v-card-text>
-                      </v-card>
-                    </v-menu> 
-                  </template>
-                </v-text-field>
-              </v-col>
-              <v-col class="ma-0 pa-0">
-                <v-btn @click="chanegeFontColor" icon><v-icon>mdi-eyedropper-variant</v-icon></v-btn> 
-              </v-col>
-              </v-row>
-            </v-col> -->
             <v-col cols="2" sm="2" md="2" lg="2">
               <select id="sel" @change="formatDoc('forecolor','color')" style="color: gray; margin: 3px 5px 0 3px;">
                 <option class="heading" selected>color</option>
@@ -168,23 +144,8 @@ export default {
       isDisable: false
     }
   },
-  computed:{
-    swatchStyle() {
-      const { color, menu } = this
-      // console.log(color)
-      this.chanegeFontColor()
-      return {
-        backgroundColor: color,
-        cursor: 'pointer',
-        height: '30px',
-        width: '30px',
-        borderRadius: menu ? '50%' : '4px',
-        transition: 'border-radius 200ms ease-in-out'
-      }
-    }
-  },
   methods: {
-    ...mapActions(pageStore, ['setPageTitle', 'setPageText']),
+    ...mapActions(pageStore, ['setPageTitle', 'setPageText', 'setIsKeywordSearch']),
     onUpdate (text) {
       this.text = text
     },
@@ -204,6 +165,11 @@ export default {
     selectKeywordButtonClick(){
       this.isDisable = true
       // select한 키워드들은 this.checkbox에 배열로 담겨있음
+      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
+
+      this.setIsKeywordSearch()
+      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
+
     },
     formatDoc(sCmd, select) {
       let sValue
@@ -215,10 +181,6 @@ export default {
       document.execCommand(sCmd, false, sValue)
       document.getElementsByClassName('content')[0].focus()
     },
-    chanegeFontColor(){
-      console.log(this.color)
-      document.execCommand('ForeColor', false, this.color)
-    }
   }
 }
 </script>
