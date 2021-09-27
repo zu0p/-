@@ -252,7 +252,7 @@ export default {
     width: 12rem;
     height: 20rem;
     box-shadow: 0px 0px 2rem 0px #888888;
-    background-color: white;
+    /* background-color: white; */
     display: flex;
     justify-content: center;
     align-items: center;

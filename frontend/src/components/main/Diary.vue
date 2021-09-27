@@ -5,13 +5,14 @@
         :height="h"
         :width="w"
         @click="clickDiary"
-    >
-        <v-container fluid class="diary-wrapper">
+    >   
+        <v-container fluid class="diary-wrapper" :style="`background-image: url(${curDiary.diaryImage})`"> 
             <v-row class="card-contents">
+            <!-- <img id="cover-image" :src="curDiary.diaryImage"> -->
                 <v-col cols="1" sm="1" md="1" lg="1" id="diary-band" class="diary">
                 </v-col>
                 <v-col cols="11" sm="11" md="11" lg="11" class="diary">  
-                    <v-row id="buttons" justify="end">
+                    <v-row id="buttons" justify="end">ß
                         <!-- 수정 form dialog -->
                         <v-dialog
                         v-model="editDialog"
@@ -44,10 +45,10 @@
                     <!-- 다이어리 제목과 설명 -->
                     <v-container mt-5>        
                         <v-row>
-                            <h3>{{curDiary.diaryName}}</h3>
+                            <h3 style="color:white;">{{curDiary.diaryName}}</h3>
                         </v-row>
                         <v-row>
-                            {{curDiary.diaryDesc}}
+                            <p style="color:white;">{{curDiary.diaryDesc}}</p>
                             {{curDiary.id}}
                         </v-row>
                     </v-container>
@@ -102,6 +103,9 @@ export default {
 </script>
 
 <style>
+#cover-image{
+    object-fit: cover;
+}
 .diary-wrapper{
     margin: 0;
     padding: 0;
