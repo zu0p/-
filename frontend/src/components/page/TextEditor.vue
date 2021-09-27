@@ -14,32 +14,84 @@
         </div>
         
         <div class="text-editor-menu">
-          <v-btn icon onclick="document.execCommand('bold')">
-            <v-icon>mdi-format-bold</v-icon>
-          </v-btn>
-          <v-btn icon onclick="document.execCommand('Italic')">
-            <v-icon>mdi-format-italic</v-icon>
-          </v-btn>          
-          <v-btn icon onclick="document.execCommand('Underline')">
-            <v-icon>mdi-format-underline</v-icon>
-          </v-btn>   
-          <v-btn icon onclick="document.execCommand('justifyleft')">
-            <v-icon>mdi-format-align-left</v-icon>
-          </v-btn>
-          <v-btn icon onclick="document.execCommand('justifycenter')">
-            <v-icon>mdi-format-align-center</v-icon>
-          </v-btn>
-          <v-btn icon onclick="document.execCommand('justifyright')">
-            <v-icon>mdi-format-align-right</v-icon>
-          </v-btn>
-          <!-- <select id="fontSize" width="50px">
-            <option value="">글자 크기</option>
-            <option value="3">10px</option>
-            <option value="4">12px</option>
-            <option value="5">16px</option>
-            <option value="6">20px</option>
-            <option value="7">30px</option>
-          </select> -->
+          <v-row>
+            <v-col cols="2" sm="1" md="1" lg="1">
+              <v-btn icon onclick="document.execCommand('bold')">
+                <v-icon>mdi-format-bold</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="2" sm="1" md="1" lg="1">
+              <v-btn icon onclick="document.execCommand('Italic')">
+                <v-icon>mdi-format-italic</v-icon>
+              </v-btn>  
+            </v-col>          
+            <v-col cols="2" sm="1" md="1" lg="1">        
+              <v-btn icon onclick="document.execCommand('Underline')">
+                <v-icon>mdi-format-underline</v-icon>
+              </v-btn>   
+            </v-col>
+            <v-col cols="2" sm="1" md="1" lg="1">
+              <v-btn icon onclick="document.execCommand('justifyleft')">
+                <v-icon>mdi-format-align-left</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="2" sm="1" md="1" lg="1">
+              <v-btn icon onclick="document.execCommand('justifycenter')">
+                <v-icon>mdi-format-align-center</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col cols="2" sm="1" md="1" lg="1">
+              <v-btn icon onclick="document.execCommand('justifyright')">
+                <v-icon>mdi-format-align-right</v-icon>
+              </v-btn>
+            </v-col>
+            <!-- color picker -->
+            <!-- <v-col cols="1" class="shrink" style="min-width: 220px;">
+              <v-row class="ma-0 pa-0">
+              <v-col class="ma-0 pa-0">
+                <v-text-field v-model="color"  hide-details class="ma-0 pa-0" solo >
+                  <template v-slot:append>
+                    <v-menu v-model="menu" top nudge-bottom="105" nudge-left="16" :close-on-content-click="false" >
+                      <template v-slot:activator="{ on }">
+                        <div :style="swatchStyle" v-on="on" />
+                      </template>
+                      <v-card>
+                        <v-card-text class="pa-0">
+                          <v-color-picker v-model="color" flat />
+                        </v-card-text>
+                      </v-card>
+                    </v-menu> 
+                  </template>
+                </v-text-field>
+              </v-col>
+              <v-col class="ma-0 pa-0">
+                <v-btn @click="chanegeFontColor" icon><v-icon>mdi-eyedropper-variant</v-icon></v-btn> 
+              </v-col>
+              </v-row>
+            </v-col> -->
+            <v-col cols="2" sm="2" md="2" lg="2">
+              <select id="sel" @change="formatDoc('forecolor','color')" style="color: gray; margin: 3px 5px 0 3px;">
+                <option class="heading" selected>color</option>
+                <option value="#D81B09FF">Red</option>
+                <option value="#0911BEFF">Blue</option>
+                <option value="#075A14FF">Green</option>
+                <option value="black">Black</option>
+                <option value="white">White</option>
+              </select>
+            </v-col>
+            <v-col cols="2" sm="2" md="2" lg="2">
+              <select id="sel2" @change="formatDoc('fontSize','size')" style="color: gray; margin: 3px 0 0 3px">
+                <option class="heading" selected>size</option>
+                <option value="1">4px</option>
+                <option value="2">8px</option>
+                <option value="3">10px</option>
+                <option value="4">12px</option>
+                <option value="5">16px</option>
+                <option value="6">20px</option>
+                <option value="7">30px</option>
+              </select>
+            </v-col>
+          </v-row>
         </div>
         <div class="content" name="content" contenteditable="true" :v-bind="text"></div>
         <div style="text-align: right" id="keyword-btn">
@@ -53,7 +105,7 @@
             <v-row>
               <div style="text-align:left; font-size:12px;">
                 <v-icon small>mdi-lightbulb-outline</v-icon>
-                <sapn > 키워드를 선택해주세요</sapn>
+                <span > 키워드를 선택해주세요</span>
               </div>
             </v-row>
             <v-row>
@@ -97,6 +149,11 @@ export default {
   },
   data(){
     return{
+      oDoc: document.getElementsByClassName('content')[0],
+      color: '#1976D2FF',
+      mask: '!#XXXXXXXX',
+      menu: false,
+
       title:'',
       rules:{
         title:[
@@ -109,6 +166,21 @@ export default {
         'str1', 'str2', 'str3', 'str4', 'str5'
       ],
       isDisable: false
+    }
+  },
+  computed:{
+    swatchStyle() {
+      const { color, menu } = this
+      // console.log(color)
+      this.chanegeFontColor()
+      return {
+        backgroundColor: color,
+        cursor: 'pointer',
+        height: '30px',
+        width: '30px',
+        borderRadius: menu ? '50%' : '4px',
+        transition: 'border-radius 200ms ease-in-out'
+      }
     }
   },
   methods: {
@@ -132,6 +204,20 @@ export default {
     selectKeywordButtonClick(){
       this.isDisable = true
       // select한 키워드들은 this.checkbox에 배열로 담겨있음
+    },
+    formatDoc(sCmd, select) {
+      let sValue
+      if(select=='color')
+        sValue = document.getElementById('sel').options[sel.selectedIndex].value
+      else if(select=='size')
+        sValue = document.getElementById('sel2').options[sel2.selectedIndex].value
+      console.log(sValue)
+      document.execCommand(sCmd, false, sValue)
+      document.getElementsByClassName('content')[0].focus()
+    },
+    chanegeFontColor(){
+      console.log(this.color)
+      document.execCommand('ForeColor', false, this.color)
     }
   }
 }
@@ -147,5 +233,12 @@ export default {
 }
 .done-btn > v-icon{
  color: black;
+}
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
+  box-shadow: none;
+}
+.v-text-field.v-text-field--solo .v-input__control input {
+    caret-color: auto;
+    color: gray;
 }
 </style>

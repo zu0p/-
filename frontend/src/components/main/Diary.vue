@@ -8,11 +8,10 @@
     >   
         <v-container fluid class="diary-wrapper" :style="`background-image: url(${curDiary.diaryImage})`"> 
             <v-row class="card-contents">
-            <!-- <img id="cover-image" :src="curDiary.diaryImage"> -->
                 <v-col cols="1" sm="1" md="1" lg="1" id="diary-band" class="diary">
                 </v-col>
                 <v-col cols="11" sm="11" md="11" lg="11" class="diary">  
-                    <v-row id="buttons" justify="end">ß
+                    <v-row id="buttons" justify="end">
                         <!-- 수정 form dialog -->
                         <v-dialog
                         v-model="editDialog"
@@ -103,9 +102,6 @@ export default {
 </script>
 
 <style>
-#cover-image{
-    object-fit: cover;
-}
 .diary-wrapper{
     margin: 0;
     padding: 0;
