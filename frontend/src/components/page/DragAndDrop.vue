@@ -8,7 +8,7 @@
         @mousedown="drag($event)" 
         draggable="true" 
         @dragstart.prevent
-        name="content" contenteditable="true"
+        name="content" contenteditable="false"
         >
       </div>
     </div>
@@ -20,12 +20,6 @@
       </v-btn>
     </v-row>
   </v-container>
-  <!-- <v-container>
-    <draggable>
-      <v-textarea>
-      </v-textarea>
-    </draggable>
-  </v-container> -->
 </template>
 
 <script>
@@ -50,7 +44,6 @@ export default {
       return false;
     })
     
-    console.log('mounted')
     const pageStore = this.$store._modules.root._children.pageStore.state.store
     this.text = pageStore.page_text
     this.imgFile = pageStore.page_img
@@ -61,11 +54,15 @@ export default {
 
     document.getElementById('ball').innerHTML = this.text
 
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      this.preview = e.target.result;
+    if(typeof this.imgFile == 'string')
+      this.preview = this.imgFile
+    else{
+      var reader = new FileReader();
+      reader.onload = (e) => {
+        this.preview = e.target.result;
+      }
+      reader.readAsDataURL(this.imgFile);
     }
-    reader.readAsDataURL(this.imgFile);
   },
   created(){
 

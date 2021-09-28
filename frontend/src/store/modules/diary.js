@@ -115,7 +115,7 @@ const diaryStore = {
     },
     deleteDiary({commit}, id){
       commit('DELETE_DIARY', id)
-    }
+    },
   },
 
 }

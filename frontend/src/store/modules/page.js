@@ -1,4 +1,5 @@
 import api from "../../api";
+import axios from 'axios';
 
 const pageStore = {
   namespaced: true,
@@ -11,6 +12,7 @@ const pageStore = {
       page_text: "",
       page_title: "",
       isKeywordSearch: false,
+      selectedKeywords: []
     }
   },
 
@@ -44,6 +46,10 @@ const pageStore = {
     SET_IS_KEYWORD_SEARCH(state){
       state.store.isKeywordSearch = !state.store.isKeywordSearch
     },
+
+    SET_SELECTED_KEYWORDS(state, selected){
+      state.store.selectedKeywords = selected
+    },
   },
 
   // actions
@@ -71,6 +77,28 @@ const pageStore = {
     setIsKeywordSearch({commit}){
       commit('SET_IS_KEYWORD_SEARCH')
     },
+
+    // 키워드 분석
+    requestKeyword({commit}, info){
+      return axios.post('http://13.124.43.16:8998/keyword_extraction', info)
+    },
+    setSelectedKeywords({commit}, selected){
+      commit('SET_SELECTED_KEYWORDS', selected)
+    },
+    // 키워드 선택
+    requestKeywordImage({commit}, key){
+      console.log(key)
+      return axios.get(
+        "http://13.124.43.16:8998/image",
+        {
+          params: encodeURI(key)
+        }
+      )
+    },
+    // 감정 추출
+    requestEmotion({commit}, info){
+      return axios.post('http://3.35.52.211:8999/emotion', info)
+    }
   },
 
 }

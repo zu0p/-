@@ -69,7 +69,7 @@
             </v-col>
           </v-row>
         </div>
-        <div class="content" name="content" contenteditable="true" :v-bind="text"></div>
+        <div class="content" name="content" :contenteditable="!isDisable" :v-bind="text"></div>
         <div style="text-align: right" id="keyword-btn">
           <v-btn depressed @click="keywordButtonClick">
             <v-icon color="pink">mdi-key-chain</v-icon>
@@ -138,38 +138,61 @@ export default {
       },
       text:'',
       checkbox:[],
-      keywords:[
-        'str1', 'str2', 'str3', 'str4', 'str5'
-      ],
+      keywords:[],
       isDisable: false
     }
   },
   methods: {
-    ...mapActions(pageStore, ['setPageTitle', 'setPageText', 'setIsKeywordSearch']),
+    ...mapActions(pageStore, ['setPageTitle', 'setPageText', 'setIsKeywordSearch', 'requestKeyword', 'setSelectedKeywords', 'requestEmotion']),
     onUpdate (text) {
       this.text = text
     },
     keywordButtonClick(){
       // 타이틀, 텍스트 store저장
       this.text = document.getElementsByClassName('content')[0].innerHTML
+      if(this.text.length==0){
+        alert('텍스트를 입력하세요')
+        return
+      }
       this.setPageTitle(this.title)
       this.setPageText(this.text)
-      // console.log(this.$store)
 
-      // 1. 키워드 분석해서 가져온 값 keywords에 채워넣기
-      
-      // 2.
+      let plainText = this.text.replace(/<[^>]*>/g, '') // html to plain text
+      let info={
+        writing: plainText
+      }
+
+      // 키워드 분석
+      this.requestKeyword(info)
+        .then(res=>{
+          console.log(res.data)
+          // 키워드 분석해서 가져온 값 keywords에 채워넣기
+          this.keywords = res.data
+        })
+
+      // 감정추출
+      // this.requestEmotion(info)
+      //   .then(res=>{
+      //     console.log(res)
+      //   })
+
       document.getElementById('keyword-btn').style.display='none'
       document.getElementById('select-keyword').style.display='block'
     },
     selectKeywordButtonClick(){
+      if(this.checkbox.length==0){
+        alert('키워드를 선택하세요')
+        return
+      }
       this.isDisable = true
-      // select한 키워드들은 this.checkbox에 배열로 담겨있음
 
+      // select한 키워드들은 this.checkbox에 배열로 담겨있음
+      this.setSelectedKeywords(this.checkbox)
+      console.log(this.$store._modules.root._children.pageStore.state.store.selectedKeywords)
+      
       // 키워드 선택했음(true)으로 바꿈
       this.setIsKeywordSearch()
-      // this.$store._modules.root._children.pageStore.state.store.isKeywordSearch
-
+      // console.log(this.checkbox)
     },
     formatDoc(sCmd, select) {
       let sValue
@@ -177,7 +200,7 @@ export default {
         sValue = document.getElementById('sel').options[sel.selectedIndex].value
       else if(select=='size')
         sValue = document.getElementById('sel2').options[sel2.selectedIndex].value
-      console.log(sValue)
+      // console.log(sValue)
       document.execCommand(sCmd, false, sValue)
       document.getElementsByClassName('content')[0].focus()
     },

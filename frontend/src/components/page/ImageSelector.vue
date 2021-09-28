@@ -26,7 +26,7 @@ export default {
       let key = this.$store._modules.root._children.pageStore.state.store.isKeywordSearch
       let img = this.$store._modules.root._children.pageStore.state.store.page_img
       if(key && img!=null){ // 키워드 분석 했고 && 이미지도 선택해야 프리뷰로 넘어감
-
+        this.setIsKeywordSearch() //키워드 다시 false로
         // routing to preview page
         // check image validatioin
         this.$router.push({name:'Preview'})
