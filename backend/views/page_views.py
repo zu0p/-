@@ -13,7 +13,7 @@ from database import get_db
 
 from schemas import page_schemas, user_schemas, diary_schemas # schemas
 from models import user_model, diary_model # models
-from crud import user_crud, diary_crud # crud
+from crud import user_crud, diary_crud, page_crud # crud
 
 # image S3
 from utils.image_upload import client_s3, upload_file

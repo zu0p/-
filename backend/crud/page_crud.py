@@ -7,7 +7,8 @@ from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Fo
 from database import SessionLocal
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from models import diary_model, user_model, page_schemas
+from models import diary_model, user_model, page_model
+from schemas import page_schemas
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -17,17 +18,21 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 ### C
 def create_page(db: SessionLocal, page_data: page_schemas.PageBase, owner: str):
     Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
-    db_diary = diary_model.DiaryInfo(
-        diaryName = diary_data.diaryName,
-        diaryImage = Base_url + f"page/{owner}_{page_data.diaryId}_{page_data.pageTitle}.jpg",
-        diaryDesc = diary_data.diaryDesc,
-        diaryShare = diary_data.diaryShare,
-        diaryOwnerId = owner
+    db_page = page_model.PageInfo(
+        diaryId = page_data.diaryId,
+        pageTitle = page_data.pageTitle,
+        pageContent = page_data.pageContent,
+        pageShare = page_data.pageShare,
+        pageDiaryId = page_data.pageDiaryId,
+        pageOwnerId = owner,
+        pageImage = Base_url + f"page/{owner}_{page_data.diaryId}_{page_data.pageTitle}.jpg",
+        top = page_data.top,
+        left = page_data.left
     )
-    db.add(db_diary)
+    db.add(db_page)
     db.commit()
-    db.refresh(db_diary)
-    return db_diary
+    db.refresh(db_page)
+    return db_page
 
 ### R
 def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
