@@ -165,10 +165,10 @@ export default {
     selectKeywordButtonClick(){
       this.isDisable = true
       // select한 키워드들은 this.checkbox에 배열로 담겨있음
-      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
 
+      // 키워드 선택했음(true)으로 바꿈
       this.setIsKeywordSearch()
-      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
+      // this.$store._modules.root._children.pageStore.state.store.isKeywordSearch
 
     },
     formatDoc(sCmd, select) {
