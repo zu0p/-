@@ -56,7 +56,7 @@ def update_page(db: SessionLocal, owner: str, updateInfo:page_schemas.PageUpdate
     return 
 
 ### D
-def delete_page(db: SessionLocal, owner: str, diaryId: Integer):
-    db.query(page_model.PageInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
+def delete_page(db: SessionLocal, owner: str, deleteInfo: page_schemas.PageDeleteForm):
+    db.query(page_model.PageInfo).filter_by(diaryId=deleteInfo.diaryId).filter_by(id=deleteInfo.pageId).delete()
     db.commit()
     return 

@@ -27,7 +27,8 @@ class PageUpdateFrom(PageBase):
 
 class PageDeleteForm(BaseModel):
     diaryId: int
-
+    pageId: int
+    
 
 class Page(PageBase):
     id: int

@@ -144,7 +144,7 @@ async def delete_page(
                         deleteInfo: page_schemas.PageDeleteForm,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    page_crud.delete_page(db, current_user.userId, deleteInfo.diaryId)
+    page_crud.delete_page(db, current_user.userId, deleteInfo)
     return {"state": "success"}
 
 
