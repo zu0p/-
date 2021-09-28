@@ -7,11 +7,11 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Form, UploadFile
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.sql.sqltypes import Integer
 
 from database import get_db
 
-from schemas import user_schemas
-from schemas import diary_schemas # schemas
+from schemas import page_schemas, user_schemas, diary_schemas # schemas
 from models import user_model, diary_model # models
 from crud import user_crud, diary_crud # crud
 
@@ -29,20 +29,24 @@ page_router = APIRouter()
 
 ### C
 @page_router.post("/create")
-async def create_diary(
-                        diaryName: str = Form(...),
-                        diaryImage: UploadFile = File(...),
-                        diaryDesc: str = Form(...),
-                        diaryShare: bool = Form(...),
+async def create_page(
+                        diaryId: int = Form(...),
+                        pageTitle: str = Form(...),
+                        pageContent: str = Form(...),
+                        pageShare: bool = Form(...),
+                        pageImage: UploadFile = File(...),
+                        top: int = Form(...),
+                        left: int = Form(...),
+                        
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
-    UPLOAD_DIRECTORY = "./static/image/diary/"
-    file_name = current_user.userId+f"_{diaryName}.jpg"
+    UPLOAD_DIRECTORY = "./static/image/page/"
+    file_name = f"{current_user.userId}_"+diaryId+f"_{pageTitle}.jpg"
     new_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     async with aiofiles.open(new_path, "wb") as fp:
         # async read
-        contents = await diaryImage.read()  
+        contents = await pageImage.read()  
         # async write
         await fp.write(contents) 
         # aws image upload
@@ -50,19 +54,23 @@ async def create_diary(
         # diary -> userId_diaryId.jpeg
         # page -> userId_diaryId_pageId.jpeg
         await upload_file(UPLOAD_DIRECTORY+file_name,
-                "diary/"+file_name, 
+                "page/"+file_name, 
                 client_s3)
     fp.close()
     # diary create 객체생성
-    diary_data = diary_schemas.DiaryCreate(
-        diaryName = diaryName,
-        diaryImage = new_path,
-        diaryDesc = diaryDesc,
-        diaryShare = diaryShare,
+    page_data = page_schemas.PageCreate(
+        pageTitle =  pageTitle,
+        pageContent = pageContent,
+        pageShare = pageShare,
+        pageDiaryId = diaryId,
+        pageOwnerId = current_user.userId,
+        pageImage = new_path,
+        top = top,
+        left = left
     )
     # db 저장부분
-    new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
-    return new_diary
+    new_page = page_crud.create_page(db, page_data, current_user.userId)
+    return new_page
 
 
 ### R

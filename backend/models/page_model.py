@@ -2,6 +2,7 @@ from sqlalchemy import Column,String,Boolean
 from sqlalchemy.dialects.mysql import INTEGER
 from sqlalchemy.dialects.mysql.types import TEXT
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy.sql.sqltypes import Float
 
 from database import Base
 from sqlalchemy.orm import relationship
@@ -16,7 +17,7 @@ class PageInfo(Base):
     pageDiaryId = Column(String)
     pageOwnerId = Column(String)
     pageImage = Column(String)
-    top = Column(String)
-    left = Column(String)
+    top = Column(Float)
+    left = Column(Float)
 
     pageDiary = relationship("DiaryInfo", back_populates="diaryPages")
