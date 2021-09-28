@@ -23,7 +23,6 @@ def create_page(db: SessionLocal, page_data: page_schemas.PageBase, owner: str):
         pageTitle = page_data.pageTitle,
         pageContent = page_data.pageContent,
         pageShare = page_data.pageShare,
-        pageDiaryId = page_data.pageDiaryId,
         pageOwnerId = owner,
         pageImage = Base_url + f"page/{owner}_{page_data.diaryId}_{page_data.pageTitle}.jpg",
         top = page_data.top,
@@ -34,23 +33,23 @@ def create_page(db: SessionLocal, page_data: page_schemas.PageBase, owner: str):
     db.refresh(db_page)
     return db_page
 
-### R
-def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
-    return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).offset(skip).limit(limit).all()
+# ### R
+# def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
+#     return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).offset(skip).limit(limit).all()
 
-def read_one_diary(db: SessionLocal, owner: str, diaryId:str, skip: int = 0, limit: int = 100):
-    return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).first()
+# def read_one_diary(db: SessionLocal, owner: str, diaryId:str, skip: int = 0, limit: int = 100):
+#     return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).first()
 
 
-### U
-def update_diary(db: SessionLocal, owner: str, updateInfo:diary_schemas.DiaryUpdateFrom):
-    get = db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=updateInfo.diaryId).first()
-    get.diaryName=updateInfo.modifyName
-    db.commit()
-    return 
+# ### U
+# def update_diary(db: SessionLocal, owner: str, updateInfo:diary_schemas.DiaryUpdateFrom):
+#     get = db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=updateInfo.diaryId).first()
+#     get.diaryName=updateInfo.modifyName
+#     db.commit()
+#     return 
 
-### D
-def delete_diary(db: SessionLocal, owner: str, diaryId: Integer):
-    db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
-    db.commit()
-    return 
+# ### D
+# def delete_diary(db: SessionLocal, owner: str, diaryId: Integer):
+#     db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
+#     db.commit()
+#     return 

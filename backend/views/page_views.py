@@ -35,14 +35,14 @@ async def create_page(
                         pageContent: str = Form(...),
                         pageShare: bool = Form(...),
                         pageImage: UploadFile = File(...),
-                        top: int = Form(...),
-                        left: int = Form(...),
+                        top: float = Form(...),
+                        left: float = Form(...),
                         
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
     UPLOAD_DIRECTORY = "./static/image/page/"
-    file_name = f"{current_user.userId}_"+diaryId+f"_{pageTitle}.jpg"
+    file_name = f"{current_user.userId}_"+str(diaryId)+f"_{pageTitle}.jpg"
     new_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     async with aiofiles.open(new_path, "wb") as fp:
         # async read
@@ -59,10 +59,10 @@ async def create_page(
     fp.close()
     # diary create 객체생성
     page_data = page_schemas.PageCreate(
+        diaryId = diaryId,
         pageTitle =  pageTitle,
         pageContent = pageContent,
         pageShare = pageShare,
-        pageDiaryId = diaryId,
         pageOwnerId = current_user.userId,
         pageImage = new_path,
         top = top,
@@ -74,39 +74,39 @@ async def create_page(
 
 
 ### R
-@page_router.get("/read")
-async def read_diary(
-                        db: Session = Depends(get_db),
-                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    read_diaries = diary_crud.read_diary(db, current_user.userId)
-    return read_diaries
+# @page_router.get("/read")
+# async def read_diary(
+#                         db: Session = Depends(get_db),
+#                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+#     read_diaries = diary_crud.read_diary(db, current_user.userId)
+#     return read_diaries
 
-@page_router.get("/read/{diaryId}")
-async def read_diary(
-                        diaryId: str,
-                        db: Session = Depends(get_db),
-                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    read_diaries = diary_crud.read_one_diary(db, current_user.userId, diaryId)
-    return read_diaries
-
-
-### U
-@page_router.put("/update")
-async def update_diary(
-                        updateInfo: diary_schemas.DiaryUpdateFrom,
-                        db: Session = Depends(get_db),
-                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.update_diary(db, current_user.userId, updateInfo)
-    return {"state": "success"}
+# @page_router.get("/read/{diaryId}")
+# async def read_diary(
+#                         diaryId: str,
+#                         db: Session = Depends(get_db),
+#                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+#     read_diaries = diary_crud.read_one_diary(db, current_user.userId, diaryId)
+#     return read_diaries
 
 
-### D
-@page_router.delete("/delete")
-async def delete_diary(
-                        deleteInfo: diary_schemas.DiaryDeleteForm,
-                        db: Session = Depends(get_db),
-                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
-    diary_crud.delete_diary(db, current_user.userId, deleteInfo.diaryId)
-    return {"state": "success"}
+# ### U
+# @page_router.put("/update")
+# async def update_diary(
+#                         updateInfo: diary_schemas.DiaryUpdateFrom,
+#                         db: Session = Depends(get_db),
+#                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+#     diary_crud.update_diary(db, current_user.userId, updateInfo)
+#     return {"state": "success"}
+
+
+# ### D
+# @page_router.delete("/delete")
+# async def delete_diary(
+#                         deleteInfo: diary_schemas.DiaryDeleteForm,
+#                         db: Session = Depends(get_db),
+#                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+#     diary_crud.delete_diary(db, current_user.userId, deleteInfo.diaryId)
+#     return {"state": "success"}
 
 

@@ -9,7 +9,6 @@ class PageBase(BaseModel):
     pageTitle : str
     pageContent : str
     pageShare : bool
-    pageDiaryId : str
     pageOwnerId : str
     pageImage : str
     top : float
@@ -31,7 +30,6 @@ class PageDeleteForm(BaseModel):
 
 class Page(PageBase):
     id: int
-    pageDiary : str
 
     class Config:
         orm_mode = True

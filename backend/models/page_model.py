@@ -11,11 +11,11 @@ class PageInfo(Base):
     __tablename__ = "page_info"
 
     id = Column(INTEGER(unsigned=True), autoincrement=True, primary_key=True)
+    diaryId = Column(String, ForeignKey("diary_info.id"))
     pageTitle = Column(String)
     pageContent = Column(TEXT)
     pageShare = Column(Boolean, default=True)
-    pageDiaryId = Column(String)
-    pageOwnerId = Column(String)
+    pageOwnerId = Column(String, ForeignKey("user_info.id"))
     pageImage = Column(String)
     top = Column(Float)
     left = Column(Float)
