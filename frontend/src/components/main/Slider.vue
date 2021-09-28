@@ -89,6 +89,7 @@ export default {
     }, 
   },
   updated(){
+      this.diarys
       if(this.diarys.length >= 5){
           // .box 클래스에 n-th child 에 넣은 css를 처리하기 위해 css 클래스 네임 바꾸고
           for(let i = 0; i<this.diarys.length; i++){
@@ -154,7 +155,7 @@ export default {
             // boxes[3].className = `box move-to-position3-from-left ${isOverFive}`
             // boxes[4].className = `box move-to-position4-from-left ${isOverFive}`
             boxes[0].remove();
-            for(let i = 1; i<lastIdx; i++){
+            for(let i = 1; i<=lastIdx; i++){
                 boxes[i].className = `box move-to-position${i%5}-from-left ${isOverFive}`
             }
             document.querySelector(".cards__container").appendChild(tmpNode);

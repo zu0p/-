@@ -1,13 +1,24 @@
 <template>
-  <v-container>
-    <div class="book">
+  <v-container @keydown="nextPage">
+    <!-- <div class="book">
       <h1>page1</h1>
       <p>마우스를 올려주세요</p>
     </div>
-    <!-- <div class="book">
+    <div class="book">
       <h1>page2</h1>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, tenetur.</p>
     </div>   -->
+
+
+<div id="magazine">
+	<div class="pages">1</div>
+	<div class="pages">2</div>
+	<div class="pages">3</div>
+	<div class="pages">4</div>
+	<div class="pages">5</div> 
+	<div class="pages">6</div>
+</div>
+
   </v-container>
 </template>
 
@@ -19,14 +30,41 @@ export default{
     }
   },
   created(){
+    document.getElementById('magazine').turn({
+      display: 'single',
+      acceleration: true,
+      gradients: !$.isTouch,
+      elevation:50,
+      when: {
+        turned: function(e, page) {
+          /*console.log('Current view: ', $(this).turn('view'));*/
+        }
+      }
+    });
+    
   },
   methods:{
-
+    nextPage(e){
+      if (e.keyCode==37)
+        document.getElementById('magazine').turn('previous');
+      else if (e.keyCode==39)
+        document.getElementById('magazine').turn('next');
+    }
   }
 }
 </script>
 
 <style>
+.pages{
+  width: 400px;
+  height: 600px;
+  background-color: white;
+  border: solid;
+}
+#magazine{
+  position: relative;
+  z-index: 100;
+}
 section{
   margin:50px auto;
   position:relative;
@@ -49,7 +87,7 @@ section{
   background: #cba;
   transform-origin: left center;
   transition: 2s;   
-  z-index:2;
+  z-index:-2;
 }
 .book:nth-child(1):hover{
   transform: rotateY(-180deg);
