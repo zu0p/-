@@ -47,8 +47,8 @@ async def create_diary(
         await fp.write(contents) 
         # aws image upload
         # profile -> userId.jpeg
-        # diary -> userId_diaryId.jpeg
-        # page -> userId_diaryId_pageId.jpeg
+        # diary -> userId_diaryName.jpeg
+        # page -> userId_diaryName_pageName.jpeg
         await upload_file(UPLOAD_DIRECTORY+file_name,
                 "diary/"+file_name, 
                 client_s3)

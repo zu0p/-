@@ -16,3 +16,4 @@ class DiaryInfo(Base):
     diaryOwnerId = Column(String, ForeignKey("user_info.id"))
 
     diaryOwner = relationship("UserInfo", back_populates="userDiaries")
+    diaryPages = relationship("PageInfo", back_populates="pageDiary")
