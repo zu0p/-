@@ -9,19 +9,20 @@ class PageBase(BaseModel):
     pageTitle : str
     pageContent : str
     pageShare : bool
-    pageOwnerId : str
     pageImage : str
     top : float
     left : float
 
 class PageCreate(PageBase):
+    pageOwnerId : str
     class Config:
         orm_mode = True
 
 
-class PageUpdateFrom(BaseModel):
-    diaryId: int
-    modifyName: str
+class PageUpdateFrom(PageBase):
+    pageId: int
+    class Config:
+        orm_mode = True
 
 
 class PageDeleteForm(BaseModel):
@@ -30,6 +31,6 @@ class PageDeleteForm(BaseModel):
 
 class Page(PageBase):
     id: int
-
+    pageOwnerId : str
     class Config:
         orm_mode = True

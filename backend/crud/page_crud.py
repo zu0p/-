@@ -33,23 +33,30 @@ def create_page(db: SessionLocal, page_data: page_schemas.PageBase, owner: str):
     db.refresh(db_page)
     return db_page
 
-# ### R
-# def read_diary(db: SessionLocal, owner: str, skip: int = 0, limit: int = 100):
-#     return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).offset(skip).limit(limit).all()
+### R
+def read_pagies(db: SessionLocal, owner: str, diaryId: str, skip: int = 0, limit: int = 100):
+    return db.query(page_model.PageInfo).filter_by(diaryId=diaryId).offset(skip).limit(limit).all()
 
-# def read_one_diary(db: SessionLocal, owner: str, diaryId:str, skip: int = 0, limit: int = 100):
-#     return db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).first()
+def read_one_page(db: SessionLocal, owner: str, diaryId:str, pageId:str, skip: int = 0, limit: int = 100):
+    return db.query(page_model.PageInfo).filter_by(diaryId=diaryId).filter_by(id=pageId).first()
 
 
-# ### U
-# def update_diary(db: SessionLocal, owner: str, updateInfo:diary_schemas.DiaryUpdateFrom):
-#     get = db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=updateInfo.diaryId).first()
-#     get.diaryName=updateInfo.modifyName
-#     db.commit()
-#     return 
+### U
+def update_page(db: SessionLocal, owner: str, updateInfo:page_schemas.PageUpdateFrom):
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
+    get = db.query(page_model.PageInfo).filter_by(id=updateInfo.pageId).first()
+    get.diaryId=updateInfo.diaryId
+    get.pageTitle=updateInfo.pageTitle
+    get.pageContent=updateInfo.pageContent
+    get.pageShare=updateInfo.pageShare
+    get.pageImage=Base_url + f"page/{owner}_{updateInfo.diaryId}_{updateInfo.pageTitle}.jpg"
+    get.top=updateInfo.top
+    get.left=updateInfo.left
+    db.commit()
+    return 
 
-# ### D
-# def delete_diary(db: SessionLocal, owner: str, diaryId: Integer):
-#     db.query(diary_model.DiaryInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
-#     db.commit()
-#     return 
+### D
+def delete_page(db: SessionLocal, owner: str, diaryId: Integer):
+    db.query(page_model.PageInfo).filter_by(diaryOwnerId=owner).filter_by(id=diaryId).delete()
+    db.commit()
+    return 
