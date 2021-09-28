@@ -5,11 +5,20 @@ from starlette.staticfiles import StaticFiles
 
 from views.user_views import user_router
 from views.diary_views import diary_router
+from views.page_views import page_router
 
 tags_metadata = [
     {
         "name": "회원관리",
         "description": "회원관리 API",
+    },
+    {
+        "name": "다이어리",
+        "description": "다이어리 API",
+    },
+    {
+        "name": "일기관리",
+        "description": "일기관리 API",
     },
     # {
     #     "name": "items",
@@ -59,3 +68,4 @@ server.router.prefix = "/api/v1"
 # router 설정
 server.include_router(user_router, prefix="/users", tags=["회원관리"])
 server.include_router(diary_router, prefix="/diary", tags=["다이어리"])
+server.include_router(page_router, prefix="/page", tags=["일기관리"])
