@@ -40,6 +40,9 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+const pageStore = 'pageStore'
+
 export default {
   name: 'ImageSelectorItem',
   data(){
@@ -50,6 +53,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(pageStore, ['setPageImg']),
     onUploadButtonClick(){
       this.imageSelect = true
       window.addEventListener('focus', () => {
@@ -74,6 +78,8 @@ export default {
       
       // document.getElementById('before-select').classList.add('disappear')
       // document.getElementById('after-select').classList.add('appear')
+
+      this.setPageImg(this.image)
     }
   }
 }
