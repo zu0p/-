@@ -34,6 +34,19 @@ diary_info = sqlalchemy.Table(
     sqlalchemy.Column("diaryOwnerId", sqlalchemy.String(256))
 )
 
+page_info = sqlalchemy.Table(
+    "page_info",
+    metadata,
+    sqlalchemy.Column("id", INTEGER(unsigned=True), autoincrement=True, primary_key=True),
+    sqlalchemy.Column("pageTitle", sqlalchemy.String(256)),
+    sqlalchemy.Column("pageContent", sqlalchemy.TEXT),
+    sqlalchemy.Column("pageShare", sqlalchemy.Boolean(256)),
+    sqlalchemy.Column("pageDiaryId", sqlalchemy.String(256)),
+    sqlalchemy.Column("pageOwnerId", sqlalchemy.String(256)),
+    sqlalchemy.Column("pageImage", sqlalchemy.String(256)),
+    sqlalchemy.Column("top", sqlalchemy.FLOAT),
+    sqlalchemy.Column("left", sqlalchemy.FLOAT),
+)
 # ============================================ db-info ============================================
 
 # local
