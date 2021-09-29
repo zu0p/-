@@ -114,9 +114,10 @@ const pageStore = {
     },
     // 키워드 선택
     requestKeywordImage({commit}, key){
+      
       console.log(key)
       return axios.get(
-        "http://13.124.43.16:8998/image",
+        `http://13.124.43.16:8998/image`,
         {
           params: encodeURI(key)
         }

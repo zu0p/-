@@ -143,8 +143,13 @@ export default {
           .then(res=>{
             console.log(res.data)
             //res.data = [] -> 4개만 보여주기
-            for(let i = 0; i<4; i++){
-              this.createImage.push(res.data[i].url)
+            for(let i = 0; i<4; i++){              
+              // this.createImage.push(res.data[i].url)
+              // this.createImage.push('/img/night.5f01451a.jpg')
+              let tmp = res.data[i].url.substr(10)
+              console.log(tmp)
+              // this.createImage.push(require(`@/images/night.jpg`))
+              this.createImage.push(require(`@${tmp}`))
             }
             console.log(this.createImage)
             document.getElementById('before-select').style.display='none'
