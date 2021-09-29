@@ -1,6 +1,9 @@
-FROM node:lts-alpine 
-WORKDIR /app
-ADD package*.json ./ 
-ADD . ./ 
-CMD npm install && npm run serve 
-EXPOSE 8080
+FROM node:14.17
+WORKDIR ./front
+
+COPY package.json .
+
+ADD . .
+RUN npm install
+
+CMD ["npm", "run", "serve"]
