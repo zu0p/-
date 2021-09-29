@@ -88,7 +88,8 @@ export default {
   name: 'DiaryMenu',
   methods:{
     goToHome(){
-      this.$router.push({name:'Main'})
+      // this.$router.push({name:'Main'})
+      window.location='/main'
     },
     showDiaryList(){
 

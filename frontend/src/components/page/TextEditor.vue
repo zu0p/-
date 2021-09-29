@@ -165,16 +165,19 @@ export default {
       // 키워드 분석
       this.requestKeyword(info)
         .then(res=>{
-          console.log(res.data)
+          // console.log(res.data)
           // 키워드 분석해서 가져온 값 keywords에 채워넣기
           this.keywords = res.data
         })
 
       // 감정추출
-      // this.requestEmotion(info)
-      //   .then(res=>{
-      //     console.log(res)
-      //   })
+      this.requestEmotion(info)
+        .then(res=>{
+          console.log('감정')
+          console.log(res.data)
+          let emo=['중립','긍정','부정']
+          alert('감정추출결과: '+emo[res.data])
+        })
 
       document.getElementById('keyword-btn').style.display='none'
       document.getElementById('select-keyword').style.display='block'
