@@ -1,5 +1,22 @@
 import api from "../../api";
 import axios from 'axios';
+import { setInterceptors } from '../interceptors'
+
+function createInstance(){
+  const instance = axios.create()
+  return setInterceptors(instance)
+}
+
+// Token값과 특정 url을 붙여서 셋팅
+function createInstanceWithAuth(url) {
+  const instance = axios.create({
+    baseURL: BASE_URL+`${url}`,
+  })
+  return setInterceptors(instance)
+}
+
+const BASE_URL='http://j5d103.p.ssafy.io/api/v1/page'
+const instanceWithAuth = createInstance()
 
 const pageStore = {
   namespaced: true,
@@ -12,7 +29,8 @@ const pageStore = {
       page_text: "",
       page_title: "",
       isKeywordSearch: false,
-      selectedKeywords: []
+      selectedKeywords: [],
+      pageList:[]
     }
   },
 
@@ -22,6 +40,9 @@ const pageStore = {
 
   // mutations
   mutations : {
+    SET_PAGE_LIST(state, pages){
+      state.store.pageList = pages
+    },
     SET_PAGE_ID(state, id){
       state.store.page_id = id
     },
@@ -54,6 +75,12 @@ const pageStore = {
 
   // actions
   actions : {
+    requestPageList({commit},diaryId){
+      return instanceWithAuth.get(`${BASE_URL}/read/${diaryId}`)
+    },
+    setPageList({commit}, pages){
+      commit('SET_PAGE_LIST', pages)
+    },
     setPageId({commit}, id){
       commit('SET_PAGE_ID', id)
     },
