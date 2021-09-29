@@ -277,16 +277,19 @@ export default {
         });
     },
     clickSignup() {
-      this.requestSignup(this.form)
-        .then((res) => {
-          if (res.statusText == "OK") {
-            alert("회원가입 성공");
-            window.location = "/";
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        this.requestSignup(this.form)
+          .then((res) => {
+            if (res.statusText == "OK") {
+              alert("회원가입 성공");
+              window.location = "/";
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
   },
 
