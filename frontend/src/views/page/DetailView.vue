@@ -1,5 +1,5 @@
 <template>
-  <v-container @keydown="nextPage">
+  <v-container>
 
     <div class="detail-view-wrapper">
         <div class="page" id="first">

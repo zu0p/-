@@ -60,6 +60,9 @@
 <script>
 import AddDiary from './AddDiary.vue'
 import DeleteDiary from './DeleteDiary.vue'
+import { mapActions } from 'vuex'
+const pageStore='pageStore'
+
 export default {
     components: { 
         DeleteDiary,
@@ -79,14 +82,26 @@ export default {
         // this.diaryTitle = this.title
     },
     methods:{
+        ...mapActions(pageStore, ['requestPageList', 'setPageList']),
         clickDiary(){
             //해당 title의 diary page로 이동
             // console.log("click!"+this.diaryTitle)
+            this.requestPageList(this.curDiary.id)
+                .then(res=>{
+                    // console.log(res)
 
-            // 선택한 diary에 page가 하나도 없으면 
-            // => beforeCreate(path: /diary/:id/first)로 라우팅
-            this.$router.push({path:`pages/${this.curDiary.diaryName}/first`})
-            
+                    if(res.data.length==0){
+                        // 선택한 diary에 page가 하나도 없으면 
+                        // => beforeCreate(path: /diary/:id/first)로 라우팅
+                        this.$router.push({path:`pages/${this.curDiary.diaryName}/first`})
+                    }
+                    else{
+                        // 페이지 저장
+                        this.setPageList(res.data)
+                        // console.log(this.$store._modules.root._children.pageStore.state.store.pageList)
+                        this.$router.push({path:`pages/${this.curDiary.diaryName}/detailView`})
+                    }
+                })
         },
         // editClick(e){
         //     e.stopPropagation()

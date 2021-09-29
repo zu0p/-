@@ -31,6 +31,9 @@ export default {
         // check image validatioin
         this.$router.push({name:'Preview'})
       }
+      else{
+        alert('글을 작성하고 이미지를 선택하세요!')
+      }
     }
   }
 }
