@@ -4,6 +4,7 @@ import vuetify from "./plugins/vuetify";
 import infiniteScroll from "vue-infinite-scroll";
 import router from "./router";
 import store from "./store";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 Vue.config.productionTip = false;
 Vue.use(infiniteScroll);

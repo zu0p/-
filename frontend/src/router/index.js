@@ -56,6 +56,11 @@ const router = new Router({
           path:"preview",
           name:"Preview",
           component: resolve => import(`@/views/page/Preview.vue`).then(resolve),
+        },
+        {
+          path:"detailView",
+          name:"DetailView",
+          component: resolve => import(`@/views/page/DetailView.vue`).then(resolve),
         }
       ]
     },
