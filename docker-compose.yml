@@ -6,4 +6,5 @@ services:
         ports: 
             - "80:80"
         volumes:
-            - ./:.
+            - /home/ubuntu/images/profile:/static/image/profile
+            - /home/ubuntu/images/diary:/static/image/diary

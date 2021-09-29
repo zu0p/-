@@ -8,30 +8,19 @@ from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Fo
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-
-app = FastAPI()
-
-# 로그 생성
-logger = logging.getLogger()
-# 로그의 출력 기준 설정
-logger.setLevel(logging.INFO)
-
-
-@app.post("/files/")
-async def create_file(file: bytes = File(...)):
-    return {"file_size": len(file)}
-
-
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    return {"filename": file.filename}
-
-
 from database import get_db
 
 from schemas import user_schemas # schemas
 from models import user_model # models
 from crud import user_crud # crud
+
+# image S3
+from utils.image_upload import client_s3, upload_file
+
+# 로그 생성
+logger = logging.getLogger()
+# 로그의 출력 기준 설정
+logger.setLevel(logging.INFO)
 
 user_router = APIRouter()
 
@@ -105,11 +94,20 @@ async def change_image(
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
     # image 저장부분
     UPLOAD_DIRECTORY = "./static/image/profile/"
-    new_path = os.path.join(UPLOAD_DIRECTORY, current_user.userId+".jpg")
+    file_name = current_user.userId+".jpg"
+    new_path = os.path.join(UPLOAD_DIRECTORY, file_name)
     async with aiofiles.open(new_path, "wb") as fp:
-        contents = await profileImage.read()  # async read
-        fp.write(contents)
-        await fp.write(contents)  # async write
+        # async read
+        contents = await profileImage.read()  
+        # async write
+        await fp.write(contents)
+        # aws image upload
+        # profile -> userId.jpeg
+        # diary -> userId_diaryId.jpeg
+        # page -> userId_diaryId_pageId.jpeg
+        await upload_file(UPLOAD_DIRECTORY+file_name,
+                "profile/"+file_name, 
+                client_s3)
     fp.close()
 
     logger.info(profileImage)
