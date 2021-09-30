@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="position: relative; width:100%; height: 100%; z-index: 20;">
     <!-- text editor -->
     <v-row>
       <form>
