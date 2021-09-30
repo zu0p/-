@@ -146,3 +146,6 @@ article.xlsx
 # ai 폴더 
 ai/article.xlsx
 ai/keywords.xlsx
+
+# music recommend
+recommend/Data
