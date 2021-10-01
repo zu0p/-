@@ -1,7 +1,5 @@
 <template>
-  <v-card
-    :loading="isUpdating"
-  >
+  <v-card>
     <template v-slot:progress>
       <v-progress-linear
         absolute
@@ -208,7 +206,7 @@ export default {
       this.$emit("closeUserInfoDialog");
     },
     updateClick(){
-      this.updateUserInfo.then((res) => {
+      this.updateUserInfo(this.userInfo).then((res) => {
           // 회원정보 수정 성공
           if ((res.statusText = "OK")) {
             this.isUpdate=false
