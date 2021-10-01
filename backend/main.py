@@ -20,6 +20,10 @@ tags_metadata = [
         "name": "일기관리",
         "description": "일기관리 API",
     },
+    {
+        "name": "추천관리",
+        "description": "추천관리 API",
+    },
     # {
     #     "name": "items",
     #     "description": "Manage items. So _fancy_ they have their own docs.",
@@ -69,3 +73,4 @@ server.router.prefix = "/api/v1"
 server.include_router(user_router, prefix="/users", tags=["회원관리"])
 server.include_router(diary_router, prefix="/diary", tags=["다이어리"])
 server.include_router(page_router, prefix="/page", tags=["일기관리"])
+server.include_router(recommend_router, prefix="/recommend", tags=["추천관리"])
