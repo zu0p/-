@@ -1,13 +1,23 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import data from "./modules/data";
-import app from "./modules/app";
+// import state from './state'
+// import * as getters from './getters'
+// import * as actions from './actions'
+import pageStore from './modules/page'
+import diaryStore from './modules/diary'
+import userStore from './modules/user'
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const root = new Vuex.Store({
+  // state,
+  // getters,
+  // actions,
   modules: {
-    data,
-    app
+    pageStore: pageStore,
+    diaryStore: diaryStore,
+    userStore: userStore
   }
-});
+})
+
+export default root
