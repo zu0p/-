@@ -39,11 +39,20 @@ import MainHeader from '../components/main/MainHeader.vue'
 import MainFooter from '../components/main/MainFooter.vue'
 import {reactive} from 'vue'
 import Slider from '../components/main/Slider.vue'
+import { mapActions } from 'vuex'
+const diaryStore='diaryStore'
 
 export default {
   components: { MainHeader, MainFooter, Slider },
   mounted(){
-      console.log("hiyo")
+    console.log("hiyo")
+    this.init()
+  },
+  methods:{
+    ...mapActions(diaryStore, ['setDiaryId']),
+    init(){
+        this.setDiaryId(-1)
+    }
   }
 }
 </script>

@@ -62,6 +62,7 @@ import AddDiary from './AddDiary.vue'
 import DeleteDiary from './DeleteDiary.vue'
 import { mapActions } from 'vuex'
 const pageStore='pageStore'
+const diaryStore='diaryStore'
 
 export default {
     components: { 
@@ -83,7 +84,9 @@ export default {
     },
     methods:{
         ...mapActions(pageStore, ['requestPageList', 'setPageList']),
+        ...mapActions(diaryStore, ['setDiaryId']),
         clickDiary(){
+            this.setDiaryId(this.curDiary.id)
             //해당 title의 diary page로 이동
             // console.log("click!"+this.diaryTitle)
             this.requestPageList(this.curDiary.id)

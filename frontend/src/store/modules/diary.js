@@ -24,7 +24,8 @@ const diaryStore = {
   // initial state
   state : {
     store:{
-      diaryList: []
+      diaryList: [],
+      diaryId: null
     }
   },
 
@@ -37,6 +38,9 @@ const diaryStore = {
 
   // mutations
   mutations : {
+    SET_DIARY_ID(state, id){
+      state.store.diaryId = id
+    },
     SET_DIARY_LIST(state, list){
       // console.log(state.store.diaryList)      
       state.store.diaryList = list.map((item, idx)=>{
@@ -70,6 +74,9 @@ const diaryStore = {
 
   // actions
   actions : {
+    setDiaryId({commit}, id){
+      commit('SET_DIARY_ID', id)
+    },
     // 다이어리 목록 조회
     getDiaryList({commit}){
       return instanceWithAuth.get(`${BASE_URL}/read`)
