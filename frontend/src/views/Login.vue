@@ -44,6 +44,7 @@
                             color="teal accent-3"
                             dark
                             v-model="login.userPwd"
+                            @keyup.enter="clickLogin"
                           />
                         </v-form>
                         <h3 class="text-center mt-4">Forgot your password ?</h3>
