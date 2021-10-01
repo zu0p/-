@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -27,10 +28,26 @@ export default {
         userNick: "",
         userPhone: "",
       },
-    };
+    }
+  }, 
+  mounted(){
+     this.requestUserInfo()
+        .then((res) => {
+          // 회원정보 조회 성공
+          if ((res.statusText = "OK")) {
+            this.userInfo = res.data;
+            console.log(this.userInfo);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e.response.status == 401) {
+            alert("회원정보 조회 실패했습니다..");
+          }
+        });
   },
-  mounted: {},
   methods: {
+    ...mapActions(userStore, ["logout", "requestUserInfo"]),
     closeClick() {
       this.$emit("closeUserInfoDialog");
     },

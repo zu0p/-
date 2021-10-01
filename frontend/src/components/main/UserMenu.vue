@@ -44,22 +44,7 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["logout", "requestUserInfo"]),
-    clickUserInfo() {
-      this.requestUserInfo()
-        .then((res) => {
-          // 회원정보 조회 성공
-          if ((res.statusText = "OK")) {
-            this.userInfo = res.data;
-            console.log(this.userInfo);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          if (e.response.status == 401) {
-            alert("회원정보 조회 실패했습니다..");
-          }
-        });
-    },
+
     clickLogout() {
       this.logout();
       window.localStorage.removeItem("access-token");
