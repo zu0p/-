@@ -42,6 +42,9 @@ import Slider from '../components/main/Slider.vue'
 
 export default {
   components: { MainHeader, MainFooter, Slider },
+  mounted(){
+      console.log("hiyo")
+  }
 }
 </script>
 
