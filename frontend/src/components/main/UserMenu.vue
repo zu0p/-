@@ -2,7 +2,7 @@
   <v-layout id="user-menu">
     <v-flex xs12 sm12 md12>
       <div class="text-right">
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="dialog" persistent max-width="400px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn dark class="btn" v-bind="attrs" v-on="on" text>
               <v-icon dark left>mdi-account-circle-outline</v-icon>

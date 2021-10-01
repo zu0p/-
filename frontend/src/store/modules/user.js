@@ -60,6 +60,9 @@ const userStore = {
     logout({ commit }) {
       commit("RESET_TOKEN");
     },
+    updateUserInfo({ commit }, user) {
+      return instanceWithAuth.put(`${BASE_URL}/update`, user);
+    }
   },
 };
 export default userStore;
