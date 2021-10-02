@@ -23,7 +23,7 @@
             color="white"
             size="150"
           >
-           <img src = {{ userInfo.userImage }}>
+           <img :src = "userInfo.userImage">
           </v-avatar>
           <v-avatar class = "avatar" v-else
             size="150"

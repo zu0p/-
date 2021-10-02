@@ -66,11 +66,11 @@ const userStore = {
       return instanceWithAuth.put(`${BASE_URL}/update`, user);
     },
     updateProfileImage({ commit }, image) {
-      const profileImage = {
-        profileImage: image
-      }
-      console.log(profileImage)
-      return instanceWithAuth.put(`${BASE_URL}/change-image`, profileImage);
+      const formdata = new FormData();
+      formdata.append('profileImage', image)
+      return instanceWithAuth.put(`${BASE_URL}/change-image`, formdata,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
     },
     deleteUserInfo({ commit }) {
       instanceWithAuth.delete(`${BASE_URL}/delete`).then((res) => {
