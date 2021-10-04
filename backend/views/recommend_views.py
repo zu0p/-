@@ -13,20 +13,69 @@ from database import get_db
 from schemas import user_schemas
 from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
-from crud import user_crud, diary_crud # crud
+from crud import user_crud, music_recommend ,diary_crud # crud
+
+import pandas as pd
+from sklearn import preprocessing
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 recommend_router = APIRouter()
 
-# ================================== diary CRUD ==================================
+# ================================== music recommendation CRUD ==================================
 
-### C
+### 음악추천 랜덤 5
 @recommend_router.get("/recommend_by_page/{pageId}")
-async def create_diary( pageId: int ):
-    new_diary = diary_crud.create_diary(db, diary_data, current_user.userId)
-    return new_diary
+async def recommend_music_random_5( 
+                        pageId: str,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    return None
 
+
+### 유사 음악 TOP 5 추천s
+
+def find_similar_songs(id, sim_df, n=5):
+    series = sim_df[id].sort_values(by = id, ascending=False)
+    series = series.drop(id).head(n)
+    return series
+    
+
+# 유사도 분석, 코사인 유사도
+@recommend_router.get("/recommend_by_content/{musicName}")
+async def recommend_music_top_5( 
+                        musicName: str,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    # 1. data load
+    music_origin = music_recommend.return_musics_in_pdObject()
+    labels = music_origin[['label']]
+    music_data = music_origin.drop(columns=['length','label','sementic','id','filename']) # 코사인 유사도 분석에 쓸모없는건 다뺀다.
+    music_data_scaled = preprocessing.scale(music_data)
+    music_data = pd.DataFrame(music_data_scaled, columns=music_data.columns)
+
+    # 2. 유사도 설정
+    similarity = cosine_similarity(music_data)
+    sim_df = pd.DataFrame(similarity, index=labels.index, columns=labels.index)
+
+    # 3. 유사 음악 추출
+    id = music_origin.index[music_origin['filename'] == musicName].tolist()
+    res = find_similar_songs(id, sim_df)
+    
+    # 4. 반환형태로 변환해서 리턴
+    result = []
+    for r in res:
+        tmp = {}
+        tmp["musicId"] = r
+        tmp["genre"] = music_origin.loc[r]["label"]
+        tmp["musicName"] = music_origin.loc[r]["filename"]
+        tmp["link"] = r
+        result.append(tmp)
+
+    print(result)
+    return None
 
 
