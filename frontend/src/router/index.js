@@ -5,12 +5,12 @@ import Router from "vue-router";
 import paths from "./paths";
 
 function route(path, view, name, children) {
-  console.log(children)
+  console.log(children);
   return {
     name: name || view,
     path: path,
-    component: resolve => import(`@/views/${view}.vue`).then(resolve),
-    children: children!=undefined?children:null
+    component: (resolve) => import(`@/views/${view}.vue`).then(resolve),
+    children: children != undefined ? children : null,
   };
 }
 
@@ -19,52 +19,57 @@ Vue.use(Router);
 // Create a new router
 const router = new Router({
   mode: "history",
-  routes:[
+  routes: [
     {
-      name: 'Login',
-      path: '/',
-      component: resolve => import(`@/views/Login.vue`).then(resolve)
+      name: "Login",
+      path: "/",
+      component: (resolve) => import(`@/views/Login.vue`).then(resolve),
     },
     {
-      name: 'Main',
-      path: '/main',
-      component: resolve => import(`@/views/Main.vue`).then(resolve)
+      name: "Main",
+      path: "/main",
+      component: (resolve) => import(`@/views/Main.vue`).then(resolve),
     },
     {
-      name: 'Pages',
-      path: '/pages/:title',
-      component: resolve => import(`@/views/page/Page.vue`).then(resolve),
-      children:[
+      name: "PageList",
+      path: "/pageList",
+      component: (resolve) => import(`@/views/page/PageList.vue`).then(resolve),
+    },
+    {
+      name: "Pages",
+      path: "/pages/:title",
+      component: (resolve) => import(`@/views/page/Page.vue`).then(resolve),
+      children: [
         {
-          path:"first",
-          name:"BeforeCreate",
-          component: resolve => import(`@/views/page/BeforeCreate.vue`).then(resolve),
+          path: "first",
+          name: "BeforeCreate",
+          component: (resolve) => import(`@/views/page/BeforeCreate.vue`).then(resolve),
         },
         {
-          path:"create",
-          name:"CreatePage",
-          component: resolve => import(`@/views/page/CreatePage.vue`).then(resolve),
-          children:[
+          path: "create",
+          name: "CreatePage",
+          component: (resolve) => import(`@/views/page/CreatePage.vue`).then(resolve),
+          children: [
             {
-              path:"imageSelect",
-              name:"ImageSelect",
-              component: resolve => import(`@/components/page/ImageSelectorItem.vue`).then(resolve),
-            }
-          ]
+              path: "imageSelect",
+              name: "ImageSelect",
+              component: (resolve) => import(`@/components/page/ImageSelectorItem.vue`).then(resolve),
+            },
+          ],
         },
         {
-          path:"preview",
-          name:"Preview",
-          component: resolve => import(`@/views/page/Preview.vue`).then(resolve),
+          path: "preview",
+          name: "Preview",
+          component: (resolve) => import(`@/views/page/Preview.vue`).then(resolve),
         },
         {
-          path:"detailView",
-          name:"DetailView",
-          component: resolve => import(`@/views/page/DetailView.vue`).then(resolve),
-        }
-      ]
+          path: "detailView",
+          name: "DetailView",
+          component: (resolve) => import(`@/views/page/DetailView.vue`).then(resolve),
+        },
+      ],
     },
-  ]
+  ],
   // routes: paths
   //   .map(path => route(path.path, path.view, path.name))
   // //   .concat([{ path: "*", redirect: "/" }]),
