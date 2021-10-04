@@ -66,16 +66,16 @@ async def recommend_music_top_5(
     res = find_similar_songs(id, sim_df)
     
     # 4. 반환형태로 변환해서 리턴
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
     result = []
-    for r in res:
+    for r in res.index.to_list():
         tmp = {}
         tmp["musicId"] = r
-        tmp["genre"] = music_origin.loc[r]["label"]
-        tmp["musicName"] = music_origin.loc[r]["filename"]
-        tmp["link"] = r
+        genre = tmp["genre"] = music_origin.loc[r]["label"]
+        musicName = tmp["musicName"] = music_origin.loc[r]["filename"]
+        tmp["link"] = Base_url + f"music/{genre}/{musicName}"
         result.append(tmp)
 
-    print(result)
-    return None
+    return result
 
 

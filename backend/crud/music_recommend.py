@@ -1,4 +1,5 @@
 
+from sqlalchemy.sql.elements import Null
 from sqlalchemy.sql.sqltypes import Integer
 from database import get_db
 from typing import Optional
@@ -37,5 +38,6 @@ conn = engine.connect()
 ### return all data in pandas object
 def return_musics_in_pdObject():
     data = pd.read_sql_table('music_info', conn)
-    # print(data.head())
+    data = data[data['sementic'].notnull()]
+    print(data.head())
     return data
