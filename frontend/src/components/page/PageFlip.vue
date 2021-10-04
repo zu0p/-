@@ -1,71 +1,94 @@
 <template>
   <div class="book-section">
     <div class="container">
-        <!-- <div class="right">
-            <figure class="back" id="back-cover"></figure>
-            <figure class="front" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/1.jpg);"></figure>
-        </div>
         <div class="right">
-            <figure class="back" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/1.jpg;"></figure>
-            <figure class="front" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/2.jpg);"></figure>
-        </div>
-        <div class="right">
-            <figure class="back" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/2.jpg);"></figure>
-            <figure class="front" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/1.jpg);"></figure>
-        </div>
-        <div class="right">
-            <figure class="back" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/1.jpg);"></figure>
-            <figure class="front" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/2.jpg);"></figure>
-        </div>
-        <div class="right">
-            <figure class="back" style="background-image: url(https://tympanus.net/Development/BookBlock/images/demo1/2.jpg);"></figure>
-            <figure class="front" style="background-image: url(http://artisticdesigning.com/Drawings/Photoshopped/narendra_modi_caricature.jpg);"></figure>
-        </div>
-        <div class="right">
-            <figure class="back" style="background-image: url('http://artisticdesigning.com/Drawings/Photoshopped/narendra_modi_caricature.jpg');"></figure>
-            <figure class="front" id="cover">
-                <h1>Diary Title</h1>
-                <p>description</p>
-            </figure>
-        </div> -->
-        <div class="right">
+            <div id="page_content_text_back" contenteditable="false">{{pages[0].pageContent}}</div>
             <figure class="back" id="back-cover"></figure>
             <figure class="front" :style="{backgroundImage: `url(${pages[0].pageImage})`}"></figure>
         </div>
-        <div class="right" v-for="(page, idx) in pages" :key="idx">
-            <figure v-if="idx+1<pages.length" class="back" :style="{backgroundImage: `url(${pages[idx].pageImage})`}"></figure>
-            <figure v-if="idx+1<pages.length" class="front" :style="{backgroundImage: `url(${pages[idx+1].pageImage})`}"></figure>
-        </div>
+        <!-- <div class="right" v-for="(page, idx) in list()" :key="idx">
+            <div id="page_content_text" contenteditable="false">{{page.pageContent}}</div>
+            <div><b><font color="#ffffff">하얀색</font></b></div>
+            <figure class="back" :style="{backgroundImage: `url(${pages[idx].pageImage})`}"></figure>
+            <figure class="front" :style="{backgroundImage: `url(${pages[idx+1].pageImage})`}"></figure>
+        </div> -->
+        <page  v-for="(page, idx) in list()" :key="idx" 
+          :nextImage="pages[idx].pageImage" 
+          :curImage="pages[idx+1].pageImage"
+          :page="pages[idx+1]"
+          :idx="idx"
+        />
         <div class="right">
             <figure class="back" :style="{backgroundImage: `url(${pages[pages.length-1].pageImage})`}"></figure>
             <figure class="front" id="cover">
-                <h1>Diary Title</h1>
-                <p>description</p>
+              <div style="margin-top: 40%;">
+                <hr />
+                <h1>{{diaryTitle}}</h1>
+                <hr />
+                <p>d{{diaryDesc}}</p>
+              </div>
             </figure>
         </div>
     </div>
     <div id="prev" @click="turnLeft"></div>
     <div id="next" @click="turnRight"></div>
+    <div id="create-page-btn">
+      <v-tooltip right>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon 
+            v-bind="attrs"
+            v-on="on"
+            @click="clickCreate"
+          >
+            <v-icon large :color="$vuetify.breakpoint.xs?'black':'white'" >mdi-plus-circle-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>일기 추가하기</span>
+      </v-tooltip>
+
+      <!-- <v-btn icon @click="clickCreate" >
+          <v-icon :color="$vuetify.breakpoint.xs?'black':'white'" >mdi-plus-circle-outline</v-icon>
+      </v-btn> -->
+    </div>
     <br/>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
+import Page from '../../components/page/Page.vue'
+const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
 export default {
+  components: { Page },
   data(){
     return{
       right:'',
       si:-1,
-      z:1
+      z:1,
+      list: function(){
+        let list = []
+        for(let i = 0; i<this.pages.length-1; i++){
+          list.push(this.pages[i])
+        }
+        return list
+      }
     }
   },
-  computed: mapState(pageStore,{
-    pages: state=>state.store.pageList.reverse()
-  }),
+  computed:{
+    ...mapState(pageStore, {
+      pages: state=>state.store.pageList.reverse(),
+    }),
+    ...mapState(diaryStore, {
+      diaryId: state=>state.store.diaryId,
+      diaryTitle: state=>state.store.diaryTitle,
+      diaryDesc: state=>state.store.diaryDesc,
+    })
+  },
   mounted(){
     console.log(this.pages)
+    console.log(this.pages[0].pageContent)
   },
   created(){
     setTimeout(() => { // HTMLCollection 길이가 0으로 나오는 문제 해결
@@ -90,6 +113,14 @@ export default {
         //   this.z=1
         // }
       }
+      if(this.si==0){
+        document.getElementById('next').style.zIndex=-2
+        document.getElementById('create-page-btn').style.zIndex=10
+      }
+      else{
+        document.getElementById('next').style.zIndex=999
+        document.getElementById('create-page-btn').style.zIndex=-1
+      }
       this.right[this.si].classList.add('flip')
       this.z++
       this.right[this.si].style.zIndex=this.z
@@ -106,11 +137,25 @@ export default {
         //   right[i].style.zIndex=right.length+1-i
         // }
       }
+
+      if(this.si==0){
+        document.getElementById('next').style.zIndex=-2
+        document.getElementById('create-page-btn').style.zIndex=10
+      }
+      else{
+        document.getElementById('next').style.zIndex=999
+        document.getElementById('create-page-btn').style.zIndex=-1
+      }
       this.right[this.si-1].className='right'
       this.z++
       this.right[this.si-1].style.zIndex=this.z
       
       // setTimeout(function(){this.right[this.si-1].style.zIndex="auto";},350)
+    },
+    clickCreate(e){
+      // e.stopPropagation()
+      // console.log("click!!")
+      this.$router.push({name:'CreatePage'})
     }
   }
 }
@@ -218,30 +263,46 @@ export default {
   padding: 0 30px;
 }
 .front#cover h1{
-  color: #fff;
+  /* margin: 40% 0 0 0; */
+  text-align: center;
+  color: rgb(121, 116, 99);
+}
+.front#cover hr{
+  text-align: center;
+  color: rgb(121, 116, 99);
+  height: 5px;
+  border: none;
 }
 .front#cover p{
-  color: rgba(0,0,0,0.8);
-  font-size: 14px;
+  margin: 10% 0 0 0;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
 }
 
 /* controls */
 #prev, #next {
   position: absolute;
   width: 50%;
-  height: 100%;
+  height: 80%;
   z-index: 999;
 }
-#prev:hover, #next:hover {
+/* #prev:hover, #next:hover {
   background: rgba(0,0,0,0.05);
   cursor: pointer;
-}
+} */
 #prev {
   top: 0;
   left: 0;
 }
 #next {
-  top: 0;
+  top: 20%;
   left: 50%;
+}
+#create-page-btn{
+  position: absolute;
+  z-index: -1;
+  top: 45%;
+  left: 75%;
 }
 </style>

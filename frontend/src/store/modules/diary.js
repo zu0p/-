@@ -25,7 +25,9 @@ const diaryStore = {
   state : {
     store:{
       diaryList: [],
-      diaryId: null
+      diaryId: null,
+      diaryTitle: '',
+      diaryDesc: ''
     }
   },
 
@@ -40,6 +42,15 @@ const diaryStore = {
   mutations : {
     SET_DIARY_ID(state, id){
       state.store.diaryId = id
+    },
+    SET_DIARY_TITLE_AND_DESC(state, info){
+      for(let i = 0 ;i<state.store.diaryList.length; i++){
+        if(state.store.diaryList[i].id == info.id){
+          state.store.diaryTitle = info.title
+          state.store.diaryDesc = info.desc
+          break
+        }
+      }
     },
     SET_DIARY_LIST(state, list){
       // console.log(state.store.diaryList)      
@@ -76,6 +87,9 @@ const diaryStore = {
   actions : {
     setDiaryId({commit}, id){
       commit('SET_DIARY_ID', id)
+    },
+    setDiaryTitleAndDesc({commit}, info){
+      commit('SET_DIARY_TITLE_AND_DESC', info)
     },
     // 다이어리 목록 조회
     getDiaryList({commit}){

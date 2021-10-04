@@ -1,7 +1,6 @@
 <template>
   <v-container>
       <v-row>
-        <!-- <detail-page /> -->
         <page-flip />
       </v-row>
       <v-row>
@@ -10,12 +9,10 @@
 </template>
 
 <script>
-import DetailPage from '../../components/page/DetailPage.vue'
 import PageFlip from '../../components/page/PageFlip.vue'
 export default{
   name:'DetailView',
   components:{
-    DetailPage,
     PageFlip,
   },
   data(){

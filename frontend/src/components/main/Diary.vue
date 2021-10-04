@@ -84,9 +84,16 @@ export default {
     },
     methods:{
         ...mapActions(pageStore, ['requestPageList', 'setPageList']),
-        ...mapActions(diaryStore, ['setDiaryId']),
+        ...mapActions(diaryStore, ['setDiaryId', 'setDiaryTitleAndDesc']),
         clickDiary(){
             this.setDiaryId(this.curDiary.id)
+            let info ={
+                id:this.curDiary.id,
+                title:this.curDiary.diaryName,
+                desc:this.curDiary.diaryDesc
+            }
+            // console.log(info)
+            this.setDiaryTitleAndDesc(info)
             //해당 title의 diary page로 이동
             // console.log("click!"+this.diaryTitle)
             this.requestPageList(this.curDiary.id)

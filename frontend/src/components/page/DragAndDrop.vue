@@ -128,7 +128,6 @@ export default {
       form.append('pageImage', this.pageImage)
       form.append('top', textposition.y)
       form.append('left', textposition.x)
-      console.log(form.diaryId)
 
       this.requestCreateDiary(form)
         .then(res => {
