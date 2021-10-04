@@ -23,9 +23,10 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapState} from 'vuex'
 import draggable from 'vuedraggable'
 const pageStore = 'pageStore'
+const diaryStore='diaryStore'
 export default {
   components:{
     draggable
@@ -38,19 +39,35 @@ export default {
       plainText: ''
     }
   },
+  // computed: mapState(diaryStore,{
+  //   diaryId: state=>state.store.diaryId
+  // }),
+  // computed: mapState(pageStore,{
+  //   pageText: state=>state.store.page_text,
+  //   pageTitle: state=>state.store.page_title
+  // }),
+  computed:{
+    ...mapState(pageStore, {
+      pageText: state=>state.store.page_text,
+      pageTitle: state=>state.store.page_title,
+      pageImage: state=>state.store.page_img
+    }),
+    ...mapState(diaryStore,{
+      diaryId: state=>state.store.diaryId
+    })
+  },
   mounted(){
     let ball = document.getElementById('ball')
     ball.addEventListener('dragstart', function() {
       return false;
     })
     
-    const pageStore = this.$store._modules.root._children.pageStore.state.store
-    this.text = pageStore.page_text
-    this.imgFile = pageStore.page_img
-    this.plainText = this.text.replace(/<[^>]*>/g, '')
-    console.log(this.plainText)
-    console.log(this.text)
-    console.log(this.imgFile)
+    this.text = this.pageText
+    this.imgFile = this.pageImage
+    // this.plainText = this.text.replace(/<[^>]*>/g, '')
+    // console.log(this.plainText)
+    // console.log(this.text)
+    // console.log(this.imgFile)
 
     document.getElementById('ball').innerHTML = this.text
 
@@ -64,10 +81,8 @@ export default {
       reader.readAsDataURL(this.imgFile);
     }
   },
-  created(){
-
-  },
   methods:{
+    ...mapActions(pageStore, ['requestCreateDiary']),
     drag(e){
       console.log("mouse down")
       let ball = document.getElementById('ball')
@@ -102,6 +117,22 @@ export default {
 
     clickWritePage(){
       // 이미지+텍스트+위치 create page
+      const textbox = document.getElementById('ball')
+      const textposition = textbox.getBoundingClientRect();
+
+      const form = new FormData()
+      form.append('diaryId', this.diaryId)
+      form.append('pageTitle', this.pageTitle)
+      form.append('pageContent', this.pageText)
+      form.append('pageShare', false)
+      form.append('pageImage', this.pageImage)
+      form.append('top', textposition.y)
+      form.append('left', textposition.x)
+
+      this.requestCreateDiary(form)
+        .then(res => {
+          console.log(res)
+        })
     }
   },
 }
