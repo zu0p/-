@@ -118,8 +118,16 @@ const pageStore = {
     },
     // 감정 추출
     requestEmotion({ commit }, info) {
-      return axios.post("http://3.35.52.211:8999/emotion", info);
+      return axios.post('http://13.125.248.60:8999/emotion', info);
     },
+    // 일기 작성
+    requestCreateDiary({commit}, formData){
+      return instanceWithAuth.post(
+        `${BASE_URL}/create`, 
+        formData,
+        {headers:{'Content-Type': 'multipart/form-data'}}
+      )
+    }
   },
 };
 export default pageStore;
