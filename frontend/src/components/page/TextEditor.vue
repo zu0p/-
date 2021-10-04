@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="position: relative; width:100%; height: 100%;">
     <!-- text editor -->
     <v-row>
       <form>
@@ -10,6 +10,7 @@
             :rules="rules.title"
             label="Title"
             required
+            style="position: relative; width:100%; height: 100%;"
           ></v-text-field>
         </div>
         
@@ -77,7 +78,7 @@
           </v-btn>
         </div>
         <div style="text-align: right; display:none;" id="select-keyword">
-          <v-container fluid>
+          <v-container fluid style="position: relative; width:100%; height: 100%;">
             <v-row>
               <div style="text-align:left; font-size:12px;">
                 <v-icon small>mdi-lightbulb-outline</v-icon>
@@ -213,7 +214,9 @@ export default {
 
 <style>
 .content{
-  height: 50vh;
+  position: relative !important;
+  height: 50vh !important;
+  /* width: 50vh !important; */
   overflow: auto;
   border: 0.01rem solid gray;
   border-radius: 5px;

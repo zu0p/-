@@ -44,6 +44,7 @@
                             color="teal accent-3"
                             dark
                             v-model="login.userPwd"
+                            @keyup.enter="clickLogin"
                           />
                         </v-form>
                         <h3 class="text-center mt-4">Forgot your password ?</h3>
@@ -277,16 +278,19 @@ export default {
         });
     },
     clickSignup() {
-      this.requestSignup(this.form)
-        .then((res) => {
-          if (res.statusText == "OK") {
-            alert("회원가입 성공");
-            window.location = "/";
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        this.requestSignup(this.form)
+          .then((res) => {
+            if (res.statusText == "OK") {
+              alert("회원가입 성공");
+              window.location = "/";
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
   },
 

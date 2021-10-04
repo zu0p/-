@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="position:relative; witdh: 100%; height: 100%">
     <v-row v-if="!$vuetify.breakpoint.xs">
       <v-col class="wrapper">
         <text-editor />

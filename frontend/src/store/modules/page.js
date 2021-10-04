@@ -22,8 +22,8 @@ const pageStore = {
   namespaced: true,
 
   // initial state
-  state : {
-    store:{
+  state: {
+    store: {
       page_id: "",
       page_img: null,
       page_text: "",
@@ -35,8 +35,7 @@ const pageStore = {
   },
 
   // getters
-  getters:{
-  },
+  getters: {},
 
   // mutations
   mutations : {
@@ -47,29 +46,29 @@ const pageStore = {
       state.store.page_id = id
     },
 
-    SET_PAGE_IMG(state, img){
-      state.store.page_img = img
-      console.log(state.store.page_img)
+    SET_PAGE_IMG(state, img) {
+      state.store.page_img = img;
+      console.log(state.store.page_img);
     },
 
-    SET_PAGE_TEXT(state, text){
-      state.store.page_text = text
+    SET_PAGE_TEXT(state, text) {
+      state.store.page_text = text;
     },
 
-    SET_PAGE_TITLE(state, title){
-      state.store.page_title = title
+    SET_PAGE_TITLE(state, title) {
+      state.store.page_title = title;
     },
 
-    GET_PAGE_IMG(state){
-      return state.store.page_img
+    GET_PAGE_IMG(state) {
+      return state.store.page_img;
     },
 
-    SET_IS_KEYWORD_SEARCH(state){
-      state.store.isKeywordSearch = !state.store.isKeywordSearch
+    SET_IS_KEYWORD_SEARCH(state) {
+      state.store.isKeywordSearch = !state.store.isKeywordSearch;
     },
 
-    SET_SELECTED_KEYWORDS(state, selected){
-      state.store.selectedKeywords = selected
+    SET_SELECTED_KEYWORDS(state, selected) {
+      state.store.selectedKeywords = selected;
     },
   },
 
@@ -85,48 +84,50 @@ const pageStore = {
       commit('SET_PAGE_ID', id)
     },
 
-    setPageImg({commit}, img){
-      commit('SET_PAGE_IMG', img)
+    setPageImg({ commit }, img) {
+      commit("SET_PAGE_IMG", img);
     },
 
-    setPageText({commit}, text){
-      commit('SET_PAGE_TEXT', text)
+    setPageText({ commit }, text) {
+      commit("SET_PAGE_TEXT", text);
     },
 
-    setPageTitle({commit}, title){
-      commit('SET_PAGE_TITLE', title)
+    setPageTitle({ commit }, title) {
+      commit("SET_PAGE_TITLE", title);
     },
 
-    getPageImg({commit}){
-      return commit('GET_PAGE_IMG')
+    getPageImg({ commit }) {
+      return commit("GET_PAGE_IMG");
     },
 
-    setIsKeywordSearch({commit}){
-      commit('SET_IS_KEYWORD_SEARCH')
+    setIsKeywordSearch({ commit }) {
+      commit("SET_IS_KEYWORD_SEARCH");
     },
 
     // 키워드 분석
-    requestKeyword({commit}, info){
-      return axios.post('http://13.124.43.16:8998/keyword_extraction', info)
+    requestKeyword({ commit }, info) {
+      return axios.post("http://13.124.43.16:8998/keyword_extraction", info);
     },
-    setSelectedKeywords({commit}, selected){
-      commit('SET_SELECTED_KEYWORDS', selected)
+    setSelectedKeywords({ commit }, selected) {
+      commit("SET_SELECTED_KEYWORDS", selected);
     },
     // 키워드 선택
-    requestKeywordImage({commit}, key){
-      console.log(key)
-      return axios.get(
-        "http://13.124.43.16:8998/image",
-        {
-          params: encodeURI(key)
-        }
-      )
+    requestKeywordImage({ commit }, key) {
+      console.log(key.keyword);
+      return axios.get("http://13.124.43.16:8998/image/?keyword=" + key.keyword);
     },
     // 감정 추출
-    requestEmotion({commit}, info){
-      return axios.post('http://3.35.52.211:8999/emotion', info)
+    requestEmotion({ commit }, info) {
+      return axios.post('http://13.125.248.60:8999/emotion', info);
+    },
+    // 일기 작성
+    requestCreateDiary({commit}, formData){
+      return instanceWithAuth.post(
+        `${BASE_URL}/create`, 
+        formData,
+        {headers:{'Content-Type': 'multipart/form-data'}}
+      )
     }
   },
-
-}
+};
 export default pageStore;
