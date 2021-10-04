@@ -6,6 +6,7 @@ from starlette.staticfiles import StaticFiles
 from views.user_views import user_router
 from views.diary_views import diary_router
 from views.page_views import page_router
+from views.recommend_views import recommend_router
 
 tags_metadata = [
     {
