@@ -12,10 +12,13 @@ tags_metadata = [
     {
         "name": "회원관리",
         "description": "회원관리 API",
+#       "externalDocs": {
+#           "description": "Items external docs",
+#           "url": "https://fastapi.tiangolo.com/",
+#       },
     },
     {
-        "name": "다이어리",
-        "description": "다이어리 API",
+        "name": "다이어리",        "description": "다이어리 API",
     },
     {
         "name": "일기관리",
@@ -25,21 +28,16 @@ tags_metadata = [
         "name": "추천관리",
         "description": "추천관리 API",
     },
-    # {
-    #     "name": "items",
-    #     "description": "Manage items. So _fancy_ they have their own docs.",
-    #     "externalDocs": {
-    #         "description": "Items external docs",
-    #         "url": "https://fastapi.tiangolo.com/",
-    #     },
-    # },
+    {
+        "name": "추천음악관리",
+        "description": "추천음악관리 API"
+    }
 ]
 
 server = FastAPI(
                 title='APIs for 그리더(당신의 글에 이미지를 더하다)', 
                 description=' Greeder Backend System, Made by FastAPI', 
                 version='0.1', 
-                # terms_of_service="http://example.com/terms/",
                 contact={
                         "name": "Seungyeup Lee",
                         "url": "https://buildabetterworld.tistory.com/",
@@ -70,8 +68,10 @@ server.add_middleware(
 # prefix 지정
 server.router.prefix = "/api/v1"
 
-# router 설정
+# web-server router 설정
 server.include_router(user_router, prefix="/users", tags=["회원관리"])
 server.include_router(diary_router, prefix="/diary", tags=["다이어리"])
 server.include_router(page_router, prefix="/page", tags=["일기관리"])
-server.include_router(recommend_router, prefix="/recommend", tags=["추천관리"])
+# Recommend_part
+server.include_router(recommend_router, prefix="/music", tags=["추천음악관리"])
+
