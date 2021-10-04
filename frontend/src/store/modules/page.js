@@ -118,7 +118,7 @@ const pageStore = {
     },
     // 감정 추출
     requestEmotion({ commit }, info) {
-      return axios.post("http://3.35.52.211:8999/emotion", info);
+      return axios.post('http://13.125.248.60:8999/emotion', info);
     },
   },
 };
