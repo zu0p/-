@@ -8,29 +8,30 @@
       <div id="diary-menu">
         <diary-menu />
       </div>
-      <VueSlickCarousel class="pageList" v-bind="settings">
-        <div v-for="card in cards" :key="card.title">
+      <VueSlickCarousel class="pageList" v-bind="settings" ref="carousel" v-if="pages.length">
+        <div v-for="page in pages" :key="page.id">
           <v-card class="ma-1">
             <v-img
-              :src="card.src"
+              :src="page.pageImage"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="330px"
               aspect-ratio="1"
-              @click="pageClick(card)"
-              @mouseover="card.isMouseOver = true"
-              @mouseleave="card.isMouseOver = false"
+              @click="pageClick(page)"
+              @mouseover="page.isMouseOver = true"
+              @mouseleave="page.isMouseOver = false"
             >
-              <v-card-title v-text="card.title"></v-card-title>
+              <v-card-title v-text="page.pageTitle"></v-card-title>
               <v-expand-transition>
-                <div v-if="card.isMouseOver == true" class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal text-h2 white--text">
-                  $14.99
+                <div v-if="page.isMouseOver == true" class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal white--text">
+                  {{ Html2Text(page.pageContent) }}
                 </div>
               </v-expand-transition>
             </v-img>
           </v-card>
         </div>
       </VueSlickCarousel>
+
       <v-row>
         <main-footer />
       </v-row>
@@ -45,20 +46,27 @@ import VueSlickCarousel from "vue-slick-carousel";
 import MainFooter from "../../components/main/MainFooter.vue";
 import UserMenu from "@/components/main/UserMenu.vue";
 import DiaryMenu from "@/components/page/DiaryMenu.vue";
+import { mapActions } from "vuex";
+const pageStore = "pageStore";
 
 export default {
+  name: "Params",
   components: { VueSlickCarousel, DiaryMenu, MainFooter, UserMenu },
+  props: {
+    diaryId: {
+      type: Number,
+    },
+  },
   data: () => ({
     settings: {
       infinite: false,
       slidesToShow: 4,
       speed: 500,
       rows: 2,
-      slidesToScroll: 4,
+      slidesToScroll: 3,
       arrows: true,
       dots: true,
     },
-    icons: ["mdi-rewind", "mdi-play", "mdi-fast-forward"],
     cards: [
       { title: "Pre-fab homes", src: "https://cdn.vuetifyjs.com/images/cards/house.jpg", pageContent: "설명입니다.1", isMouseOver: false },
       { title: "Favorite road trips", src: "https://cdn.vuetifyjs.com/images/cards/road.jpg", pageContent: "설명입니다.2", isMouseOver: false },
@@ -70,15 +78,40 @@ export default {
       { title: "hello", src: "https://cdn.vuetifyjs.com/images/cards/road.jpg", pageContent: "설명입니다.8", isMouseOver: false },
       { title: "6", src: "https://cdn.vuetifyjs.com/images/cards/road.jpg", pageContent: "설명입니다.9", isMouseOver: false },
     ],
-    transparent: "rgba(255, 255, 255, 0)",
+    pages: [],
   }),
-
+  created() {
+    this.requestPageList(this.$route.params.diaryId)
+      .then((res) => {
+        if ((res.statusText = "OK")) {
+          for (let i = 0; i < res.data.length; i++) {
+            var arr = res.data[i];
+            arr.isMouseOver = false;
+            this.pages.push(arr);
+          }
+          // this.pages = res.data;
+          console.log(this.pages);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        if (e.response.status == 422) {
+          alert("잘못된 요청입니다.");
+          window.location("/main");
+        }
+      });
+  },
   methods: {
-    pageClick(card) {
-      alert(card.title);
+    ...mapActions(pageStore, ["requestPageList"]),
+    pageClick(page) {
+      alert(page.pageTitle);
+      console.log(this.diaryId);
     },
     mouseOver(card) {
       console.log(card.pageContent);
+    },
+    Html2Text(str) {
+      return str.replace(/<[^>]*>?/gm, "");
     },
   },
 };
