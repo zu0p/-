@@ -135,4 +135,4 @@ def change_image(db: SessionLocal, current_user: user_schemas.UserInDB,
     current_user.userImage = Base_url + f"profile/{current_user.userId}.jpg"
     db.commit()
     db.refresh(current_user)
-    return
+    return Base_url + f"profile/{current_user.userId}.jpg"
