@@ -7,13 +7,14 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, File, Form, UploadFile
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
+import requests 
+import json
 from database import get_db
 
 from schemas import user_schemas
 from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
-from crud import user_crud, music_recommend ,diary_crud # crud
+from crud import user_crud, music_recommend ,diary_crud, page_crud # crud
 
 import pandas as pd
 from sklearn import preprocessing
@@ -28,11 +29,28 @@ recommend_router = APIRouter()
 # ================================== music recommendation CRUD ==================================
 
 ### 음악추천 랜덤 5
-@recommend_router.get("/recommend_by_page/{pageId}")
+@recommend_router.get("/recommend_by_page/{diaryId}/{pageId}")
 async def recommend_music_random_5( 
                         pageId: str,
+                        diaryId: str,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    # 1. data load
+    music_origin = music_recommend.return_musics_in_pdObject()
+    read_one_page = music_recommend.return_pageInfo_in_pdObject(diaryId, pageId)
+    
+    # 2. sementic analysis request
+    sementic_URL = 'http://13.125.248.60:8999/emotion'
+    data = {
+        "writing" : read_one_page.iloc[0]['pageContent'] 
+    }
+    res = requests.post(sementic_URL, data=json.dumps(data))
+    print(res.request)
+    # "musicId": 고유ID
+    # "genre": 음악장르
+    # "musicName": 음악파일명 
+    # "link": 음악URL
+
     return None
 
 
@@ -50,6 +68,7 @@ async def recommend_music_top_5(
                         musicName: str,
                         db: Session = Depends(get_db),
                         current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+
     # 1. data load
     music_origin = music_recommend.return_musics_in_pdObject()
     labels = music_origin[['label']]
