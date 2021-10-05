@@ -15,7 +15,7 @@ from schemas import user_schemas
 from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
 from crud import user_crud, music_recommend ,diary_crud, page_crud # crud
-
+from pydantic import BaseModel
 import pandas as pd
 from sklearn import preprocessing
 from sklearn.metrics.pairwise import cosine_similarity
@@ -27,6 +27,8 @@ logger.setLevel(logging.INFO)
 recommend_router = APIRouter()
 
 # ================================== music recommendation CRUD ==================================
+
+
 
 ### 음악추천 랜덤 5
 @recommend_router.get("/recommend_by_page/{diaryId}/{pageId}")
@@ -66,8 +68,49 @@ async def recommend_music_random_5(
     return result
 
 
-### 유사 음악 TOP 5 추천s
 
+
+### 음악추천 랜덤 5 텍스트만 사용
+class Item(BaseModel):
+    writing: str
+
+@recommend_router.post("/recommend_by_text")
+async def recommend_music_just_giveMeText( 
+                        item: Item,
+                        db: Session = Depends(get_db),
+                        current_user: user_schemas.UserInDB = Depends(user_crud.get_current_user)):
+    # 1. data load
+    music_origin = music_recommend.return_musics_in_pdObject()
+    
+    # 2. sementic analysis request
+    sementic_URL = 'http://13.125.248.60:8999/emotion'
+    data = {
+        "writing" : item.writing
+    }
+    res = requests.post(sementic_URL, data=json.dumps(data))
+    # print(res.text)
+
+    # 3. 유사 감정 음악 추출
+    music_sementic = music_origin[music_origin['sementic']==int(res.text)]
+    similar_music = music_sementic['id'].to_list()
+    similar_music_random = random.sample(similar_music, 5)
+
+    # 4. 반환형태로 변환해서 리턴
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
+    result = []
+    for s in similar_music_random:
+        tmp = {}
+        tmp["musicId"] = s
+        genre = tmp["genre"] = music_origin.loc[s]["label"]
+        musicName = tmp["musicName"] = music_origin.loc[s]["filename"]
+        tmp["link"] = Base_url + f"music/{genre}/{musicName}"
+        result.append(tmp)
+
+    return result
+
+
+
+### 유사 음악 TOP 5 추천
 def find_similar_songs(id, sim_df, n=5):
     series = sim_df[id].sort_values(by = id, ascending=False)
     series = series.drop(id).head(n)
