@@ -6,12 +6,6 @@
             <figure class="back" id="back-cover"></figure>
             <figure class="front" :style="{backgroundImage: `url(${pages[0].pageImage})`}"></figure>
         </div>
-        <!-- <div class="right" v-for="(page, idx) in list()" :key="idx">
-            <div id="page_content_text" contenteditable="false">{{page.pageContent}}</div>
-            <div><b><font color="#ffffff">하얀색</font></b></div>
-            <figure class="back" :style="{backgroundImage: `url(${pages[idx].pageImage})`}"></figure>
-            <figure class="front" :style="{backgroundImage: `url(${pages[idx+1].pageImage})`}"></figure>
-        </div> -->
         <page  v-for="(page, idx) in list()" :key="idx" 
           :nextImage="pages[idx].pageImage" 
           :curImage="pages[idx+1].pageImage"

@@ -141,8 +141,8 @@ export default {
           //res.data = [] -> 4개만 보여주기
           for (let i = 0; i < 4; i++) {
             console.log(res.data)
-            // let tmp = res.data[i].url;
-            let tmp = 'chocolate'+(i+1)
+            let tmp = res.data[i].url;
+            // let tmp = 'chocolate'+(i+1)
             console.log(tmp);
             this.createImage.push(require(`@/images/keywords/${tmp}.jpg`));
           }
