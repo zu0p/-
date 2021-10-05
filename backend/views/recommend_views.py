@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import requests 
 import json
 from database import get_db
-
+import random
 from schemas import user_schemas
 from schemas import diary_schemas # schemas
 from models import user_model, diary_model # models
@@ -45,13 +45,25 @@ async def recommend_music_random_5(
         "writing" : read_one_page.iloc[0]['pageContent'] 
     }
     res = requests.post(sementic_URL, data=json.dumps(data))
-    print(res.request)
-    # "musicId": 고유ID
-    # "genre": 음악장르
-    # "musicName": 음악파일명 
-    # "link": 음악URL
+    # print(res.text)
 
-    return None
+    # 3. 유사 감정 음악 추출
+    music_sementic = music_origin[music_origin['sementic']==int(res.text)]
+    similar_music = music_sementic['id'].to_list()
+    similar_music_random = random.sample(similar_music, 5)
+
+    # 4. 반환형태로 변환해서 리턴
+    Base_url = "https://greeda-recommend.s3.ap-northeast-2.amazonaws.com/"
+    result = []
+    for s in similar_music_random:
+        tmp = {}
+        tmp["musicId"] = s
+        genre = tmp["genre"] = music_origin.loc[s]["label"]
+        musicName = tmp["musicName"] = music_origin.loc[s]["filename"]
+        tmp["link"] = Base_url + f"music/{genre}/{musicName}"
+        result.append(tmp)
+
+    return result
 
 
 ### 유사 음악 TOP 5 추천s
