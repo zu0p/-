@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="wrapper">
       <v-col>
-        <drag-and-drop />
+        <drag-and-drop :pDiaryId="pDiaryId" :pPageId="pPageId" />
       </v-col>
     </v-row>
   </v-container>  
@@ -12,6 +12,10 @@
 import DragAndDrop from '../../components/page/DragAndDrop.vue'
 export default {
   components: { DragAndDrop },
+  props:['pDiaryId', 'pPageId'],
+  mounted(){
+    // console.log(this.pDiaryId)
+  }
 }
 </script>
 

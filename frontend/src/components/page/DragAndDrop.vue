@@ -31,12 +31,15 @@ export default {
   components:{
     draggable
   },
+  props:['pDiaryId', 'pPageId'],
   data(){
     return{
       text: '',
       imgFile: {},
       preview: null,
-      plainText: ''
+      plainText: '',
+      pageId: null,
+      propsDiary: null
     }
   },
   // computed: mapState(diaryStore,{
@@ -57,6 +60,12 @@ export default {
     })
   },
   mounted(){
+    // console.log(this.pDiaryId)
+    if(this.pDiaryId){
+      this.propsDiary = this.pDiaryId
+      this.pageId = this.pPageId
+    }
+
     let ball = document.getElementById('ball')
     ball.addEventListener('dragstart', function() {
       return false;
@@ -82,7 +91,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(pageStore, ['requestCreateDiary']),
+    ...mapActions(pageStore, ['requestCreateDiary', 'requestUpdatePage', 'requestPageList', 'setPageList']),
     drag(e){
       console.log("mouse down")
       let ball = document.getElementById('ball')
@@ -121,7 +130,6 @@ export default {
       const textposition = textbox.getBoundingClientRect();
 
       const form = new FormData()
-      form.append('diaryId', this.diaryId)
       form.append('pageTitle', this.pageTitle)
       form.append('pageContent', this.pageText)
       form.append('pageShare', false)
@@ -129,10 +137,28 @@ export default {
       form.append('top', textposition.y)
       form.append('left', textposition.x)
 
-      this.requestCreateDiary(form)
-        .then(res => {
-          console.log(res)
-        })
+      // 일기 수정
+      if(this.propsDiary){
+        form.append('diaryId', this.propsDiary)
+        form.append('pageId', this.pageId)
+        this.requestUpdatePage(form)
+          .then(res=>{
+            // console.log(res)
+
+            this.$router.push({name:'DetailView'})
+          })
+      }
+
+      // 일기 생성
+      else{
+        form.append('diaryId', this.diaryId)
+        this.requestCreateDiary(form)
+          .then(res => {
+            // console.log(res)
+
+            this.$router.push({name:'DetailView'})
+          })
+      }
     }
   },
 }

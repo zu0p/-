@@ -132,6 +132,14 @@ const pageStore = {
           data: info
         }
       )
+    },
+    // 일기 조회
+    requestReadPage({commit}, info){
+      return instanceWithAuth.get(`${BASE_URL}/read/${info.diaryId}/${info.pageId}`)
+    },
+    // 일기 수정
+    requestUpdatePage({commit}, formData){
+      return instanceWithAuth.put(`${BASE_URL}/update`, formData, { headers: { "Content-Type": "multipart/form-data" } })
     }
   },
 };

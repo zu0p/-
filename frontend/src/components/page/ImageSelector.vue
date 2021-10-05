@@ -20,6 +20,18 @@ import {mapActions} from 'vuex'
 const pageStore = 'pageStore'
 export default {
   name: 'ImageSelector',
+  props:['pDiaryId', 'pPageId'],
+  data(){
+    return{
+      diaryId:null,
+      pageId:null
+    }
+  },
+  mounted(){
+    console.log(this.pDiaryId)
+    this.diaryId = this.pDiaryId
+    this.pageId = this.pPageId
+  },
   methods: {
     ...mapActions(pageStore, ['setIsKeywordSearch']),
     previewButtonClick(){
@@ -29,7 +41,13 @@ export default {
         this.setIsKeywordSearch() //키워드 다시 false로
         // routing to preview page
         // check image validatioin
-        this.$router.push({name:'Preview'})
+        if(this.diaryId){
+          console.log("edit page")
+
+          this.$router.push({name:'Preview', params:{pDiaryId: this.diaryId, pPageId: this.pageId}})
+        }
+        else
+          this.$router.push({name:'Preview'})
       }
       else{
         alert('글을 작성하고 이미지를 선택하세요!')

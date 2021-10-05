@@ -81,8 +81,16 @@ export default {
     })
   },
   mounted(){
-    console.log(this.pages)
-    console.log(this.pages[0].pageContent)
+
+    // this.requestPageList(this.diaryId)
+    //   .then(res=>{
+    //     console.log(res.data)
+    //     this.setPageList(res.data)
+    //     console.log(this.$store._modules.root._children.pageStore.state.store.pageList)
+        
+    //   })
+    // console.log(this.pages)
+    // console.log(this.pages[0].pageContent)
   },
   created(){
     setTimeout(() => { // HTMLCollection 길이가 0으로 나오는 문제 해결
@@ -91,6 +99,7 @@ export default {
     }, 0);
   },
   methods:{
+    ...mapActions(pageStore, ['requestPageList', 'setPageList']),
     turnRight(){
       if(this.si>=1){
         this.si--

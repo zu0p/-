@@ -6,12 +6,9 @@
     <figure class="front" :style="{backgroundImage: `url(${curImage})`}"></figure>
 
     <div id="page-buttons">
-      <v-btn icon style="z-index:1000">
+      <v-btn icon style="z-index:1000" @click="clickEditPage">
           <v-icon color="blue darken-3">mdi-pencil-outline</v-icon>
       </v-btn>
-      <!-- <v-btn icon style="z-index:1000" @click="clickDeletePage">
-          <v-icon color="red darken-3">mdi-trash-can-outline</v-icon>
-      </v-btn> -->
       <v-dialog
         v-model="deleteDialog"
         persistent
@@ -54,6 +51,11 @@ export default {
     clickDeletePage(e){
       e.stopPropagation()
       console.log("delete click")
+    },
+    clickEditPage(){
+      // 수정페이지로 가
+      console.log('eee')
+      this.$router.push({name:'CreatePage', params:{isEdit:true, diaryId:this.page.diaryId, pageId:this.page.id}})
     },
     onDeleteDialog(){
         this.deleteDialog = false

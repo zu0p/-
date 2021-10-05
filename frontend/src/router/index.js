@@ -49,6 +49,7 @@ const router = new Router({
           path: "create",
           name: "CreatePage",
           component: (resolve) => import(`@/views/page/CreatePage.vue`).then(resolve),
+          props: true,
           children: [
             {
               path: "imageSelect",
@@ -61,6 +62,7 @@ const router = new Router({
           path: "preview",
           name: "Preview",
           component: (resolve) => import(`@/views/page/Preview.vue`).then(resolve),
+          props: true
         },
         {
           path: "detailView",
