@@ -13,30 +13,35 @@
           <v-icon color="red darken-3">mdi-trash-can-outline</v-icon>
       </v-btn> -->
       <v-dialog
-      v-model="deleteDialog"
-      persistent
-      max-width="290"
+        v-model="deleteDialog"
+        persistent
+        max-width="290"
       >
           <template v-slot:activator="{ on, attrs }">
               <v-btn icon  v-bind="attrs" v-on="on">
                   <v-icon color="red darken-3">mdi-trash-can-outline</v-icon>
               </v-btn>
           </template>
-          <!-- <delete-diary :id="curDiary.id" @cancelDeleteDialog="onDeleteDialog"/> -->
+          <delete-diary isPage=true :diaryId="page.id" :id="page.diaryId" @cancelDeleteDialog="onDeleteDialog"/>
       </v-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import DeleteDiary from '../main/DeleteDiary.vue'
 export default {
+  components:{
+    DeleteDiary
+  },
   props: ['curImage', 'nextImage', 'page', 'idx'],
   data(){
     return{
+      deleteDialog: false
     }
   },
   mounted(){
-    // console.log(this.page.pageContent)
+    console.log(this.page)
     const textbox = document.getElementById(`pct_${this.idx}`)
     textbox.innerHTML = this.page.pageContent
     textbox.style.left = this.page.left.toString()+"px"
@@ -49,6 +54,9 @@ export default {
     clickDeletePage(e){
       e.stopPropagation()
       console.log("delete click")
+    },
+    onDeleteDialog(){
+        this.deleteDialog = false
     }
   }
 }

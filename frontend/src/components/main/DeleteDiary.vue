@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="text-h5">
-      정말 이 다이어리를 삭제하실건가요?
+      정말 이 {{name}}를 삭제하실건가요?
     </v-card-title>
     <v-card-text>
-      삭제된 다이어리는 복구할 수 없습니다.
+      삭제된 {{name}}는 복구할 수 없습니다.
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -38,7 +38,7 @@
                   <v-icon color="white">mdi-alert-circle-outline</v-icon>
                 </v-col>
                 <v-col style="color:white;">
-                다이어리 <strong>삭제</strong>가 완료 되었습니다.
+                {{name}} <strong>삭제</strong>가 완료 되었습니다.
                 </v-col>
                 <v-col align="right">
                   <v-btn
@@ -61,38 +61,70 @@
 <script>
 import { mapActions } from 'vuex'
 const diaryStore = 'diaryStore'
+const pageStore = 'pageStore'
 export default {
-  props:['id'],
+  props:['id', 'isPage', 'diaryId'],
   data(){
     return{
-      dialog: false
+      dialog: false,
+      name: ''
     }
+  },
+  mounted(){
+    if(this.isPage){
+      this.name = '일기'
+    }
+    else this.name = '다이어리'
   },
   methods:{
     ...mapActions(diaryStore, ['requestDeleteDiary', 'deleteDiary']),
+    ...mapActions(pageStore, ['requestDeletePage']),
     clickCancel(){
       this.$emit('cancelDeleteDialog')
     },
     clickDelete(){
       this.dialog = false
 
-      // diary-actions로 diaryList에서 해당 다이어리 제거
-      const param={
-        "diaryId": this.id
+      // 페이지 제거일 때
+      if(this.isPage){
+        console.log('일기 제거')
+        console.log(this.diaryId)
+        const param={
+          "diaryId": this.id,
+          "pageId": this.diaryId
+        }
+        this.requestDeletePage(param)
+          .then(res=>{
+            if(res.statusText=='OK')
+              this.deleteDiary(this.id)
+
+            // dialog 닫기
+            this.$emit('cancelDeleteDialog')
+          })
+          .catch(e=>{
+            console.log(e.response)
+          })
       }
-      this.requestDeleteDiary(param)
-        .then(res=>{
-          console.log(res)
-          if(res.statusText=='OK')
-            this.deleteDiary(this.id)
 
-          // dialog 닫기
-          this.$emit('cancelDeleteDialog')
-        })
-        .catch(e=>{
-          console.log(e.response)
-        })
+      // 다이어리 제거일 때
+      else{
+        console.log('다이어리 제거')
+        const param={
+          "diaryId": this.id
+        }
+        this.requestDeleteDiary(param)
+          .then(res=>{
+            // console.log(res)
+            if(res.statusText=='OK')
+              this.deleteDiary(this.id)
 
+            // dialog 닫기
+            this.$emit('cancelDeleteDialog')
+          })
+          .catch(e=>{
+            console.log(e.response)
+          })
+      }
     }
   }
 }

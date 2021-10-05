@@ -124,6 +124,15 @@ const pageStore = {
     requestCreateDiary({ commit }, formData) {
       return instanceWithAuth.post(`${BASE_URL}/create`, formData, { headers: { "Content-Type": "multipart/form-data" } });
     },
+    // 일기 삭제
+    requestDeletePage({commit}, info){
+      return instanceWithAuth.delete(
+        `${BASE_URL}/delete`,
+        {
+          data: info
+        }
+      )
+    }
   },
 };
 export default pageStore;
