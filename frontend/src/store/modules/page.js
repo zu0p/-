@@ -35,7 +35,12 @@ const pageStore = {
   },
 
   // getters
-  getters: {},
+  getters: {
+
+    pageList:(state)=>{
+      return state.store.pageList
+    }
+  },
 
   // mutations
   mutations: {
@@ -65,11 +70,36 @@ const pageStore = {
 
     SET_IS_KEYWORD_SEARCH(state) {
       state.store.isKeywordSearch = !state.store.isKeywordSearch;
+      // state.store.isKeywordSearch = true
+      // console.log(state.store.isKeywordSearch)
     },
 
     SET_SELECTED_KEYWORDS(state, selected) {
       state.store.selectedKeywords = selected;
     },
+    
+    DELETE_PAGE(state, page){
+      // 찾아서 지우기
+      const res = state.store.pageList.filter(item => item.id != page)
+      state.store.pageList = res
+      // console.log(state.store.pageList)
+    },
+    ADD_PAGE(state, page){
+      state.store.pageList.push(page)
+      // console.log(state.store.pageList)
+    },
+    UPDATE_PAGE(state, page){
+      // 찾아서 바꾸기
+      const res = state.store.pageList.map(item => {
+        if(item.id == page.id){
+          return page
+        }
+        else
+          return item
+      })
+      // console.log(res)
+      state.store.pageList = res
+    }
   },
 
   // actions
@@ -124,6 +154,9 @@ const pageStore = {
     requestCreateDiary({ commit }, formData) {
       return instanceWithAuth.post(`${BASE_URL}/create`, formData, { headers: { "Content-Type": "multipart/form-data" } });
     },
+    addPage({commit}, page){
+      commit('ADD_PAGE', page)
+    },
     // 일기 삭제
     requestDeletePage({commit}, info){
       return instanceWithAuth.delete(
@@ -133,6 +166,9 @@ const pageStore = {
         }
       )
     },
+    deletePage({commit}, page){
+      commit('DELETE_PAGE', page)
+    },
     // 일기 조회
     requestReadPage({commit}, info){
       return instanceWithAuth.get(`${BASE_URL}/read/${info.diaryId}/${info.pageId}`)
@@ -140,6 +176,9 @@ const pageStore = {
     // 일기 수정
     requestUpdatePage({commit}, formData){
       return instanceWithAuth.put(`${BASE_URL}/update`, formData, { headers: { "Content-Type": "multipart/form-data" } })
+    },
+    updatePage({commit}, page){
+      commit('UPDATE_PAGE', page)
     }
   },
 };

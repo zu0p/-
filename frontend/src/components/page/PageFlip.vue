@@ -1,16 +1,17 @@
 <template>
   <div class="book-section">
     <div class="container">
-        <div class="right">
-            <div id="page_content_text_back" contenteditable="false">{{pages[0].pageContent}}</div>
+        <!-- <div class="right">
+            <div id="page_content_text_back" contenteditable="false"></div>
             <figure class="back" id="back-cover"></figure>
             <figure class="front" :style="{backgroundImage: `url(${pages[0].pageImage})`}"></figure>
-        </div>
+        </div> -->
         <page  v-for="(page, idx) in list()" :key="idx" 
           :nextImage="pages[idx].pageImage" 
           :curImage="pages[idx+1].pageImage"
           :page="pages[idx+1]"
-          :idx="idx"
+          :idx="idx+1"
+          @requestRefresh="refresh"
         />
         <div class="right">
             <figure class="back" :style="{backgroundImage: `url(${pages[pages.length-1].pageImage})`}"></figure>
@@ -50,7 +51,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions, mapGetters} from 'vuex'
 import Page from '../../components/page/Page.vue'
 const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
@@ -66,14 +67,20 @@ export default {
         for(let i = 0; i<this.pages.length-1; i++){
           list.push(this.pages[i])
         }
+        console.log(list)
         return list
       }
     }
   },
   computed:{
-    ...mapState(pageStore, {
-      pages: state=>state.store.pageList.reverse(),
-    }),
+    ...mapGetters(pageStore, ['pageList']),
+
+    pages(){
+        return this.pageList
+    }, 
+    // ...mapState(pageStore, {
+    //   pages: state=>state.store.pageList.reverse(),
+    // }),
     ...mapState(diaryStore, {
       diaryId: state=>state.store.diaryId,
       diaryTitle: state=>state.store.diaryTitle,
@@ -81,18 +88,18 @@ export default {
     })
   },
   mounted(){
-
-    // this.requestPageList(this.diaryId)
-    //   .then(res=>{
-    //     console.log(res.data)
-    //     this.setPageList(res.data)
-    //     console.log(this.$store._modules.root._children.pageStore.state.store.pageList)
-        
-    //   })
     // console.log(this.pages)
     // console.log(this.pages[0].pageContent)
+    // document.getElementById('page_content_text_back').innerHTML = this.pages[0].pageContent
   },
   created(){
+    let dummy = {
+      pageImage: 'back-cover'
+    }
+    this.pages.reverse()
+    this.pages.unshift(dummy)
+    console.log(this.pages)
+
     setTimeout(() => { // HTMLCollection 길이가 0으로 나오는 문제 해결
       this.right = document.getElementsByClassName('right')
       this.si = this.right.length
@@ -100,6 +107,7 @@ export default {
   },
   methods:{
     ...mapActions(pageStore, ['requestPageList', 'setPageList']),
+    ...mapActions(diaryStore, ['requestDiaryInfo']),
     turnRight(){
       if(this.si>=1){
         this.si--
@@ -156,9 +164,15 @@ export default {
       // setTimeout(function(){this.right[this.si-1].style.zIndex="auto";},350)
     },
     clickCreate(e){
-      // e.stopPropagation()
-      // console.log("click!!")
       this.$router.push({name:'CreatePage'})
+    },
+    refresh(){
+      // console.log(this.diaryId)
+      // localStorage.setItem('diaryId', this.diaryId)
+
+      // this.$router.push({name: 'DetailView', params:{diaryId: this.diaryId}})
+      // location.reload()
+      // this.$forceUpdate()
     }
   }
 }

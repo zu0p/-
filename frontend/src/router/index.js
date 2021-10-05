@@ -37,7 +37,7 @@ const router = new Router({
     },
     {
       name: "Pages",
-      path: "/pages/:title",
+      path: "/pages",
       component: (resolve) => import(`@/views/page/Page.vue`).then(resolve),
       children: [
         {
@@ -68,6 +68,7 @@ const router = new Router({
           path: "detailView",
           name: "DetailView",
           component: (resolve) => import(`@/views/page/DetailView.vue`).then(resolve),
+          props: true
         },
       ],
     },

@@ -213,6 +213,8 @@ export default {
       
       // 키워드 선택했음(true)으로 바꿈
       this.setIsKeywordSearch()
+
+      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
       // console.log(this.checkbox)
     },
     formatDoc(sCmd, select) {

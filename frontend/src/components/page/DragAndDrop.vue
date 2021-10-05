@@ -91,7 +91,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(pageStore, ['requestCreateDiary', 'requestUpdatePage', 'requestPageList', 'setPageList']),
+    ...mapActions(pageStore, ['requestCreateDiary', 'requestUpdatePage', 'requestPageList', 'setPageList', 'addPage', 'updatePage']),
     drag(e){
       console.log("mouse down")
       let ball = document.getElementById('ball')
@@ -136,16 +136,30 @@ export default {
       form.append('pageImage', this.pageImage)
       form.append('top', textposition.y)
       form.append('left', textposition.x)
-
+      console.log(form)
       // 일기 수정
       if(this.propsDiary){
         form.append('diaryId', this.propsDiary)
         form.append('pageId', this.pageId)
         this.requestUpdatePage(form)
           .then(res=>{
-            // console.log(res)
+            console.log(res)
+            const newPage = {
+              diaryId: this.propsDiary,
+              id: this.pageId,
+              top: textposition.y,
+              left: textposition.x,
+              pageTitle: this.pageTitle,
+              pageContent: this.pageText,
+              pageImage: this.pageImage,
+              pageOwnerId: '',
+              pageShare: false,
+            }
+            this.updatePage(newPage)
 
             this.$router.push({name:'DetailView'})
+            // alert('수정이 완료되었습니다 홈으로 돌아갑니다')
+            // window.location.href = `/main`
           })
       }
 
@@ -155,6 +169,19 @@ export default {
         this.requestCreateDiary(form)
           .then(res => {
             // console.log(res)
+
+            const newPage = {
+              diaryId: this.diaryId,
+              id: this.pageId,
+              top: textposition.y,
+              left: textposition.x,
+              pageTitle: this.pageTitle,
+              pageContent: this.pageText,
+              pageImage: this.pageImage,
+              pageOwnerId: '',
+              pageShare: false,
+            }
+            this.addPage(newPage)
 
             this.$router.push({name:'DetailView'})
           })

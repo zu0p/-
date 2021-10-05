@@ -2,7 +2,8 @@
   <div class="right">    
      
     <div class="page_content_text" v-bind:id="'pct_' + idx" contenteditable="false"></div>
-    <figure class="back" :style="{backgroundImage: `url(${nextImage})`}"></figure>
+    <figure v-if="!backCover" class="back" :style="{backgroundImage: `url(${nextImage})`}"></figure>
+    <figure v-if="backCover" class="back" id="back-cover"></figure>
     <figure class="front" :style="{backgroundImage: `url(${curImage})`}"></figure>
 
     <div id="page-buttons">
@@ -34,31 +35,40 @@ export default {
   props: ['curImage', 'nextImage', 'page', 'idx'],
   data(){
     return{
-      deleteDialog: false
+      deleteDialog: false,
+      backCover: true
+    }
+  },
+  created(){
+    if(this.nextImage=='back-cover'){
+      // console.log('dummy')
+      // console.log(this.page)
+      this.backCover=true
+    }
+    else{
+      console.log(this.page)
+      this.backCover=false
     }
   },
   mounted(){
-    console.log(this.page)
     const textbox = document.getElementById(`pct_${this.idx}`)
+    console.log(textbox)
     textbox.innerHTML = this.page.pageContent
     textbox.style.left = this.page.left.toString()+"px"
-    textbox.style.top = this.page.top.toString()+"px"
-    console.log(textbox)
-
-    console.log(this.page.left+" "+textbox.style.left)
+    textbox.style.top = this.page.top.toString()+"px"    
   },
   methods:{
     clickDeletePage(e){
       e.stopPropagation()
-      console.log("delete click")
+      // console.log("delete click")
     },
     clickEditPage(){
       // 수정페이지로 가
-      console.log('eee')
       this.$router.push({name:'CreatePage', params:{isEdit:true, diaryId:this.page.diaryId, pageId:this.page.id}})
     },
     onDeleteDialog(){
-        this.deleteDialog = false
+      this.deleteDialog = false
+      this.$emit('requestRefresh')
     }
   }
 }

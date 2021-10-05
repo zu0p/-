@@ -12,14 +12,16 @@
 import PageFlip from '../../components/page/PageFlip.vue'
 export default{
   name:'DetailView',
+  props:['diaryId'],
   components:{
     PageFlip,
   },
   data(){
     return{
+        id: null
     }
   },
-  created(){    
+  created(){   
   },
   methods:{
 

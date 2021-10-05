@@ -78,7 +78,7 @@ export default {
   },
   methods:{
     ...mapActions(diaryStore, ['requestDeleteDiary', 'deleteDiary']),
-    ...mapActions(pageStore, ['requestDeletePage']),
+    ...mapActions(pageStore, ['requestDeletePage', 'deletePage']),
     clickCancel(){
       this.$emit('cancelDeleteDialog')
     },
@@ -87,16 +87,20 @@ export default {
 
       // 페이지 제거일 때
       if(this.isPage){
-        console.log('일기 제거')
-        console.log(this.diaryId)
+        // console.log('일기 제거')
+        // console.log(this.diaryId)
         const param={
           "diaryId": this.id,
           "pageId": this.diaryId
         }
         this.requestDeletePage(param)
           .then(res=>{
-            if(res.statusText=='OK')
-              this.deleteDiary(this.id)
+            if(res.statusText=='OK'){
+              // console.log(res)
+              // console.log(this.diaryId)
+              this.deletePage(this.diaryId)
+            }
+            
 
             // dialog 닫기
             this.$emit('cancelDeleteDialog')
@@ -108,7 +112,7 @@ export default {
 
       // 다이어리 제거일 때
       else{
-        console.log('다이어리 제거')
+        // console.log('다이어리 제거')
         const param={
           "diaryId": this.id
         }

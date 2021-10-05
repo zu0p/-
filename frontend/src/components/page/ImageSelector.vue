@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.pDiaryId)
+    // console.log(this.pDiaryId)
     this.diaryId = this.pDiaryId
     this.pageId = this.pPageId
   },
@@ -37,6 +37,8 @@ export default {
     previewButtonClick(){
       let key = this.$store._modules.root._children.pageStore.state.store.isKeywordSearch
       let img = this.$store._modules.root._children.pageStore.state.store.page_img
+      console.log(key)
+      console.log(img)
       if(key && img!=null){ // 키워드 분석 했고 && 이미지도 선택해야 프리뷰로 넘어감
         this.setIsKeywordSearch() //키워드 다시 false로
         // routing to preview page
@@ -50,7 +52,7 @@ export default {
           this.$router.push({name:'Preview'})
       }
       else{
-        alert('글을 작성하고 이미지를 선택하세요!')
+        alert('글 작성을 완료하고 이미지를 선택하세요!')
       }
     }
   }
