@@ -111,5 +111,5 @@ async def change_image(
     fp.close()
 
     logger.info(profileImage)
-    user_crud.change_image(db, current_user, new_path)
-    return {"state": "success"}
+    changed_url = user_crud.change_image(db, current_user, new_path)
+    return {"state": "success", "changedImg": changed_url}
