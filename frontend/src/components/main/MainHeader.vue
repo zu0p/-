@@ -23,6 +23,7 @@ export default {
 .header-title{
     margin: 60px 0 10px 0;
     z-index: 2;
+    position: relative;
 }
 .title{
     font-size: 3rem !important;
@@ -43,7 +44,7 @@ export default {
 }
 .outer{
     display: flex;
-    margin: 20px 0 0 0;
+    margin: 60px 0 0 0;
 }
 hr{
     size: 5px;

@@ -1,22 +1,22 @@
 import api from "../../api";
-import axios from 'axios';
-import { setInterceptors } from '../interceptors'
+import axios from "axios";
+import { setInterceptors } from "../interceptors";
 
-function createInstance(){
-  const instance = axios.create()
-  return setInterceptors(instance)
+function createInstance() {
+  const instance = axios.create();
+  return setInterceptors(instance);
 }
 
 // Token값과 특정 url을 붙여서 셋팅
 function createInstanceWithAuth(url) {
   const instance = axios.create({
-    baseURL: BASE_URL+`${url}`,
-  })
-  return setInterceptors(instance)
+    baseURL: BASE_URL + `${url}`,
+  });
+  return setInterceptors(instance);
 }
 
-const BASE_URL='http://j5d103.p.ssafy.io/api/v1/page'
-const instanceWithAuth = createInstance()
+const BASE_URL = "http://j5d103.p.ssafy.io/api/v1/page";
+const instanceWithAuth = createInstance();
 
 const pageStore = {
   namespaced: true,
@@ -30,20 +30,20 @@ const pageStore = {
       page_title: "",
       isKeywordSearch: false,
       selectedKeywords: [],
-      pageList:[]
-    }
+      pageList: [],
+    },
   },
 
   // getters
   getters: {},
 
   // mutations
-  mutations : {
-    SET_PAGE_LIST(state, pages){
-      state.store.pageList = pages
+  mutations: {
+    SET_PAGE_LIST(state, pages) {
+      state.store.pageList = pages;
     },
-    SET_PAGE_ID(state, id){
-      state.store.page_id = id
+    SET_PAGE_ID(state, id) {
+      state.store.page_id = id;
     },
 
     SET_PAGE_IMG(state, img) {
@@ -73,15 +73,15 @@ const pageStore = {
   },
 
   // actions
-  actions : {
-    requestPageList({commit},diaryId){
-      return instanceWithAuth.get(`${BASE_URL}/read/${diaryId}`)
+  actions: {
+    requestPageList({ commit }, diaryId) {
+      return instanceWithAuth.get(`${BASE_URL}/read/${diaryId}`);
     },
-    setPageList({commit}, pages){
-      commit('SET_PAGE_LIST', pages)
+    setPageList({ commit }, pages) {
+      commit("SET_PAGE_LIST", pages);
     },
-    setPageId({commit}, id){
-      commit('SET_PAGE_ID', id)
+    setPageId({ commit }, id) {
+      commit("SET_PAGE_ID", id);
     },
 
     setPageImg({ commit }, img) {
@@ -118,7 +118,11 @@ const pageStore = {
     },
     // 감정 추출
     requestEmotion({ commit }, info) {
-      return axios.post("http://3.35.52.211:8999/emotion", info);
+      return axios.post("http://13.125.248.60:8999/emotion", info);
+    },
+    // 일기 작성
+    requestCreateDiary({ commit }, formData) {
+      return instanceWithAuth.post(`${BASE_URL}/create`, formData, { headers: { "Content-Type": "multipart/form-data" } });
     },
   },
 };

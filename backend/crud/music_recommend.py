@@ -39,5 +39,10 @@ conn = engine.connect()
 def return_musics_in_pdObject():
     data = pd.read_sql_table('music_info', conn)
     data = data[data['sementic'].notnull()]
-    print(data.head())
+    return data
+ 
+### return all data in pandas object
+def return_pageInfo_in_pdObject(diaryId, pageId):
+    data = pd.read_sql_table('page_info', conn)
+    data = data[(data['id'] == int(pageId)) & (data['diaryId'] == int(diaryId))]
     return data

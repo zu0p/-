@@ -4,6 +4,7 @@ WORKDIR ./front
 COPY package.json .
 
 ADD . .
+RUN npm install slick-carousel --save
 RUN npm install
 
 CMD ["npm", "run", "serve"]
