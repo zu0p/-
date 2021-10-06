@@ -49,6 +49,9 @@
       </v-btn> -->
     </div>
     <br/>
+    <div class="music-container">
+      <music-recommend :page="curPage"/>
+    </div>
   </div>
 </template>
 
@@ -56,10 +59,16 @@
 import {mapState, mapActions, mapGetters} from 'vuex'
 import Page from '../../components/page/Page.vue'
 import PageText from '../../components/page/PageText.vue'
+import MusicRecommend from './MusicRecommend.vue'
 const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
+const musicStore = 'musicStore'
 export default {
-  components: { Page, PageText },
+  components: { 
+    Page, 
+    PageText,
+    MusicRecommend,
+  },
   data(){
     return{
       right:'',
@@ -74,6 +83,10 @@ export default {
         // console.log(list)
         return list
       },
+      curPage: {
+        text: '',
+        music: ''
+      }
       // pages: []
     }
   },
@@ -126,6 +139,7 @@ export default {
   methods:{
     ...mapActions(pageStore, ['requestPageList', 'setPageList']),
     ...mapActions(diaryStore, ['requestDiaryInfo']),
+    ...mapActions(musicStore, ['requestMusicByText']),
   
     turnRight(){
       if(this.si>=1){
@@ -143,7 +157,8 @@ export default {
         //   this.z=1
         // }
       }
-      // console.log(this.si)
+      this.musicPlay()
+
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
         document.getElementById('create-page-btn').style.zIndex=10
@@ -174,6 +189,7 @@ export default {
         //   right[i].style.zIndex=right.length+1-i
         // }
       }
+      this.musicPlay()
       // console.log(this.si)
 
       if(this.si==0){
@@ -210,13 +226,48 @@ export default {
         this.$router.push({name:'BeforeCreate'})
       }
     },
+    musicPlay(){
+      if(this.si==this.right.length){
+        document.getElementById('text-recomm-music').pause()
+        return
+      }
+      if(this.si-1<this.texts.length && this.texts[this.si-1]){
+        // 현재 페이지 저장
+        console.log(this.si)
+        console.log(this.texts[this.si-1])
+        console.log(this.texts[this.si-1].innerText)
+        this.curPage.text = this.texts[this.si-1].innerText
+        let param = {
+          writing: this.curPage.text
+        }
+        this.requestMusicByText(param)
+          .then(res=>{
+            // console.log(res)
+            this.curPage.music = res.data[0].link
+            document.getElementById('text-recomm-music').load()
+          })
+      }
+      else{
+        document.getElementById('text-recomm-music').pause()
+      }
+    }
   }
 }
 </script>
 
 <style>
+.music-container{
+  position: fixed;
+  height: 20%;
+  width: 100%;
+  color: white;
+  background-color: rgba(71, 67, 67, 0.7);
+  margin: 0;
+  padding: 0;
+  left: 0;
+}
 .book-section{
-  height: 90vh;
+  height: 85vh;
   width: 100%;
   padding: 40px 0;
   text-align: center;
@@ -345,7 +396,7 @@ export default {
   cursor: pointer;
 } */
 #prev {
-  top: 0;
+  top: 10%;
   left: 0;
 }
 #next {
