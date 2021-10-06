@@ -6,7 +6,7 @@
     <v-img height="200" src="../../images/draw.png">
       <v-row align="center" justify="center" class="mt-3">
         <v-col class="text-center">
-          <v-avatar v-if="userInfo.userImage" class="profile-image" color="white" size="150">
+          <v-avatar id="profileImg" v-if="userInfo.userImage" class="profile-image" color="white" size="150">
             <img :src="userInfo.userImage" />
           </v-avatar>
           <v-avatar class="avatar" v-else size="150" color="white">
@@ -257,7 +257,6 @@ export default {
         }
       })
       .catch((e) => {
-        console.log(e);
         if (e.response.status == 401) {
           alert("회원정보 조회 실패했습니다..");
         }
@@ -333,13 +332,14 @@ export default {
     },
     profileUpdated(e) {
       this.userInfo.profileImage = e.target.files[0];
-      console.log(this.userInfo.profileImage);
-
-      var reader = new FileReader();
-      reader.onload = (e) => {
-        this.preview = e.target.result;
-      };
-      reader.readAsDataURL(this.userInfo.profileImage);
+      var input = e.target;
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (e) => {
+          this.userInfo.userImage = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
 
       // document.getElementById("before-select").style.display = "none";
       this.updateProfileImage(this.userInfo.profileImage)
