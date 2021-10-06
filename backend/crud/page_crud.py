@@ -53,7 +53,7 @@ def update_page(db: SessionLocal, owner: str, updateInfo:page_schemas.PageUpdate
     get.top=updateInfo.top
     get.left=updateInfo.left
     db.commit()
-    return get
+    return get.pageImage
 
 ### D
 def delete_page(db: SessionLocal, owner: str, deleteInfo: page_schemas.PageDeleteForm):
