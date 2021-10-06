@@ -7,11 +7,14 @@
         <!-- <v-icon color="white">mdi-refresh</v-icon> -->
         
         <audio id="text-recomm-music" controls autoplay loop>
-          <source :src="page.music" type="audio/wav">
+          <source :src="page.textMusic" type="audio/wav">
         </audio>
       </v-col>
       <v-col>
-        새로고침
+        감정기반 추천
+        <audio id="emotion-recomm-music" controls loop>
+          <source :src="page.emotionMusic" type="audio/wav">
+        </audio>
       </v-col>
     </v-row>
   </v-container>

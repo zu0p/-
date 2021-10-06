@@ -35,6 +35,9 @@ const musicStore = {
     requestMusicByText({ commit }, text) {
       return instanceWithAuth.post(`${BASE_URL}/recommend_by_text`, text);
     },
+    requestMusicByPage({ commit }, info){
+      return instanceWithAuth.get(`${BASE_URL}/recommend_by_page/${info.diaryId}/${info.pageId}`, info);
+    }
   },
 };
 export default musicStore;

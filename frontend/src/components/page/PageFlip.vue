@@ -85,7 +85,8 @@ export default {
       },
       curPage: {
         text: '',
-        music: ''
+        textMusic: '',
+        emotionMusic: ''
       }
       // pages: []
     }
@@ -139,7 +140,7 @@ export default {
   methods:{
     ...mapActions(pageStore, ['requestPageList', 'setPageList']),
     ...mapActions(diaryStore, ['requestDiaryInfo']),
-    ...mapActions(musicStore, ['requestMusicByText']),
+    ...mapActions(musicStore, ['requestMusicByText', 'requestMusicByPage']),
   
     turnRight(){
       if(this.si>=1){
@@ -233,18 +234,30 @@ export default {
       }
       if(this.si-1<this.texts.length && this.texts[this.si-1]){
         // 현재 페이지 저장
-        console.log(this.si)
-        console.log(this.texts[this.si-1])
-        console.log(this.texts[this.si-1].innerText)
+        // console.log(this.si)
+        // console.log(this.texts[this.si-1])
+        // console.log(this.texts[this.si-1].innerText)
         this.curPage.text = this.texts[this.si-1].innerText
         let param = {
           writing: this.curPage.text
         }
-        this.requestMusicByText(param)
+        this.requestMusicByText(param) // text 기반 음악추천
           .then(res=>{
             // console.log(res)
-            this.curPage.music = res.data[0].link
+            this.curPage.textMusic = res.data[0].link
             document.getElementById('text-recomm-music').load()
+          })
+
+        // console.log(this.pages[this.si])
+        let info={
+          diaryId: this.diaryId,
+          pageId: this.pages[this.si].id
+        }
+        this.requestMusicByPage(info) // 감정 기반 음악추천
+          .then(res=>{
+            console.log(res)
+            this.curPage.emotionMusic = res.data[0].link
+            document.getElementById('emotion-recomm-music').load()
           })
       }
       else{
