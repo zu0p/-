@@ -6,6 +6,7 @@ import Vuex from "vuex";
 import pageStore from './modules/page'
 import diaryStore from './modules/diary'
 import userStore from './modules/user'
+// import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex);
 
@@ -17,7 +18,10 @@ const root = new Vuex.Store({
     pageStore: pageStore,
     diaryStore: diaryStore,
     userStore: userStore
-  }
+  },
+  // plugins: [
+  //   createPersistedState()
+  // ]
 })
 
 export default root

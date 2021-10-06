@@ -70,7 +70,7 @@
             </v-col>
           </v-row>
         </div>
-        <div class="content" name="content" :contenteditable="!isDisable" :v-bind="text"></div>
+        <div class="content" name="content" :contenteditable="!isDisable" :v-model="text"></div>
         <div style="text-align: right" id="keyword-btn">
           <v-btn depressed @click="keywordButtonClick">
             <v-icon color="pink">mdi-key-chain</v-icon>
@@ -124,6 +124,7 @@ export default {
   name: 'TextEditor',
   components:{
   },
+  props:['pDiaryId', 'pPageId'],
   data(){
     return{
       oDoc: document.getElementsByClassName('content')[0],
@@ -143,8 +144,24 @@ export default {
       isDisable: false
     }
   },
+  mounted(){
+    // 수정일 떄
+    if(this.pDiaryId){
+      // 수정 -> 기본 일기 조회
+      let param = {
+        diaryId: this.pDiaryId,
+        pageId: this.pPageId
+      }
+      this.requestReadPage(param)
+        .then(res=>{
+          // console.log(res)
+          this.title = res.data.pageTitle
+          document.getElementsByClassName('content')[0].innerHTML = res.data.pageContent
+        })
+    }
+  },
   methods: {
-    ...mapActions(pageStore, ['setPageTitle', 'setPageText', 'setIsKeywordSearch', 'requestKeyword', 'setSelectedKeywords', 'requestEmotion']),
+    ...mapActions(pageStore, ['setPageTitle', 'setPageText', 'setIsKeywordSearch', 'requestKeyword', 'setSelectedKeywords', 'requestEmotion', 'requestReadPage']),
     onUpdate (text) {
       this.text = text
     },
@@ -196,6 +213,8 @@ export default {
       
       // 키워드 선택했음(true)으로 바꿈
       this.setIsKeywordSearch()
+
+      console.log(this.$store._modules.root._children.pageStore.state.store.isKeywordSearch)
       // console.log(this.checkbox)
     },
     formatDoc(sCmd, select) {
