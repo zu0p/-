@@ -169,7 +169,13 @@ export default {
       });
     },
     selectKeywordImage(e) {
-      console.log(e.target.src);
+      const images = document.getElementsByClassName("img-fluid");
+
+      for (var i = 0; i < images.length; i++) {
+        images[i].style.border = "";
+      }
+
+      e.target.style.border = "3px solid cornflowerblue";
       this.image = e.target.src;
 
       this.setPageImg(this.image);
