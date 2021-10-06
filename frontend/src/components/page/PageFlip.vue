@@ -1,11 +1,13 @@
 <template>
   <div class="book-section">
     <div class="container">
-        <!-- <div class="right">
-            <div id="page_content_text_back" contenteditable="false"></div>
-            <figure class="back" id="back-cover"></figure>
-            <figure class="front" :style="{backgroundImage: `url(${pages[0].pageImage})`}"></figure>
-        </div> -->
+        <page-text  v-for="(page, idx) in list()" :key="idx" 
+          :page="pages[idx+1]"
+          :idx="idx+1"
+          isFront=false
+        />
+        <page-text isFront=true page=null idx=0 /> <!--front용-->
+
         <page  v-for="(page, idx) in list()" :key="idx" 
           :nextImage="pages[idx].pageImage" 
           :curImage="pages[idx+1].pageImage"
@@ -20,7 +22,7 @@
                 <hr />
                 <h1>{{diaryTitle}}</h1>
                 <hr />
-                <p>d{{diaryDesc}}</p>
+                <p>{{diaryDesc}}</p>
               </div>
             </figure>
         </div>
@@ -53,13 +55,15 @@
 <script>
 import {mapState, mapActions, mapGetters} from 'vuex'
 import Page from '../../components/page/Page.vue'
+import PageText from '../../components/page/PageText.vue'
 const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
 export default {
-  components: { Page },
+  components: { Page, PageText },
   data(){
     return{
       right:'',
+      texts:'',
       si:-1,
       z:1,
       list: function(){
@@ -69,14 +73,23 @@ export default {
         }
         console.log(list)
         return list
-      }
+      },
+      pages: []
     }
   },
   computed:{
     ...mapGetters(pageStore, ['pageList']),
 
-    pages(){
-        return this.pageList
+    getterPages(){
+      console.log(this.pageList)
+      this.pages = this.pageList
+      let dummy = {
+        pageImage: 'back-cover'
+      }
+      this.pages.reverse()
+      this.pages.unshift(dummy)
+
+      return this.pageList
     }, 
     // ...mapState(pageStore, {
     //   pages: state=>state.store.pageList.reverse(),
@@ -93,21 +106,28 @@ export default {
     // document.getElementById('page_content_text_back').innerHTML = this.pages[0].pageContent
   },
   created(){
-    let dummy = {
-      pageImage: 'back-cover'
-    }
-    this.pages.reverse()
-    this.pages.unshift(dummy)
-    console.log(this.pages)
-
+    // this.initPages()
+    this.getterPages
     setTimeout(() => { // HTMLCollection 길이가 0으로 나오는 문제 해결
       this.right = document.getElementsByClassName('right')
+      this.texts = document.getElementsByClassName('page_content_text')
       this.si = this.right.length
     }, 0);
   },
   methods:{
     ...mapActions(pageStore, ['requestPageList', 'setPageList']),
     ...mapActions(diaryStore, ['requestDiaryInfo']),
+    initPages(){
+      this.getterPages
+      console.log(this.pages)
+      let dummy = {
+        pageImage: 'back-cover'
+      }
+      this.pages.reverse()
+      this.pages.unshift(dummy)
+
+      console.log(this.pages)
+    },
     turnRight(){
       if(this.si>=1){
         this.si--
@@ -124,6 +144,7 @@ export default {
         //   this.z=1
         // }
       }
+      console.log(this.si)
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
         document.getElementById('create-page-btn').style.zIndex=10
@@ -132,9 +153,15 @@ export default {
         document.getElementById('next').style.zIndex=999
         document.getElementById('create-page-btn').style.zIndex=-1
       }
+
+      this.texts[this.si].style.display='block'
       this.right[this.si].classList.add('flip')
       this.z++
       this.right[this.si].style.zIndex=this.z
+      // this.right[this.si].childNodes[0].style.zIndex = this.z-1
+      // console.log(this.right[this.si].childNodes[0].style.zIndex)
+      if(this.si-1>=0 && this.si-1<this.texts.length)
+        this.texts[this.si-1].style.zIndex=this.z+1
     },
     turnLeft() {
       if(this.si<this.right.length){
@@ -148,6 +175,7 @@ export default {
         //   right[i].style.zIndex=right.length+1-i
         // }
       }
+      console.log(this.si)
 
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
@@ -157,9 +185,17 @@ export default {
         document.getElementById('next').style.zIndex=999
         document.getElementById('create-page-btn').style.zIndex=-1
       }
+      // if(this.si==this.right.length){
+      //   for(let i = 0; i<this.texts.length; i++)
+      //     this.texts[i].style.display='none'
+      // }
+
       this.right[this.si-1].className='right'
       this.z++
       this.right[this.si-1].style.zIndex=this.z
+      // this.texts[this.si-1].style.zIndex=this.z-1
+      if(this.si-2>=0 && this.si-2<this.texts.length)
+        this.texts[this.si-2].style.display='none'
       
       // setTimeout(function(){this.right[this.si-1].style.zIndex="auto";},350)
     },
@@ -173,7 +209,7 @@ export default {
       // this.$router.push({name: 'DetailView', params:{diaryId: this.diaryId}})
       // location.reload()
       // this.$forceUpdate()
-    }
+    },
   }
 }
 </script>
@@ -293,7 +329,7 @@ export default {
 .front#cover p{
   margin: 10% 0 0 0;
   text-align: center;
-  color: #fff;
+  color: rgb(121, 116, 99);
   font-size: 20px;
 }
 
