@@ -139,6 +139,7 @@ export default {
       text: "",
       radio: "",
       keywords: [],
+      emotion: "",
       isDisable: false,
       isExtraction: false,
       isKeywordExist: false,
