@@ -136,7 +136,7 @@ export default {
       form.append('pageImage', this.pageImage)
       form.append('top', textposition.y)
       form.append('left', textposition.x)
-      console.log(form)
+      // console.log(form)
       // 일기 수정
       if(this.propsDiary){
         form.append('diaryId', this.propsDiary)
@@ -151,7 +151,7 @@ export default {
               left: textposition.x,
               pageTitle: this.pageTitle,
               pageContent: this.pageText,
-              pageImage: this.pageImage,
+              pageImage: res.data.pageImage,
               pageOwnerId: '',
               pageShare: false,
             }
@@ -168,7 +168,7 @@ export default {
         form.append('diaryId', this.diaryId)
         this.requestCreateDiary(form)
           .then(res => {
-            // console.log(res)
+            console.log(res)
 
             const newPage = {
               diaryId: this.diaryId,
@@ -177,7 +177,7 @@ export default {
               left: textposition.x,
               pageTitle: this.pageTitle,
               pageContent: this.pageText,
-              pageImage: this.pageImage,
+              pageImage: res.data.pageImage,
               pageOwnerId: '',
               pageShare: false,
             }
