@@ -134,8 +134,7 @@ async def update_page(
             left = left
     )
     updated = page_crud.update_page(db, current_user.userId, updateInfo)
-    print(updated)
-    return {"state": "success"}
+    return updateInfo
 
 
 ### D
