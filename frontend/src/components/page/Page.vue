@@ -1,7 +1,7 @@
 <template>
   <div class="right">    
      
-    <div class="page_content_text" v-bind:id="'pct_' + idx" contenteditable="false"></div>
+    <!-- <div class="page_content_text" v-bind:id="'pct_' + idx" contenteditable="false"></div> -->
     <figure v-if="!backCover" class="back" :style="{backgroundImage: `url(${nextImage})`}"></figure>
     <figure v-if="backCover" class="back" id="back-cover"></figure>
     <figure class="front" :style="{backgroundImage: `url(${curImage})`}"></figure>
@@ -51,11 +51,11 @@ export default {
     }
   },
   mounted(){
-    const textbox = document.getElementById(`pct_${this.idx}`)
-    console.log(textbox)
-    textbox.innerHTML = this.page.pageContent
-    textbox.style.left = this.page.left.toString()+"px"
-    textbox.style.top = this.page.top.toString()+"px"    
+    // const textbox = document.getElementById(`pct_${this.idx}`)
+    // console.log(textbox)
+    // textbox.innerHTML = this.page.pageContent
+    // textbox.style.left = this.page.left.toString()+"px"
+    // textbox.style.top = this.page.top.toString()+"px"    
   },
   methods:{
     clickDeletePage(e){
@@ -75,9 +75,9 @@ export default {
 </script>
 
 <style>
-.page_content_text{
+/* .page_content_text{
   position: fixed !important;
-}
+} */
 #page-buttons{
   position: absolute;
   top: 5%;
