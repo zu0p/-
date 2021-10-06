@@ -133,7 +133,8 @@ async def update_page(
             top = top,
             left = left
     )
-    updated = page_crud.update_page(db, current_user.userId, updateInfo)
+    updatedURL = page_crud.update_page(db, current_user.userId, updateInfo)
+    updateInfo.pageImage = updatedURL
     return updateInfo
 
 
