@@ -84,7 +84,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(pageStore, ["requestCreateDiary", "requestUpdatePage", "requestPageList", "setPageList", "addPage", "updatePage"]),
+    ...mapActions(pageStore, ["requestCreateDiary", "requestUpdatePage", "requestPageList", "setPageList", "addPage", "updatePage", "imageCountUp"]),
 
     async convertURLtoFile(url) {
       const response = await fetch(url);
@@ -105,16 +105,19 @@ export default {
         form.append("top", textposition.y);
         form.append("left", textposition.x);
 
-        for (var pair of form.entries()) {
-          console.log(pair[0] + ", " + pair[1]);
+        const slash = this.pageImage.lastIndexOf("/");
+        var url = this.pageImage.substring(slash + 1, slash + 6);
+
+        if (url.charAt(url.length - 1) == ".") {
+          url = url.substring(0, url.length - 1);
         }
-        console.log(res);
+
+        this.imageCountUp(url);
 
         if (this.propsDiary) {
           form.append("diaryId", this.propsDiary);
           form.append("pageId", this.pageId);
           this.requestUpdatePage(form).then((res) => {
-            console.log(res);
             const newPage = {
               diaryId: this.propsDiary,
               id: this.pageId,

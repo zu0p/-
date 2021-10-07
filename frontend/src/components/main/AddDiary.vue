@@ -29,12 +29,7 @@
             <v-checkbox :disabled="!isAdd" v-model="diary.diaryShare" label="Share Diary"></v-checkbox>
           </v-col>
           <v-col>
-            <v-file-input
-              :disabled="!isAdd"
-              accept="image/*"
-              label="Diary Cover Image*(세로 사진을 사용해주세요)"
-              v-model="diary.diaryImage"
-            ></v-file-input>
+            <v-file-input :disabled="!isAdd" accept="image/*" label="Diary Cover Image*(세로 사진)" v-model="diary.diaryImage"></v-file-input>
           </v-col>
         </v-row>
       </v-container>

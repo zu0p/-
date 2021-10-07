@@ -193,6 +193,11 @@ const pageStore = {
     updatePage({ commit }, page) {
       commit("UPDATE_PAGE", page);
     },
+    //사진 선택시 선택 횟수 증가
+    imageCountUp({ commit }, url) {
+      console.log(url);
+      return axios.get("http://13.124.43.16:8995/image/select/" + url);
+    },
   },
 };
 export default pageStore;
