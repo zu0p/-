@@ -255,7 +255,7 @@ export default {
         }
         this.requestMusicByPage(info) // 감정 기반 음악추천
           .then(res=>{
-            console.log(res)
+            // console.log(res)
             this.curPage.emotionMusic = res.data[0].link
             document.getElementById('emotion-recomm-music').load()
           })
