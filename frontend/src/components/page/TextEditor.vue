@@ -95,15 +95,14 @@
               </v-radio-group>
             </v-row>
             <v-row align="center" justify="start">
-              <v-col cols="6" class="ml-2" style="text-align: left;">
+              <v-col cols="8" style="text-align: left;">
                 <v-icon color="red">mdi-head-heart-outline</v-icon
                 ><span
                   ><b>{{ emotion }}</b
                   >적인 글이군요</span
                 >
               </v-col>
-              <v-col class="ml-3" cols="1"></v-col>
-              <v-col class="ml-5" cols="4">
+              <v-col cols="4">
                 <v-btn class="done-btn" depressed :disabled="isDisable" @click="selectKeywordButtonClick">
                   <span>완료</span>
                   <v-icon color="blue">mdi-check-bold</v-icon>
