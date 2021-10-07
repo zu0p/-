@@ -5,7 +5,8 @@
     </v-row>
     <!-- 이미지 선택-->
     <v-row>
-      <router-view />
+      <!-- <router-view /> -->
+      <image-selector-item />
       <v-col style="text-align:right">
       <v-btn depressed @click="previewButtonClick">
         <span>미리보기</span>
@@ -17,8 +18,10 @@
 
 <script>
 import {mapActions} from 'vuex'
+import ImageSelectorItem from './ImageSelectorItem.vue'
 const pageStore = 'pageStore'
 export default {
+  components: { ImageSelectorItem },
   name: 'ImageSelector',
   props:['pDiaryId', 'pPageId'],
   data(){
