@@ -1,7 +1,7 @@
 <template>
-<div>
+
   <div class="page_content_text" v-bind:id="'pct_' + idx" contenteditable="false"></div>
-</div>
+
 </template>
 
 <script>
