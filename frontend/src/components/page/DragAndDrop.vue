@@ -300,7 +300,7 @@ export default {
   padding: 10px;
   cursor: move;
   z-index: 10;
-  border: 3px dashed yellow;
+  border: 3px dashed white;
 }
 /* #preview-wrapper{
   position: absolute;
