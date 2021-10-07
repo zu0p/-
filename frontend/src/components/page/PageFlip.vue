@@ -1,12 +1,12 @@
 <template>
   <div class="book-section">
-    <div class="container">
         <page-text  v-for="(page, idx) in list()" :key="idx+123" 
           :page="pages[idx+1]"
           :idx="idx+1"
           isFront=false
         />
         <page-text isFront=true page=null idx=0 /> <!--front용-->
+    <div class="container">
 
         <page  v-for="(page, idx) in list()" :key="idx" 
           :nextImage="pages[idx].pageImage" 
@@ -27,6 +27,7 @@
             </figure>
         </div>
     </div>
+    <div id="page-text" contenteditable="false"></div>
     <div id="prev" @click="turnLeft"></div>
     <div id="next" @click="turnRight"></div>
     <div id="create-page-btn">
@@ -148,18 +149,10 @@ export default {
       }
       else{
         console.log('last page')
-        // this.si=this.right.length-1
-        // function sttmot(i){
-        //   setTimeout(function(){this.right[i].style.zIndex="auto";},300) 
-        // }
-        // for(var i=0; i<this.right.length; i++){
-        //   this.right[i].className='right' 
-        //   sttmot(i)
-        //   this.z=1
-        // }
       }
       this.musicPlay()
-
+      this.setText()
+      
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
         document.getElementById('create-page-btn').style.zIndex=10
@@ -169,14 +162,12 @@ export default {
         document.getElementById('create-page-btn').style.zIndex=-1
       }
 
-      this.texts[this.si].style.display='block'
+      // this.texts[this.si].style.display='block'
       this.right[this.si].classList.add('flip')
       this.z++
       this.right[this.si].style.zIndex=this.z
-      // this.right[this.si].childNodes[0].style.zIndex = this.z-1
-      // console.log(this.right[this.si].childNodes[0].style.zIndex)
-      if(this.si-1>=0 && this.si-1<this.texts.length)
-        this.texts[this.si-1].style.zIndex=this.z+1
+      // if(this.si-1>=0 && this.si-1<this.texts.length)
+      //   this.texts[this.si-1].style.zIndex=this.z
     },
     turnLeft() {
       if(this.si<this.right.length){
@@ -184,14 +175,9 @@ export default {
       }
       else{
         console.log('first page')
-        // this.si=1;
-        // for(var i=right.length-1;i>0;i--){
-        //   right[i].classList.add('flip')
-        //   right[i].style.zIndex=right.length+1-i
-        // }
       }
       this.musicPlay()
-      // console.log(this.si)
+      this.setText()
 
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
@@ -201,17 +187,12 @@ export default {
         document.getElementById('next').style.zIndex=999
         document.getElementById('create-page-btn').style.zIndex=-1
       }
-      // if(this.si==this.right.length){
-      //   for(let i = 0; i<this.texts.length; i++)
-      //     this.texts[i].style.display='none'
-      // }
 
       this.right[this.si-1].className='right'
       this.z++
       this.right[this.si-1].style.zIndex=this.z
-      // this.texts[this.si-1].style.zIndex=this.z-1
-      if(this.si-2>=0 && this.si-2<this.texts.length)
-        this.texts[this.si-2].style.display='none'
+      // if(this.si-2>=0 && this.si-2<this.texts.length)
+      //   this.texts[this.si-2].style.display='none'
       
       // setTimeout(function(){this.right[this.si-1].style.zIndex="auto";},350)
     },
@@ -249,20 +230,36 @@ export default {
           })
 
         // console.log(this.pages[this.si])
-        let info={
-          diaryId: this.diaryId,
-          pageId: this.pages[this.si].id
-        }
-        this.requestMusicByPage(info) // 감정 기반 음악추천
-          .then(res=>{
-            // console.log(res)
-            this.curPage.emotionMusic = res.data[0].link
-            document.getElementById('emotion-recomm-music').load()
-          })
+        // let info={
+        //   diaryId: this.diaryId,
+        //   pageId: this.pages[this.si].id
+        // }
+        // this.requestMusicByPage(info) // 감정 기반 음악추천
+        //   .then(res=>{
+        //     // console.log(res)
+        //     this.curPage.emotionMusic = res.data[0].link
+        //     document.getElementById('emotion-recomm-music').load()
+        //   })
       }
       else{
         document.getElementById('text-recomm-music').pause()
       }
+    },
+    setText(){
+      if(this.texts[this.si-1]){
+        let curText = document.getElementById('page-text')
+        let realText = this.texts[this.si-1].innerHTML
+        curText.innerHTML = ''
+        setTimeout(function(){
+          console.log(realText)
+          document.getElementById('page-text').innerHTML = realText
+          
+        },500);
+        curText.style.left = this.texts[this.si-1].style.left
+        curText.style.top = this.texts[this.si-1].style.top + 70
+      }
+      else
+        document.getElementById('page-text').innerHTML = ''
     }
   }
 }
@@ -397,6 +394,11 @@ export default {
   font-size: 20px;
 }
 
+#page-text{
+  position: absolute;
+  top: 70px;
+  left: 0;
+}
 /* controls */
 #prev, #next {
   position: absolute;
