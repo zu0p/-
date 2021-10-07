@@ -172,7 +172,7 @@ export default {
 
             const newPage = {
               diaryId: this.diaryId,
-              id: this.pageId,
+              id: res.data.id,
               top: textposition.y,
               left: textposition.x,
               pageTitle: this.pageTitle,

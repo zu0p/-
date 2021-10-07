@@ -1,7 +1,7 @@
 <template>
   <div class="book-section">
     <div class="container">
-        <page-text  v-for="(page, idx) in list()" :key="idx" 
+        <page-text  v-for="(page, idx) in list()" :key="idx+123" 
           :page="pages[idx+1]"
           :idx="idx+1"
           isFront=false
@@ -49,6 +49,9 @@
       </v-btn> -->
     </div>
     <br/>
+    <div class="music-container">
+      <music-recommend :page="curPage"/>
+    </div>
   </div>
 </template>
 
@@ -56,10 +59,16 @@
 import {mapState, mapActions, mapGetters} from 'vuex'
 import Page from '../../components/page/Page.vue'
 import PageText from '../../components/page/PageText.vue'
+import MusicRecommend from './MusicRecommend.vue'
 const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
+const musicStore = 'musicStore'
 export default {
-  components: { Page, PageText },
+  components: { 
+    Page, 
+    PageText,
+    MusicRecommend,
+  },
   data(){
     return{
       right:'',
@@ -71,24 +80,21 @@ export default {
         for(let i = 0; i<this.pages.length-1; i++){
           list.push(this.pages[i])
         }
-        console.log(list)
+        // console.log(list)
         return list
       },
-      pages: []
+      curPage: {
+        text: '',
+        textMusic: '',
+        emotionMusic: ''
+      }
+      // pages: []
     }
   },
   computed:{
     ...mapGetters(pageStore, ['pageList']),
 
-    getterPages(){
-      console.log(this.pageList)
-      this.pages = this.pageList
-      let dummy = {
-        pageImage: 'back-cover'
-      }
-      this.pages.reverse()
-      this.pages.unshift(dummy)
-
+    pages(){
       return this.pageList
     }, 
     // ...mapState(pageStore, {
@@ -106,7 +112,24 @@ export default {
     // document.getElementById('page_content_text_back').innerHTML = this.pages[0].pageContent
   },
   created(){
-    // this.initPages()
+
+    // console.log(this.getterPages)
+    // this.pages = this.getterPages
+    if(this.pages[0].pageImage == 'back-cover'){
+      console.log("다시접근해서 삭제+reverse")
+      console.log(this.pages)
+      // this.pages.pop()
+      // this.pages.reverse()
+    }
+    else{
+      let dummy = {
+        pageImage: 'back-cover'
+      }
+      this.pages.reverse()
+      this.pages.unshift(dummy)
+      console.log(this.pages)
+    }
+
     this.getterPages
     setTimeout(() => { // HTMLCollection 길이가 0으로 나오는 문제 해결
       this.right = document.getElementsByClassName('right')
@@ -117,17 +140,8 @@ export default {
   methods:{
     ...mapActions(pageStore, ['requestPageList', 'setPageList']),
     ...mapActions(diaryStore, ['requestDiaryInfo']),
-    initPages(){
-      this.getterPages
-      console.log(this.pages)
-      let dummy = {
-        pageImage: 'back-cover'
-      }
-      this.pages.reverse()
-      this.pages.unshift(dummy)
-
-      console.log(this.pages)
-    },
+    ...mapActions(musicStore, ['requestMusicByText', 'requestMusicByPage']),
+  
     turnRight(){
       if(this.si>=1){
         this.si--
@@ -144,7 +158,8 @@ export default {
         //   this.z=1
         // }
       }
-      console.log(this.si)
+      this.musicPlay()
+
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
         document.getElementById('create-page-btn').style.zIndex=10
@@ -175,7 +190,8 @@ export default {
         //   right[i].style.zIndex=right.length+1-i
         // }
       }
-      console.log(this.si)
+      this.musicPlay()
+      // console.log(this.si)
 
       if(this.si==0){
         document.getElementById('next').style.zIndex=-2
@@ -203,20 +219,68 @@ export default {
       this.$router.push({name:'CreatePage'})
     },
     refresh(){
-      // console.log(this.diaryId)
-      // localStorage.setItem('diaryId', this.diaryId)
+      console.log(this.pages)
+      console.log(this.pages.length)
 
-      // this.$router.push({name: 'DetailView', params:{diaryId: this.diaryId}})
-      // location.reload()
-      // this.$forceUpdate()
+      if(this.pages.length == 1){
+        // 모든 페이지 삭제되면 최초 작성으로 라우팅
+        this.$router.push({name:'BeforeCreate'})
+      }
     },
+    musicPlay(){
+      if(this.si==this.right.length){
+        document.getElementById('text-recomm-music').pause()
+        return
+      }
+      if(this.si-1<this.texts.length && this.texts[this.si-1]){
+        // 현재 페이지 저장
+        // console.log(this.si)
+        // console.log(this.texts[this.si-1])
+        // console.log(this.texts[this.si-1].innerText)
+        this.curPage.text = this.texts[this.si-1].innerText
+        let param = {
+          writing: this.curPage.text
+        }
+        this.requestMusicByText(param) // text 기반 음악추천
+          .then(res=>{
+            // console.log(res)
+            this.curPage.textMusic = res.data[0].link
+            document.getElementById('text-recomm-music').load()
+          })
+
+        // console.log(this.pages[this.si])
+        let info={
+          diaryId: this.diaryId,
+          pageId: this.pages[this.si].id
+        }
+        this.requestMusicByPage(info) // 감정 기반 음악추천
+          .then(res=>{
+            console.log(res)
+            this.curPage.emotionMusic = res.data[0].link
+            document.getElementById('emotion-recomm-music').load()
+          })
+      }
+      else{
+        document.getElementById('text-recomm-music').pause()
+      }
+    }
   }
 }
 </script>
 
 <style>
+.music-container{
+  position: fixed;
+  height: 20%;
+  width: 100%;
+  color: white;
+  background-color: rgba(71, 67, 67, 0.7);
+  margin: 0;
+  padding: 0;
+  left: 0;
+}
 .book-section{
-  height: 90vh;
+  height: 85vh;
   width: 100%;
   padding: 40px 0;
   text-align: center;
@@ -345,7 +409,7 @@ export default {
   cursor: pointer;
 } */
 #prev {
-  top: 0;
+  top: 10%;
   left: 0;
 }
 #next {

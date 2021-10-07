@@ -46,7 +46,7 @@ export default {
       this.backCover=true
     }
     else{
-      console.log(this.page)
+      // console.log(this.page)
       this.backCover=false
     }
   },

@@ -12,9 +12,9 @@ export default {
   },
   props: ['page', 'idx', 'isFront'],
   mounted(){
-    console.log(this.isFront)
+    // console.log(this.isFront)
     const textbox = document.getElementById(`pct_${this.idx}`)
-    console.log(textbox)
+    // console.log(textbox)
     if(this.page.pageContent===undefined){
       textbox.style.display='none'
     }
