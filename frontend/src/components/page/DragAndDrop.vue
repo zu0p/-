@@ -59,6 +59,7 @@ export default {
     }),
   },
   mounted() {
+    console.log(this.pageTitle)
     if (this.pDiaryId) {
       this.propsDiary = this.pDiaryId;
       this.pageId = this.pPageId;
