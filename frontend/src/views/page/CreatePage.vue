@@ -36,7 +36,7 @@ export default {
   created(){ 
     console.log(this.title+"created")
     //이건 나중에 watch로 바꿔야하나 => 선택하면 emit으로 받아서 this.imageSelect를 바꿔주고 그때 routing해도 되겠다 초기에는 무조건 false니까
-    if(!this.imageSelect)this.$router.push({name: 'ImageSelect'})
+    // if(!this.imageSelect)this.$router.push({name: 'ImageSelect'})
   },
   methods:{
   }
