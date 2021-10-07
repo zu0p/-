@@ -185,7 +185,7 @@ export default {
         return;
       }
       this.isExtraction = true;
-      this.setPageTitle(this.title);
+      this.setPageTitle(this.title.replaceAll(' ',''));
       this.setPageText(this.text);
 
       let plainText = this.text.replace(/<[^>]*>/g, ""); // html to plain text

@@ -93,7 +93,7 @@ export default {
         //생성
         //actions 불러서 새로 생성
         const form = new FormData();
-        form.append("diaryName", this.diary.diaryName);
+        form.append("diaryName", this.diary.diaryName.replaceAll(' ',''));
         form.append("diaryImage", this.diary.diaryImage);
         form.append("diaryDesc", this.diary.diaryDesc);
         form.append("diaryShare", this.diary.diaryShare);
@@ -113,7 +113,7 @@ export default {
         console.log("update");
         const param = {
           diaryId: this.id,
-          modifyName: this.diary.diaryName,
+          modifyName: this.diary.diaryName.replaceAll(' ',''),
         };
         this.requestUpdateDiary(param).then((res) => {
           // console.log(res)

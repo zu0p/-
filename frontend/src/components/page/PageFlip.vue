@@ -1,11 +1,5 @@
 <template>
   <div class="book-section">
-        <page-text  v-for="(page, idx) in list()" :key="idx+123" 
-          :page="pages[idx+1]"
-          :idx="idx+1"
-          isFront=false
-        />
-        <page-text isFront=true page=null idx=0 /> <!--front용-->
     <div class="container">
 
         <page  v-for="(page, idx) in list()" :key="idx" 
@@ -59,7 +53,6 @@
 <script>
 import {mapState, mapActions, mapGetters} from 'vuex'
 import Page from '../../components/page/Page.vue'
-import PageText from '../../components/page/PageText.vue'
 import MusicRecommend from './MusicRecommend.vue'
 const diaryStore = 'diaryStore'
 const pageStore = 'pageStore'
@@ -67,7 +60,6 @@ const musicStore = 'musicStore'
 export default {
   components: { 
     Page, 
-    PageText,
     MusicRecommend,
   },
   data(){
@@ -113,14 +105,9 @@ export default {
     // document.getElementById('page_content_text_back').innerHTML = this.pages[0].pageContent
   },
   created(){
-
-    // console.log(this.getterPages)
-    // this.pages = this.getterPages
     if(this.pages[0].pageImage == 'back-cover'){
       console.log("다시접근해서 삭제+reverse")
       console.log(this.pages)
-      // this.pages.pop()
-      // this.pages.reverse()
     }
     else{
       let dummy = {
@@ -162,12 +149,9 @@ export default {
         document.getElementById('create-page-btn').style.zIndex=-1
       }
 
-      // this.texts[this.si].style.display='block'
       this.right[this.si].classList.add('flip')
       this.z++
       this.right[this.si].style.zIndex=this.z
-      // if(this.si-1>=0 && this.si-1<this.texts.length)
-      //   this.texts[this.si-1].style.zIndex=this.z
     },
     turnLeft() {
       if(this.si<this.right.length){
@@ -191,21 +175,23 @@ export default {
       this.right[this.si-1].className='right'
       this.z++
       this.right[this.si-1].style.zIndex=this.z
-      // if(this.si-2>=0 && this.si-2<this.texts.length)
-      //   this.texts[this.si-2].style.display='none'
-      
-      // setTimeout(function(){this.right[this.si-1].style.zIndex="auto";},350)
     },
     clickCreate(e){
       this.$router.push({name:'CreatePage'})
     },
     refresh(){
-      console.log(this.pages)
-      console.log(this.pages.length)
+      // console.log(this.pages)
+      // console.log(this.pages.length)
+      console.log(this.si)
 
       if(this.pages.length == 1){
         // 모든 페이지 삭제되면 최초 작성으로 라우팅
         this.$router.push({name:'BeforeCreate'})
+      }
+      else{
+        // document.getElementById('page-text').innerHTML = this.pages[this.si].pageContent
+        this.setText()
+        this.musicPlay()
       }
     },
     musicPlay(){
@@ -213,14 +199,13 @@ export default {
         document.getElementById('text-recomm-music').pause()
         return
       }
-      if(this.si-1<this.texts.length && this.texts[this.si-1]){
+      if(this.pages[this.si] && this.si!=0){
         // 현재 페이지 저장
-        // console.log(this.si)
-        // console.log(this.texts[this.si-1])
-        // console.log(this.texts[this.si-1].innerText)
-        this.curPage.text = this.texts[this.si-1].innerText
+        let plainText = this.pages[this.si].pageContent.replace(/<[^>]*>/g, ""); // html to plain text
+        // console.log(plainText)
+        this.curPage.text = plainText
         let param = {
-          writing: this.curPage.text
+          writing: plainText
         }
         this.requestMusicByText(param) // text 기반 음악추천
           .then(res=>{
@@ -228,35 +213,24 @@ export default {
             this.curPage.textMusic = res.data[0].link
             document.getElementById('text-recomm-music').load()
           })
-
-        // console.log(this.pages[this.si])
-        // let info={
-        //   diaryId: this.diaryId,
-        //   pageId: this.pages[this.si].id
-        // }
-        // this.requestMusicByPage(info) // 감정 기반 음악추천
-        //   .then(res=>{
-        //     // console.log(res)
-        //     this.curPage.emotionMusic = res.data[0].link
-        //     document.getElementById('emotion-recomm-music').load()
-        //   })
       }
       else{
         document.getElementById('text-recomm-music').pause()
       }
     },
     setText(){
-      if(this.texts[this.si-1]){
+      if(this.pages[this.si] && this.si!=0){
         let curText = document.getElementById('page-text')
-        let realText = this.texts[this.si-1].innerHTML
+        let realText = this.pages[this.si].pageContent
+        
         curText.innerHTML = ''
         setTimeout(function(){
-          console.log(realText)
-          document.getElementById('page-text').innerHTML = realText
-          
+          curText.innerHTML = realText          
         },500);
-        curText.style.left = this.texts[this.si-1].style.left
-        curText.style.top = this.texts[this.si-1].style.top + 70
+        if(this.pages[this.si].left)
+          curText.style.left = this.pages[this.si].left.toString()+"px"
+        if(this.pages[this.si].top)
+          curText.style.top = (this.pages[this.si].top+75).toString()+"px"
       }
       else
         document.getElementById('page-text').innerHTML = ''

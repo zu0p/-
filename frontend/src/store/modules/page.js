@@ -61,7 +61,8 @@ const pageStore = {
     },
 
     SET_PAGE_TITLE(state, title) {
-      state.store.page_title = title;
+      state.store.page_title = title.replace(' ','');
+      console.log(state.store.page_title)
     },
 
     GET_PAGE_IMG(state) {
