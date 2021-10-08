@@ -59,7 +59,7 @@ page_info = sqlalchemy.Table(
 db_user = "test"
 db_password = "test"
 db_name = "ssafy_fastapi_web"
-db_server = "j5d103.p.ssafy.io:3306"
+db_server = "3.35.37.110:3306"
 
 SQLALCHEMY_DATABASE_URL = f"mysql+mysqlconnector://{db_user}:{db_password}@{db_server}/{db_name}"
 #SQLALCHEMY_DATABASE_URL = os.environ['SQLALCHEMY_DB_URL']
