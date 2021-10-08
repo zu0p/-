@@ -59,7 +59,7 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.pageTitle)
+    console.log(this.pageTitle);
     if (this.pDiaryId) {
       this.propsDiary = this.pDiaryId;
       this.pageId = this.pPageId;
@@ -179,8 +179,8 @@ export default {
       form.append("pageContent", this.pageText);
       form.append("pageShare", false);
       form.append("pageImage", this.pageImage);
-      form.append("top", textposition.y);
-      form.append("left", textposition.x);
+      form.append("top", textposition.top);
+      form.append("left", textposition.left);
       console.log(this.pageImage);
       // console.log(form)
       // 일기 수정
