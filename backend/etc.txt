@@ -12,7 +12,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 - container > docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<password> -d -p 3306:3306 mysql:latest
 - connect > docker exec -it mysql-container bash
           > use mysql;
-            CREATE USER 'test'@'%' IDENTIFIED BY 'password';
+            CREATE USER 'test'@'%' IDENTIFIED BY 'test'; 
             GRANT ALL PRIVILEGES ON *.* TO 'test'@'%';
             FLUSH PRIVILEGES;
             exit
@@ -37,11 +37,7 @@ docker run -d \
 -v /usr/local/bin/docker-compose:/usr/local/bin/docker-compose \ 
 -u root jenkins/jenkins
 
-git commit --amend --no-edit --date "Wed 8 Sep 2021 20:19:19 KST"
 
-git filter-branch --env-filter \
-    'if [ $GIT_COMMIT = 3a0c50592c16951a4f65f70401e982134da47630 ]
-     then
-         export GIT_AUTHOR_DATE="Sat Sep 11 11:00:00 2021 +0900"
-         export GIT_COMMITTER_DATE="Sat Sep 11 11:00:00 2021 +0900"
-     fi'
+< docker run cmd >
+: emotion = docker run -p 8999:8999 emotion:latest
+: 
