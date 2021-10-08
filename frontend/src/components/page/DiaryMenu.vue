@@ -26,29 +26,29 @@
                   <v-icon>mdi-border-all</v-icon>
                 </v-btn>
               </template>
-              <span>diary list</span>
+              <span>일기 목록 한눈에 보기</span>
             </v-tooltip>
           </v-list-item>
 
           <v-list-item>
             <v-tooltip right>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on" @click="goEditDiary()">
-                  <v-icon>mdi-pencil</v-icon>
+                <v-btn icon v-bind="attrs" v-on="on" @click="showPages()">
+                  <v-icon>mdi-book-open-page-variant-outline</v-icon>
                 </v-btn>
               </template>
-              <span>edit diary</span>
+              <span>일기 한장씩 보기</span>
             </v-tooltip>
           </v-list-item>
 
           <v-list-item>
             <v-tooltip right>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on" @click="goDeleteDiary()">
-                  <v-icon>mdi-delete</v-icon>
+                <v-btn icon v-bind="attrs" v-on="on" @click="writeNewPage()">
+                  <v-icon>mdi-pencil-plus</v-icon>
                 </v-btn>
               </template>
-              <span>delete diary</span>
+              <span>일기 추가</span>
             </v-tooltip>
           </v-list-item>
         </v-list>
@@ -79,8 +79,12 @@ export default {
       });
       // window.location = "/pageList";
     },
-    goEditDiary() {},
-    goDeleteDiary() {},
+    showPages() {
+      this.$router.push({name: 'DetailView', params:{diaryId: this.diaryId}})
+    },
+    writeNewPage() {
+      this.$router.push({name:'CreatePage'})
+    },
   },
 };
 </script>

@@ -31,11 +31,16 @@ const pageStore = {
       isKeywordSearch: false,
       selectedKeywords: [],
       pageList: [],
+      isKeywordExist: false,
     },
   },
 
   // getters
-  getters: {},
+  getters: {
+    pageList: (state) => {
+      return state.store.pageList;
+    },
+  },
 
   // mutations
   mutations: {
@@ -56,7 +61,8 @@ const pageStore = {
     },
 
     SET_PAGE_TITLE(state, title) {
-      state.store.page_title = title;
+      state.store.page_title = title.replace(' ','');
+      console.log(state.store.page_title)
     },
 
     GET_PAGE_IMG(state) {
@@ -65,10 +71,40 @@ const pageStore = {
 
     SET_IS_KEYWORD_SEARCH(state) {
       state.store.isKeywordSearch = !state.store.isKeywordSearch;
+      // state.store.isKeywordSearch = true
+      // console.log(state.store.isKeywordSearch)
     },
 
     SET_SELECTED_KEYWORDS(state, selected) {
       state.store.selectedKeywords = selected;
+    },
+    SET_IS_KEYWORD_EXIST(state, exist) {
+      if (exist == "false") {
+        state.store.isKeywordExist = false;
+      } else {
+        state.store.isKeywordExist = true;
+      }
+    },
+
+    DELETE_PAGE(state, page) {
+      // 찾아서 지우기
+      const res = state.store.pageList.filter((item) => item.id != page);
+      state.store.pageList = res;
+      // console.log(state.store.pageList)
+    },
+    ADD_PAGE(state, page) {
+      state.store.pageList.push(page);
+      // console.log(state.store.pageList)
+    },
+    UPDATE_PAGE(state, page) {
+      // 찾아서 바꾸기
+      const res = state.store.pageList.map((item) => {
+        if (item.id == page.id) {
+          return page;
+        } else return item;
+      });
+      // console.log(res)
+      state.store.pageList = res;
     },
   },
 
@@ -120,9 +156,48 @@ const pageStore = {
     requestEmotion({ commit }, info) {
       return axios.post("http://13.125.248.60:8999/emotion", info);
     },
+    //키워드 DB 존재 여부
+    requestKeywordExist({ commit }, keyword) {
+      return axios.get("http://13.124.43.16:8995/image/" + keyword).then((res) => {
+        console.log(res);
+        commit("SET_IS_KEYWORD_EXIST", res.data);
+      });
+    },
+    //추천 이미지 생성하기
+    requestRecommendImage({ commit }, keyword) {
+      return axios.get("http://13.124.43.16:8995/image/recommend/" + keyword);
+    },
     // 일기 작성
     requestCreateDiary({ commit }, formData) {
       return instanceWithAuth.post(`${BASE_URL}/create`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+    },
+    addPage({ commit }, page) {
+      commit("ADD_PAGE", page);
+    },
+    // 일기 삭제
+    requestDeletePage({ commit }, info) {
+      return instanceWithAuth.delete(`${BASE_URL}/delete`, {
+        data: info,
+      });
+    },
+    deletePage({ commit }, page) {
+      commit("DELETE_PAGE", page);
+    },
+    // 일기 조회
+    requestReadPage({ commit }, info) {
+      return instanceWithAuth.get(`${BASE_URL}/read/${info.diaryId}/${info.pageId}`);
+    },
+    // 일기 수정
+    requestUpdatePage({ commit }, formData) {
+      return instanceWithAuth.put(`${BASE_URL}/update`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+    },
+    updatePage({ commit }, page) {
+      commit("UPDATE_PAGE", page);
+    },
+    //사진 선택시 선택 횟수 증가
+    imageCountUp({ commit }, url) {
+      console.log(url);
+      return axios.get("http://13.124.43.16:8995/image/select/" + url);
     },
   },
 };
