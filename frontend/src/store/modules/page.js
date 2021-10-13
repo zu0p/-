@@ -15,7 +15,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance);
 }
 
-const BASE_URL = "http://j5d103.p.ssafy.io/api/v1/page";
+const BASE_URL = "http://15.164.104.218/api/v1/page";
 const instanceWithAuth = createInstance();
 
 const pageStore = {
@@ -61,8 +61,8 @@ const pageStore = {
     },
 
     SET_PAGE_TITLE(state, title) {
-      state.store.page_title = title.replace(' ','');
-      console.log(state.store.page_title)
+      state.store.page_title = title.replace(" ", "");
+      console.log(state.store.page_title);
     },
 
     GET_PAGE_IMG(state) {

@@ -15,7 +15,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance);
 }
 
-const BASE_URL = "http://j5d103.p.ssafy.io/api/v1/users";
+const BASE_URL = "http://15.164.104.218/api/v1/users";
 const instanceWithAuth = createInstance();
 
 const userStore = {
@@ -38,8 +38,7 @@ const userStore = {
       console.log(state.store.token + " : " + state.store.tokenType);
     },
     RESET_TOKEN(state) {
-      state.store.isLogin = false,
-      state.store.token = "";
+      (state.store.isLogin = false), (state.store.token = "");
       state.store.tokenType = "";
     },
   },
@@ -50,7 +49,7 @@ const userStore = {
       return axios.post(`${BASE_URL}/login`, users);
     },
     requestSignup({ commit }, users) {
-      console.log(users)
+      console.log(users);
       return axios.post(`${BASE_URL}/signup`, users);
     },
     requestUserInfo({ commit }) {
@@ -67,29 +66,29 @@ const userStore = {
     },
     updateProfileImage({ commit }, image) {
       const formdata = new FormData();
-      formdata.append('profileImage', image)
-      return instanceWithAuth.put(`${BASE_URL}/change-image`, formdata,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+      formdata.append("profileImage", image);
+      return instanceWithAuth.put(`${BASE_URL}/change-image`, formdata, { headers: { "Content-Type": "multipart/form-data" } });
     },
     deleteUserInfo({ commit }) {
-      instanceWithAuth.delete(`${BASE_URL}/delete`).then((res) => {
-        if ((res.statusText = "OK")) {
-          commit("RESET_TOKEN");
-          alert("회원정보가 삭제되었습니다.\n그리더를 이용해주셔서 감사합니다")
-          window.location = "/";
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        if (e.response.status == 422) {
-          alert("회원정보 수정 실패했습니다..");
-        }
-      });
+      instanceWithAuth
+        .delete(`${BASE_URL}/delete`)
+        .then((res) => {
+          if ((res.statusText = "OK")) {
+            commit("RESET_TOKEN");
+            alert("회원정보가 삭제되었습니다.\n그리더를 이용해주셔서 감사합니다");
+            window.location = "/";
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e.response.status == 422) {
+            alert("회원정보 수정 실패했습니다..");
+          }
+        });
     },
     updatePassword({ commit }, pwd) {
       return instanceWithAuth.put(`${BASE_URL}/change-password`, pwd);
-    }
+    },
   },
 };
 export default userStore;

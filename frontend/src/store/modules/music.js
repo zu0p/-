@@ -14,7 +14,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance);
 }
 
-const BASE_URL = "http://j5d103.p.ssafy.io/api/v1/music";
+const BASE_URL = "http://15.164.104.218/api/v1/music";
 const instanceWithAuth = createInstance();
 
 const musicStore = {
@@ -22,22 +22,20 @@ const musicStore = {
 
   // initial state
   state: {
-    store: {
-    },
+    store: {},
   },
 
   // mutations
-  mutations: {
-  },
+  mutations: {},
 
   // actions
   actions: {
     requestMusicByText({ commit }, text) {
       return instanceWithAuth.post(`${BASE_URL}/recommend_by_text`, text);
     },
-    requestMusicByPage({ commit }, info){
+    requestMusicByPage({ commit }, info) {
       return instanceWithAuth.get(`${BASE_URL}/recommend_by_page/${info.diaryId}/${info.pageId}`, info);
-    }
+    },
   },
 };
 export default musicStore;
