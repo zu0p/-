@@ -28,8 +28,9 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
 # set display port to avoid crash
 ENV DISPLAY=:99
-ENV keyword_url=0.0.0.0:8998
+ENV KEYWORD_URL 0.0.0.0:8998
 
-CMD ["python", "manage.py", "runserver", ${keyword_url}]
+CMD python manage.py runserver $KEYWORD_URL
+# CMD ["python", "manage.py", "runserver", "${KEYWORD_URL}"]
 
 EXPOSE 8998
